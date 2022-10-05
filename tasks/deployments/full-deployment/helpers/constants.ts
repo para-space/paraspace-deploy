@@ -46,14 +46,14 @@ export const UNISWAP_ROUTER = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
 
 // All nft oracle projects we support with floor price
 export const NFT_PROJECTS_WITH_FLOOR_PRICE = [
-    BAYC,
-    PUNKS,
-    DOODLES,
-    MAYC,
-    MOONBIRDS,
-    AZUKI,
-    CLONEX,
-    MEETBITS,
-    OTHERDEED,
-    COOLCAT,
+  BAYC,
+  PUNKS,
+  DOODLES,
+  MAYC,
+  MOONBIRDS,
+  AZUKI,
+  CLONEX,
+  MEETBITS,
+  OTHERDEED,
+  COOLCAT,
 ];

@@ -1,5 +1,8 @@
 import {MOCK_USD_PRICE_IN_WEI} from "../../../../helpers/constants";
-import {deployPriceOracle,deployNftFloorPriceOracle} from "../../../../helpers/contracts-deployments";
+import {
+  deployPriceOracle,
+  deployNftFloorPriceOracle,
+} from "../../../../helpers/contracts-deployments";
 import {
   getAllMockedTokens,
   getPunk,
@@ -7,7 +10,7 @@ import {
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {setInitialAssetPricesInOracle} from "../../../../helpers/oracles-helpers";
 import ParaSpaceConfig from "../../../../market-config";
-import {NFT_PROJECTS_WITH_FLOOR_PRICE} from '../../full-deployment/helpers/constants';
+import {NFT_PROJECTS_WITH_FLOOR_PRICE} from "../../full-deployment/helpers/constants";
 
 export const step_08 = async (verify = false) => {
   try {
@@ -17,7 +20,10 @@ export const step_08 = async (verify = false) => {
     const punks = await getPunk();
 
     //for testnet we only deploy but still use mock price instead
-    const nft_floor_oracle = await deployNftFloorPriceOracle(NFT_PROJECTS_WITH_FLOOR_PRICE, verify);
+    const nft_floor_oracle = await deployNftFloorPriceOracle(
+      NFT_PROJECTS_WITH_FLOOR_PRICE,
+      verify
+    );
 
     const fallbackOracle = await deployPriceOracle(verify);
     await waitForTx(await fallbackOracle.setEthUsdPrice(MOCK_USD_PRICE_IN_WEI));

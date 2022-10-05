@@ -41,7 +41,7 @@ export const step_15 = async (verify = false) => {
       paraSpaceAdmin,
       conduitKey
     );
-    const conduitInstance = await getConduit(conduit)
+    const conduitInstance = await getConduit(conduit);
     await waitForTx(
       await conduitInstance.initialize(protocolDataProvider.address)
     );

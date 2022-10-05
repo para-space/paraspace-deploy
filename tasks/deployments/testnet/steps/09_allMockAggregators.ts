@@ -15,11 +15,13 @@ import {
   deployWalletBalanceProvider,
 } from "../../../../helpers/contracts-deployments";
 import {
-  getAllMockedTokens, getNonfungiblePositionManager,
+  getAllMockedTokens,
+  getNonfungiblePositionManager,
   getPairsTokenAggregator,
   getPoolAddressesProvider,
   getPoolConfiguratorProxy,
-  getPriceOracle, getUniswapV3Factory,
+  getPriceOracle,
+  getUniswapV3Factory,
 } from "../../../../helpers/contracts-getters";
 import {
   getParaSpaceAdmins,
@@ -46,7 +48,10 @@ declare let hre: HardhatRuntimeEnvironment;
 
 export const step_09 = async (verify = false) => {
   // hardhat local node
-  if (hre.network.config.chainId === HARDHAT_CHAINID || hre.network.config.chainId === COVERAGE_CHAINID) {
+  if (
+    hre.network.config.chainId === HARDHAT_CHAINID ||
+    hre.network.config.chainId === COVERAGE_CHAINID
+  ) {
     try {
       const MOCK_CHAINLINK_AGGREGATORS_PRICES =
         ParaSpaceConfig.Mocks.AllAssetsInitialPrices;
@@ -110,17 +115,17 @@ export const step_09 = async (verify = false) => {
       );
 
       const uniswapWrapper = await deployUniswapV3OracleWrapper(
-          univ3Factory.address,
-          uniV3PositionManager.address,
-          addressesProvider.address,
-          verify
+        univ3Factory.address,
+        uniV3PositionManager.address,
+        addressesProvider.address,
+        verify
       );
 
       await waitForTx(
-          await paraspaceOracle.setAssetSources(
-              [uniV3PositionManager.address],
-              [uniswapWrapper.address]
-          )
+        await paraspaceOracle.setAssetSources(
+          [uniV3PositionManager.address],
+          [uniswapWrapper.address]
+        )
       );
 
       const {...tokensAddressesWithoutUsd} = allTokenAddresses;
@@ -188,7 +193,7 @@ export const step_09 = async (verify = false) => {
         undefined,
         undefined,
         undefined,
-        mockReserveAuctionStrategy.address,
+        mockReserveAuctionStrategy.address
       );
 
       await configureReservesByHelper(
@@ -200,9 +205,20 @@ export const step_09 = async (verify = false) => {
 
       const uniswapManager = (await getNonfungiblePositionManager()).address;
 
-      const dynamicConfigsStrategy = (await deployUniswapDynamicConfigStrategy([uniswapManager, addressesProvider.address])).address;
-      await poolConfigurator.setReserveDynamicConfigsStrategyAddress(uniswapToken.address, dynamicConfigsStrategy);
-      await poolConfigurator.setDynamicConfigsEnabled(uniswapToken.address, true);
+      const dynamicConfigsStrategy = (
+        await deployUniswapDynamicConfigStrategy([
+          uniswapManager,
+          addressesProvider.address,
+        ])
+      ).address;
+      await poolConfigurator.setReserveDynamicConfigsStrategyAddress(
+        uniswapToken.address,
+        dynamicConfigsStrategy
+      );
+      await poolConfigurator.setDynamicConfigsEnabled(
+        uniswapToken.address,
+        true
+      );
       await deployUiPoolDataProvider(
         mockAggregators["USDT"].address,
         mockAggregators["USDC"].address,
@@ -214,7 +230,10 @@ export const step_09 = async (verify = false) => {
     }
   }
   // rinkeby, goerli
-  if (hre.network.config.chainId === RINKEBY_CHAINID || hre.network.config.chainId === GOERLI_CHAINID) {
+  if (
+    hre.network.config.chainId === RINKEBY_CHAINID ||
+    hre.network.config.chainId === GOERLI_CHAINID
+  ) {
     try {
       const MOCK_CHAINLINK_AGGREGATORS_PRICES =
         ParaSpaceConfig.Mocks.AllAssetsInitialPrices;
@@ -350,10 +369,21 @@ export const step_09 = async (verify = false) => {
 
       const uniswapManager = (await getNonfungiblePositionManager()).address;
 
-      const dynamicConfigsStrategy = (await deployUniswapDynamicConfigStrategy([uniswapManager, addressesProvider.address])).address;
-      await poolConfigurator.setReserveDynamicConfigsStrategyAddress(uniswapToken.address, dynamicConfigsStrategy);
+      const dynamicConfigsStrategy = (
+        await deployUniswapDynamicConfigStrategy([
+          uniswapManager,
+          addressesProvider.address,
+        ])
+      ).address;
+      await poolConfigurator.setReserveDynamicConfigsStrategyAddress(
+        uniswapToken.address,
+        dynamicConfigsStrategy
+      );
       console.log("uniswap token", uniswapToken.address);
-      await poolConfigurator.setDynamicConfigsEnabled(uniswapToken.address, true);
+      await poolConfigurator.setDynamicConfigsEnabled(
+        uniswapToken.address,
+        true
+      );
       await deployUiPoolDataProvider(ETH_USD_ORACLE, ETH_USD_ORACLE, verify);
 
       await deployWalletBalanceProvider(verify);

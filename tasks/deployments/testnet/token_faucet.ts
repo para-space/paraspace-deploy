@@ -47,7 +47,7 @@ export const deployFaucet = async (mockTokens, verify?: boolean) => {
       name: "PUNK",
       addr: mockTokens.PUNK,
       mintValue: MOCK_TOKEN_MINT_VALUE.PUNK,
-    }
+    },
   ];
 
   const erc721configs = [

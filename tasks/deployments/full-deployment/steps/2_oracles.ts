@@ -7,7 +7,7 @@ import {
 } from "../../../../helpers/contracts-deployments";
 import {getPairsTokenAggregator} from "../../../../helpers/contracts-getters";
 import {tEthereumAddress} from "../../../../helpers/types";
-import {NFT_PROJECTS_WITH_FLOOR_PRICE} from '../helpers/constants'
+import {NFT_PROJECTS_WITH_FLOOR_PRICE} from "../helpers/constants";
 
 import {
   APE_ETH_ORACLE,
@@ -28,7 +28,7 @@ import {
   USDC,
 } from "../helpers/constants";
 
-import {PoolAddressesProvider} from "../../../../../types"
+import {PoolAddressesProvider} from "../../../../../types";
 
 import dotenv from "dotenv";
 
@@ -38,9 +38,12 @@ const verify = process.env.ETHERSCAN_VERIFICATION === "true" ? true : false;
 
 export const deployOracles = async (
   deployedTokens: {[tokenSymbol: string]: Contract},
-  addressesProvider: PoolAddressesProvider,
-) => {  
-  const nftFloorOracle = await deployNftFloorPriceOracle(NFT_PROJECTS_WITH_FLOOR_PRICE, verify)
+  addressesProvider: PoolAddressesProvider
+) => {
+  const nftFloorOracle = await deployNftFloorPriceOracle(
+    NFT_PROJECTS_WITH_FLOOR_PRICE,
+    verify
+  );
 
   const fallbackOracle = await deployParaSpaceFallbackOracle(
     [BEND_DAO_ORACLE, UNISWAP_FACTORY, UNISWAP_ROUTER, WETH, USDC],

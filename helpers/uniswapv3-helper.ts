@@ -1,7 +1,4 @@
-import {
-  getUniswapV3SwapRouter,
-  getUniswapV3Factory,
-} from "./contracts-getters";
+import {getUniswapV3SwapRouter, getUniswapV3Factory} from "./contracts-getters";
 import {TickMath} from "@uniswap/v3-sdk";
 import {BigNumber, BigNumberish} from "ethers";
 import {expect} from "chai";

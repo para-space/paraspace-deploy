@@ -113,7 +113,7 @@ const runScript = async () => {
     borrowCap: "0",
     supplyCap: "0",
     auctionEnabled: true,
-    auctionRecoveryHealthFactor: '1500000000000000000'
+    auctionRecoveryHealthFactor: "1500000000000000000",
   };
 
   const reservesParams = {
