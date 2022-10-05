@@ -29,7 +29,11 @@ export const step_06 = async (verify = false) => {
     const poolConfiguratorProxy = await getPoolConfiguratorProxy(
       await addressesProvider.getPoolConfigurator()
     );
-    await waitForTx(await poolConfiguratorProxy.setMaxAtomicTokensAllowed(ParaSpaceConfig.MaxUserAtomicTokensAllowed))
+    await waitForTx(
+      await poolConfiguratorProxy.setMaxAtomicTokensAllowed(
+        ParaSpaceConfig.MaxUserAtomicTokensAllowed
+      )
+    );
     await insertContractAddressInDb(
       eContractid.PoolConfigurator,
       poolConfiguratorProxy.address
