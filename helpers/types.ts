@@ -365,8 +365,6 @@ export interface IReserveParams
   supplyCap: string;
   strategy: IInterestRateStrategyParams;
   auctionStrategy: IAuctionStrategyParams;
-  auctionEnabled: boolean;
-  auctionRecoveryHealthFactor: string;
 }
 
 export interface IInterestRateStrategyParams {
@@ -454,6 +452,7 @@ export interface ICommonConfiguration {
   SymbolPrefix: string;
   ProviderId: number;
   MaxUserAtomicTokensAllowed: number;
+  AuctionRecoveryHealthFactor: string | number;
   ProtocolGlobalParams: IProtocolGlobalConfig;
   Mocks: IMocksConfig;
   ProviderRegistry: tEthereumAddress | undefined;

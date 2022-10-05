@@ -28,6 +28,7 @@ import {
   deployPTokenStETH,
   deployPTokenAToken,
 } from "./contracts-deployments";
+import {ZERO_ADDRESS} from "./constants";
 
 export const initReservesByHelper = async (
   reservesParams: iMultiPoolsAssets<IReserveParams>,
@@ -273,6 +274,8 @@ export const initReservesByHelper = async (
       if (defaultReserveAuctionStrategyAddress) {
         auctionStrategyAddresses[auctionStrategy.name] =
           defaultReserveAuctionStrategyAddress;
+      } else if (auctionStrategy.name == "auctionStrategyZero") {
+        auctionStrategyAddresses[auctionStrategy.name] = ZERO_ADDRESS;
       } else {
         // Strategy does not exist, create a new one
         auctionStrategyAddresses[auctionStrategy.name] = (
@@ -461,8 +464,6 @@ export const configureReservesByHelper = async (
     supplyCap: BigNumberish;
     stableBorrowingEnabled: boolean;
     borrowingEnabled: boolean;
-    auctionEnabled: boolean;
-    auctionRecoveryHealthFactor: BigNumberish;
   }[] = [];
 
   for (const [
@@ -476,8 +477,6 @@ export const configureReservesByHelper = async (
       supplyCap,
       stableBorrowRateEnabled,
       borrowingEnabled,
-      auctionEnabled,
-      auctionRecoveryHealthFactor,
     },
   ] of Object.entries(reservesParams) as [string, IReserveParams][]) {
     if (!tokenAddresses[assetSymbol]) {
@@ -515,8 +514,6 @@ export const configureReservesByHelper = async (
       supplyCap,
       stableBorrowingEnabled: stableBorrowRateEnabled,
       borrowingEnabled: borrowingEnabled,
-      auctionEnabled,
-      auctionRecoveryHealthFactor,
     });
 
     tokens.push(tokenAddress);

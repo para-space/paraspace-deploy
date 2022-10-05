@@ -72,6 +72,7 @@ import {
   UserFlashclaimRegistry__factory,
   MockAirdropProject__factory,
   IPool__factory,
+  MockReserveAuctionStrategy__factory,
 } from "../../types";
 // import {PoolLibraryAddresses} from "../types/Pool__factory";
 import {
@@ -1043,6 +1044,19 @@ export const getMockAirdropProject = async (address?: tEthereumAddress) =>
       (
         await getDb()
           .get(`${eContractid.MockAirdropProject}.${DRE.network.name}`)
+          .value()
+      ).address,
+    await getFirstSigner()
+  );
+
+export const getMockReserveAuctionStrategy = async (
+  address?: tEthereumAddress
+) =>
+  await MockReserveAuctionStrategy__factory.connect(
+    address ||
+      (
+        await getDb()
+          .get(`${eContractid.MockReserveAuctionStrategy}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()

@@ -34,6 +34,11 @@ export const step_06 = async (verify = false) => {
         ParaSpaceConfig.MaxUserAtomicTokensAllowed
       )
     );
+    await waitForTx(
+      await poolConfiguratorProxy.setAuctionRecoveryHealthFactor(
+        ParaSpaceConfig.AuctionRecoveryHealthFactor
+      )
+    );
     await insertContractAddressInDb(
       eContractid.PoolConfigurator,
       poolConfiguratorProxy.address
