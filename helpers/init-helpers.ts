@@ -271,11 +271,11 @@ export const initReservesByHelper = async (
       }
     }
     if (!auctionStrategyAddresses[auctionStrategy.name]) {
-      if (defaultReserveAuctionStrategyAddress) {
+      if (auctionStrategy.name == "auctionStrategyZero") {
+        auctionStrategyAddresses[auctionStrategy.name] = ZERO_ADDRESS;
+      } else if (defaultReserveAuctionStrategyAddress) {
         auctionStrategyAddresses[auctionStrategy.name] =
           defaultReserveAuctionStrategyAddress;
-      } else if (auctionStrategy.name == "auctionStrategyZero") {
-        auctionStrategyAddresses[auctionStrategy.name] = ZERO_ADDRESS;
       } else {
         // Strategy does not exist, create a new one
         auctionStrategyAddresses[auctionStrategy.name] = (
@@ -297,6 +297,7 @@ export const initReservesByHelper = async (
         );
       }
     }
+
     strategyAddressPerAsset[symbol] = strategyAddresses[strategy.name];
     auctionStrategyAddressPerAsset[symbol] =
       auctionStrategyAddresses[auctionStrategy.name];
