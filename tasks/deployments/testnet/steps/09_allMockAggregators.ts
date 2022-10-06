@@ -165,6 +165,17 @@ export const step_09 = async (verify = false) => {
       const mockIncentivesController = await deployMockIncentivesController(
         verify
       );
+      const mockReserveAuctionStrategy = await deployMockReserveAuctionStrategy(
+        [
+          auctionStrategyLinear.maxPriceMultiplier,
+          auctionStrategyLinear.minExpPriceMultiplier,
+          auctionStrategyLinear.minPriceMultiplier,
+          auctionStrategyLinear.stepLinear,
+          auctionStrategyLinear.stepExp,
+          auctionStrategyLinear.tickLength,
+        ],
+        verify
+      );
 
       await initReservesByHelper(
         reservesParams,
@@ -182,7 +193,7 @@ export const step_09 = async (verify = false) => {
         undefined,
         undefined,
         undefined,
-        undefined,
+        mockReserveAuctionStrategy.address
       );
 
       await configureReservesByHelper(
