@@ -81,6 +81,7 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   SymbolPrefix: "",
   ProviderId: 1, // Overridden in index.ts
   MaxUserAtomicTokensAllowed: 256,
+  AuctionRecoveryHealthFactor: "1500000000000000000",
   ProtocolGlobalParams: {
     TokenDistributorPercentageBase: "10000",
     MockUsdPriceInWei: "5848466240000000",

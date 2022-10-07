@@ -20,3 +20,13 @@ export const auctionStrategyLinear: IAuctionStrategyParams = {
   stepExp: utils.parseUnits("0.1", 18).toString(), // NOT USED
   tickLength: "60", // mainly used for tests so shouldn't be too much to avoid influencing accruing interests
 };
+
+export const auctionStrategyZero: IAuctionStrategyParams = {
+  name: "auctionStrategyZero",
+  maxPriceMultiplier: utils.parseUnits("3", 18).toString(),
+  minExpPriceMultiplier: utils.parseUnits("1", 18).toString(), // NOT USED
+  minPriceMultiplier: utils.parseUnits("0.5", 18).toString(),
+  stepLinear: utils.parseUnits("0.05", 18).toString(),
+  stepExp: utils.parseUnits("0.1", 18).toString(), // NOT USED
+  tickLength: "60", // mainly used for tests so shouldn't be too much to avoid influencing accruing interests
+};

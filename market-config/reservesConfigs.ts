@@ -9,11 +9,12 @@ import {
   rateStrategyNFT,
   rateStrategyParaSpace,
 } from "./rateStrategies";
-import {auctionStrategyExp} from "./auctionStrategies";
+import {auctionStrategyExp, auctionStrategyZero} from "./auctionStrategies";
+import {ZERO_ADDRESS} from "../helpers/constants";
 
 export const strategyDAI: IReserveParams = {
   strategy: rateStrategyStableTwo,
-  auctionStrategy: auctionStrategyExp,
+  auctionStrategy: auctionStrategyZero,
   baseLTVAsCollateral: "7500",
   liquidationThreshold: "8000",
   liquidationBonus: "10500",
@@ -24,13 +25,11 @@ export const strategyDAI: IReserveParams = {
   reserveFactor: "1000",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: false,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyUSDC: IReserveParams = {
   strategy: rateStrategyStableThree,
-  auctionStrategy: auctionStrategyExp,
+  auctionStrategy: auctionStrategyZero,
   baseLTVAsCollateral: "8000",
   liquidationThreshold: "8500",
   liquidationBonus: "10500",
@@ -41,13 +40,11 @@ export const strategyUSDC: IReserveParams = {
   reserveFactor: "1000",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: false,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyUSDT: IReserveParams = {
   strategy: rateStrategyStableTwo,
-  auctionStrategy: auctionStrategyExp,
+  auctionStrategy: auctionStrategyZero,
   baseLTVAsCollateral: "7500",
   liquidationThreshold: "8000",
   liquidationBonus: "10500",
@@ -58,13 +55,11 @@ export const strategyUSDT: IReserveParams = {
   reserveFactor: "1000",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: false,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyWETH: IReserveParams = {
   strategy: rateStrategyXETH,
-  auctionStrategy: auctionStrategyExp,
+  auctionStrategy: auctionStrategyZero,
   baseLTVAsCollateral: "8250",
   liquidationThreshold: "8500",
   liquidationBonus: "10500",
@@ -75,13 +70,11 @@ export const strategyWETH: IReserveParams = {
   reserveFactor: "1000",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: false,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyWBTC: IReserveParams = {
   strategy: rateStrategyWBTC,
-  auctionStrategy: auctionStrategyExp,
+  auctionStrategy: auctionStrategyZero,
   baseLTVAsCollateral: "7000",
   liquidationThreshold: "7500",
   liquidationBonus: "10650",
@@ -92,13 +85,11 @@ export const strategyWBTC: IReserveParams = {
   reserveFactor: "2000",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: false,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategySTETH: IReserveParams = {
   strategy: rateStrategyXETH,
-  auctionStrategy: auctionStrategyExp,
+  auctionStrategy: auctionStrategyZero,
   baseLTVAsCollateral: "6900",
   liquidationThreshold: "8100",
   liquidationBonus: "10750",
@@ -109,13 +100,11 @@ export const strategySTETH: IReserveParams = {
   reserveFactor: "1000",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: false,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyAPE: IReserveParams = {
   strategy: rateStrategyAPE,
-  auctionStrategy: auctionStrategyExp,
+  auctionStrategy: auctionStrategyZero,
   baseLTVAsCollateral: "2000",
   liquidationThreshold: "7000",
   liquidationBonus: "10500",
@@ -126,13 +115,11 @@ export const strategyAPE: IReserveParams = {
   reserveFactor: "1000",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: false,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyAWETH: IReserveParams = {
   strategy: rateStrategyXETH,
-  auctionStrategy: auctionStrategyExp,
+  auctionStrategy: auctionStrategyZero,
   baseLTVAsCollateral: "6900",
   liquidationThreshold: "8100",
   liquidationBonus: "10750",
@@ -143,13 +130,11 @@ export const strategyAWETH: IReserveParams = {
   reserveFactor: "1000",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: false,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyCETH: IReserveParams = {
   strategy: rateStrategyXETH,
-  auctionStrategy: auctionStrategyExp,
+  auctionStrategy: auctionStrategyZero,
   baseLTVAsCollateral: "6900",
   liquidationThreshold: "8100",
   liquidationBonus: "10750",
@@ -160,13 +145,11 @@ export const strategyCETH: IReserveParams = {
   reserveFactor: "1000",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: false,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyPUNK: IReserveParams = {
   strategy: rateStrategyXETH,
-  auctionStrategy: auctionStrategyExp,
+  auctionStrategy: auctionStrategyZero,
   baseLTVAsCollateral: "6900",
   liquidationThreshold: "8100",
   liquidationBonus: "10750",
@@ -177,13 +160,11 @@ export const strategyPUNK: IReserveParams = {
   reserveFactor: "1000",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: false,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyParaSpace: IReserveParams = {
   strategy: rateStrategyParaSpace,
-  auctionStrategy: auctionStrategyExp,
+  auctionStrategy: auctionStrategyZero,
   baseLTVAsCollateral: "2000",
   liquidationThreshold: "7000",
   liquidationBonus: "10500",
@@ -194,8 +175,6 @@ export const strategyParaSpace: IReserveParams = {
   reserveFactor: "1000",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: false,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyBAYC: IReserveParams = {
@@ -211,8 +190,6 @@ export const strategyBAYC: IReserveParams = {
   reserveFactor: "0",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: true,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyWPUNKS: IReserveParams = {
@@ -228,8 +205,6 @@ export const strategyWPUNKS: IReserveParams = {
   reserveFactor: "0",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: true,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyMAYC: IReserveParams = {
@@ -245,8 +220,6 @@ export const strategyMAYC: IReserveParams = {
   reserveFactor: "0",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: true,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyDOODLES: IReserveParams = {
@@ -262,8 +235,6 @@ export const strategyDOODLES: IReserveParams = {
   reserveFactor: "0",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: true,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyMoonbird: IReserveParams = {
@@ -279,8 +250,6 @@ export const strategyMoonbird: IReserveParams = {
   reserveFactor: "0",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: true,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyMeebits: IReserveParams = {
@@ -296,8 +265,6 @@ export const strategyMeebits: IReserveParams = {
   reserveFactor: "0",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: true,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyAzuki: IReserveParams = {
@@ -313,8 +280,6 @@ export const strategyAzuki: IReserveParams = {
   reserveFactor: "0",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: true,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyOthr: IReserveParams = {
@@ -330,8 +295,6 @@ export const strategyOthr: IReserveParams = {
   reserveFactor: "0",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: true,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyClonex: IReserveParams = {
@@ -347,16 +310,14 @@ export const strategyClonex: IReserveParams = {
   reserveFactor: "0",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: true,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };
 
 export const strategyUniswapV3: IReserveParams = {
   strategy: rateStrategyNFT,
-  auctionStrategy: auctionStrategyExp,
+  auctionStrategy: auctionStrategyZero,
   baseLTVAsCollateral: "3000",
   liquidationThreshold: "7000",
-  liquidationBonus: "10500",
+  liquidationBonus: "10000",
   borrowingEnabled: false,
   stableBorrowRateEnabled: false,
   reserveDecimals: "0",
@@ -364,6 +325,4 @@ export const strategyUniswapV3: IReserveParams = {
   reserveFactor: "0",
   borrowCap: "0",
   supplyCap: "0",
-  auctionEnabled: false,
-  auctionRecoveryHealthFactor: "1500000000000000000",
 };

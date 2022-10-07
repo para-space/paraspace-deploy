@@ -112,8 +112,6 @@ const runScript = async () => {
     reserveFactor: "0",
     borrowCap: "0",
     supplyCap: "0",
-    auctionEnabled: true,
-    auctionRecoveryHealthFactor: "1500000000000000000",
   };
 
   const reservesParams = {
