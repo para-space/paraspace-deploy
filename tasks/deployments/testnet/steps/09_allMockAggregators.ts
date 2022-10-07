@@ -209,7 +209,7 @@ export const step_09 = async (verify = false) => {
         await deployUniswapDynamicConfigStrategy([
           uniswapManager,
           addressesProvider.address,
-        ])
+        ], verify)
       ).address;
       await poolConfigurator.setReserveDynamicConfigsStrategyAddress(
         uniswapToken.address,
@@ -373,7 +373,7 @@ export const step_09 = async (verify = false) => {
         await deployUniswapDynamicConfigStrategy([
           uniswapManager,
           addressesProvider.address,
-        ])
+        ], verify)
       ).address;
       await poolConfigurator.setReserveDynamicConfigsStrategyAddress(
         uniswapToken.address,
