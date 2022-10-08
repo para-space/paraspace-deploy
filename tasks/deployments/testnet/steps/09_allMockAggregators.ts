@@ -206,10 +206,10 @@ export const step_09 = async (verify = false) => {
       const uniswapManager = (await getNonfungiblePositionManager()).address;
 
       const dynamicConfigsStrategy = (
-        await deployUniswapDynamicConfigStrategy([
-          uniswapManager,
-          addressesProvider.address,
-        ])
+        await deployUniswapDynamicConfigStrategy(
+          [uniswapManager, addressesProvider.address],
+          verify
+        )
       ).address;
       await poolConfigurator.setReserveDynamicConfigsStrategyAddress(
         uniswapToken.address,
@@ -370,10 +370,10 @@ export const step_09 = async (verify = false) => {
       const uniswapManager = (await getNonfungiblePositionManager()).address;
 
       const dynamicConfigsStrategy = (
-        await deployUniswapDynamicConfigStrategy([
-          uniswapManager,
-          addressesProvider.address,
-        ])
+        await deployUniswapDynamicConfigStrategy(
+          [uniswapManager, addressesProvider.address],
+          verify
+        )
       ).address;
       await poolConfigurator.setReserveDynamicConfigsStrategyAddress(
         uniswapToken.address,
