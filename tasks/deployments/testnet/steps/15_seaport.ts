@@ -58,7 +58,7 @@ export const step_15 = async (verify = false) => {
         PARASPACE_SEAPORT_ID,
         seaport.address,
         seaportAdapter.address,
-        seaport.address,
+        conduitInstance.address,
         false
       )
     );
