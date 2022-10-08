@@ -43,7 +43,9 @@ export const step_15 = async (verify = false) => {
     );
     const conduitInstance = await getConduit(conduit);
     await waitForTx(
-      await conduitInstance.initialize(protocolDataProvider.address)
+      await conduitInstance.initialize(protocolDataProvider.address, {
+        gasLimit: 1000000
+      })
     );
     const zone = await createZone(pausableZoneController, paraSpaceAdmin);
     const seaport = await deploySeaport(conduitController.address, verify);
