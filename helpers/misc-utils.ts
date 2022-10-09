@@ -141,7 +141,9 @@ export const verifyContracts = async (limit = 1) => {
     ([key, value]) => {
       return (
         (!process.env.ETHERSCAN_VERIFICATION_CONTRACT ||
-          process.env.ETHERSCAN_VERIFICATION_CONTRACT.split(/\s?,\s?/).includes(key)) &&
+          process.env.ETHERSCAN_VERIFICATION_CONTRACT.split(/\s?,\s?/).includes(
+            key
+          )) &&
         !!value[network] &&
         Array.isArray(value[network].constructorArgs)
       );
