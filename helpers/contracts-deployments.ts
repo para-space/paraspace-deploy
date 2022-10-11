@@ -981,7 +981,7 @@ export const deployAllMockERC721Tokens = async (verify?: boolean) => {
             // code block
             break;
           case "DOODLE":
-            tokens[tokenSymbol] = await deployDOODLE([], verify);
+            tokens[tokenSymbol] = await deployDoodle([], verify);
             // code block
             break;
           case "AZUKI":
@@ -1212,7 +1212,7 @@ export const deployAllMockTokens = async (verify?: boolean) => {
             // code block
             break;
           case "DOODLE":
-            tokens[tokenSymbol] = await deployDOODLE([], verify);
+            tokens[tokenSymbol] = await deployDoodle([], verify);
             // code block
             break;
           case "AZUKI":
@@ -1673,7 +1673,7 @@ export const deployCloneX = async (args: [], verify?: boolean) =>
     verify
   );
 
-export const deployDOODLE = async (args: [], verify?: boolean) =>
+export const deployDoodle = async (args: [], verify?: boolean) =>
   withSaveAndVerify(
     await new Doodles__factory(await getFirstSigner()).deploy(...args),
     eContractid.Doodles,

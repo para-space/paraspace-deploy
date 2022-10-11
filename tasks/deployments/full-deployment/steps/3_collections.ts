@@ -48,6 +48,7 @@ import {
   MAINNET_CHAINID,
   RINKEBY_CHAINID,
 } from "../../../../helpers/hardhat-constants";
+import {auctionStrategyExp} from "../../../../market-config/auctionStrategies";
 
 const runScript = async () => {
   const ParaSpace_ORACLE = "0x08Eaf1C8c270a485DD9c8aebb2EDE3FcAe72e04f";
@@ -321,6 +322,7 @@ const runScript = async () => {
 
   const strategyNFT: IReserveParams = {
     strategy: rateStrategyAPE,
+    auctionStrategy: auctionStrategyExp,
     baseLTVAsCollateral: "3000",
     liquidationThreshold: "7000",
     liquidationBonus: "10500",
