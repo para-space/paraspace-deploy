@@ -22,7 +22,10 @@ import {
   getMintableERC721,
   getWETHMocked,
 } from "./contracts-getters";
-import {getEthersSignersAddresses} from "./contracts-helpers";
+import {
+  getEthersSignersAddresses,
+  normalizeLibraryAddresses,
+} from "./contracts-helpers";
 import {
   ProtocolDataProvider__factory,
   PToken__factory,
@@ -148,6 +151,7 @@ import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/Pool
 import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
 import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
 import {FormatTypes} from "ethers/lib/utils";
+import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/pool/PoolConfigurator__factory";
 
 declare let hre: HardhatRuntimeEnvironment;
 
@@ -204,11 +208,12 @@ export const deployConfiguratorLogicLibrary = async (verify?: boolean) =>
 
 export const deployPoolConfigurator = async (verify?: boolean) => {
   const configuratorLogic = await deployConfiguratorLogicLibrary(verify);
+  const libraries = {
+    ["contracts/protocol/libraries/logic/ConfiguratorLogic.sol:ConfiguratorLogic"]:
+      configuratorLogic.address,
+  };
   const poolConfiguratorImpl = await new PoolConfigurator__factory(
-    {
-      ["contracts/protocol/libraries/logic/ConfiguratorLogic.sol:ConfiguratorLogic"]:
-        configuratorLogic.address,
-    },
+    libraries,
     await getFirstSigner()
   ).deploy();
   await registerContractInJsonDb(
@@ -220,7 +225,8 @@ export const deployPoolConfigurator = async (verify?: boolean) => {
     poolConfiguratorImpl,
     eContractid.PoolConfigurator,
     [],
-    verify
+    verify,
+    normalizeLibraryAddresses(libraries)
   );
 };
 
@@ -284,7 +290,8 @@ export const deployLiquidationLogic = async (
     liquidationLibrary,
     eContractid.LiquidationLogic,
     [],
-    verify
+    verify,
+    normalizeLibraryAddresses(libraries)
   );
 };
 
@@ -315,13 +322,9 @@ export const deployPoolLogic = async (verify?: boolean) => {
   return withSaveAndVerify(poolLogic, eContractid.PoolLogic, [], verify);
 };
 
-export const deployLibraries = async (
+export const deployPoolCoreLibraries = async (
   verify?: boolean
-): Promise<
-  PoolCoreLibraryAddresses &
-    PoolMarketplaceLibraryAddresses &
-    PoolParametersLibraryAddresses
-> => {
+): Promise<PoolCoreLibraryAddresses> => {
   const supplyLogic = await deploySupplyLogic(verify);
   const borrowLogic = await deployBorrowLogic(verify);
   const liquidationLogic = await deployLiquidationLogic(
@@ -331,29 +334,8 @@ export const deployLibraries = async (
     },
     verify
   );
-  const poolLogic = await deployPoolLogic(verify);
   const flashClaim = await deployFlashClaimLogic(verify);
-  const marketplaceLogic = await deployMarketplaceLogic(
-    {
-      ["contracts/protocol/libraries/logic/SupplyLogic.sol:SupplyLogic"]:
-        supplyLogic.address,
-      ["contracts/protocol/libraries/logic/BorrowLogic.sol:BorrowLogic"]:
-        borrowLogic.address,
-    },
-    verify
-  );
 
-  // Hardcoded solidity placeholders, if any library changes path this will fail.
-  // The '__$PLACEHOLDER$__ can be calculated via solidity keccak, but the PoolLibraryAddresses Type seems to
-  // require a hardcoded string.
-  //
-  //  how-to:
-  //  1. PLACEHOLDER = solidityKeccak256(['string'], `${libPath}:${libName}`).slice(2, 36)
-  //  2. LIB_PLACEHOLDER = `__$${PLACEHOLDER}$__`
-  // or grab placeholders from PoolLibraryAddresses at Typechain generation.
-  //
-  // libPath example: contracts/libraries/logic/GenericLogic.sol
-  // libName example: GenericLogic
   return {
     ["contracts/protocol/libraries/logic/LiquidationLogic.sol:LiquidationLogic"]:
       liquidationLogic.address,
@@ -361,12 +343,29 @@ export const deployLibraries = async (
       supplyLogic.address,
     ["contracts/protocol/libraries/logic/BorrowLogic.sol:BorrowLogic"]:
       borrowLogic.address,
-    ["contracts/protocol/libraries/logic/PoolLogic.sol:PoolLogic"]:
-      poolLogic.address,
     ["contracts/protocol/libraries/logic/FlashClaimLogic.sol:FlashClaimLogic"]:
       flashClaim.address,
+  };
+};
+
+export const deployPoolMarketplaceLibraries = async (
+  coreLibraries: PoolCoreLibraryAddresses,
+  verify?: boolean
+): Promise<PoolMarketplaceLibraryAddresses> => {
+  const marketplaceLogic = await deployMarketplaceLogic(coreLibraries, verify);
+  return {
     ["contracts/protocol/libraries/logic/MarketplaceLogic.sol:MarketplaceLogic"]:
       marketplaceLogic.address,
+  };
+};
+
+export const deployPoolParametersLibraries = async (
+  verify?: boolean
+): Promise<PoolParametersLibraryAddresses> => {
+  const poolLogic = await deployPoolLogic(verify);
+  return {
+    ["contracts/protocol/libraries/logic/PoolLogic.sol:PoolLogic"]:
+      poolLogic.address,
   };
 };
 
@@ -409,17 +408,22 @@ export const deployPoolComponents = async (
   provider: string,
   verify?: boolean
 ) => {
-  const libraries = await deployLibraries(verify);
+  const coreLibraries = await deployPoolCoreLibraries(verify);
+  const marketplaceLibraries = await deployPoolMarketplaceLibraries(
+    coreLibraries,
+    verify
+  );
+  const parametersLibraries = await deployPoolParametersLibraries(verify);
 
   const poolCore = await new PoolCore__factory(
-    libraries,
+    coreLibraries,
     await getFirstSigner()
   ).deploy(provider);
 
   await registerContractInJsonDb(eContractid.PoolCore, poolCore, [provider]);
 
   const poolParameters = await new PoolParameters__factory(
-    libraries,
+    parametersLibraries,
     await getFirstSigner()
   ).deploy(provider);
 
@@ -428,7 +432,7 @@ export const deployPoolComponents = async (
   ]);
 
   const poolMarketplace = await new PoolMarketplace__factory(
-    libraries,
+    marketplaceLibraries,
     await getFirstSigner()
   ).deploy(provider);
 
@@ -445,6 +449,7 @@ export const deployPoolComponents = async (
       eContractid.PoolCore,
       [provider],
       verify,
+      normalizeLibraryAddresses(coreLibraries),
       poolCoreSelectors
     ),
     poolParameters: await withSaveAndVerify(
@@ -452,6 +457,7 @@ export const deployPoolComponents = async (
       eContractid.PoolParameters,
       [provider],
       verify,
+      normalizeLibraryAddresses(marketplaceLibraries),
       poolParametersSelectors
     ),
     poolMarketplace: await withSaveAndVerify(
@@ -459,6 +465,7 @@ export const deployPoolComponents = async (
       eContractid.PoolMarketplace,
       [provider],
       verify,
+      normalizeLibraryAddresses(parametersLibraries),
       poolMarketplaceSelectors
     ),
     poolCoreSelectors: poolCoreSelectors.map((s) => s.signature),
@@ -1924,7 +1931,8 @@ export const deployMarketplaceLogic = async (
     marketplaceLogic,
     eContractid.MarketplaceLogic,
     [],
-    verify
+    verify,
+    normalizeLibraryAddresses(libraries)
   );
 };
 
@@ -2134,13 +2142,14 @@ export const deployNonfungibleTokenPositionDescriptor = async (
     [],
     verify
   );
+  const libraries = {
+    NFTDescriptor: nftDescriptorLibraryContract.address,
+  };
   const nonfungibleTokenPositionDescriptorFactory = await (
     await DRE.ethers.getContractFactoryFromArtifact(
       nonfungibleTokenPositionDescriptor,
       {
-        libraries: {
-          NFTDescriptor: nftDescriptorLibraryContract.address,
-        },
+        libraries,
       }
     )
   )
@@ -2151,7 +2160,8 @@ export const deployNonfungibleTokenPositionDescriptor = async (
     nonfungibleTokenPositionDescriptorFactory,
     eContractid.NonfungibleTokenPositionDescriptor,
     [...args],
-    verify
+    verify,
+    libraries
   );
 };
 

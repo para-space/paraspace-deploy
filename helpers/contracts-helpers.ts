@@ -8,6 +8,7 @@ import {
   eContractid,
   tStringTokenSmallUnits,
   ConstructorArgs,
+  LibraryAddresses,
   // InitializableImmutableAdminUpgradeabilityProxy,
 } from "./types";
 import {
@@ -39,6 +40,11 @@ import {InitializableImmutableAdminUpgradeabilityProxy} from "../../types";
 import {decodeEvents} from "./seaport-helpers/events";
 import {expect} from "chai";
 import ParaSpaceConfig from "../market-config";
+import {LiquidationLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/LiquidationLogic__factory";
+import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/PoolCore__factory";
+import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
+import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
+import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/pool/PoolConfigurator__factory";
 
 export type MockTokenMap = {[symbol: string]: MintableERC20};
 export type MockTokenMapERC721 = {[symbol: string]: MintableERC721};
@@ -46,7 +52,9 @@ export type MockTokenMapERC721 = {[symbol: string]: MintableERC721};
 export const registerContractInJsonDb = async (
   contractId: string,
   contractInstance: Contract,
-  constructorArgs: ConstructorArgs = []
+  constructorArgs: ConstructorArgs = [],
+  libraries?: LibraryAddresses,
+  signatures?: iFunctionSignature[]
 ) => {
   const currentNetwork = DRE.network.name;
   const FORK = process.env.FORK;
@@ -65,14 +73,17 @@ export const registerContractInJsonDb = async (
     console.log();
   }
 
-  await getDb()
-    .set(`${contractId}.${currentNetwork}`, {
-      address: contractInstance.address,
-      deployer: contractInstance.deployTransaction.from,
-      constructorArgs,
-      verified: false,
-    })
-    .write();
+  const data = {
+    address: contractInstance.address,
+    deployer: contractInstance.deployTransaction.from,
+    constructorArgs,
+    verified: false,
+  };
+
+  if (signatures?.length) data["signatures"] = signatures;
+  if (libraries) data["libraries"] = libraries;
+
+  await getDb().set(`${contractId}.${currentNetwork}`, data).write();
 };
 
 export const insertContractAddressInDb = async (
@@ -101,15 +112,31 @@ export const insertFunctionSigaturesInDb = async (
     .write();
 };
 
+export const insertLibrariesInDb = async (
+  id: eContractid | string,
+  libraries: LibraryAddresses
+) => {
+  const old = (await getDb().get(`${id}.${DRE.network.name}`).value()) || {};
+  await getDb()
+    .set(`${id}.${DRE.network.name}`, {
+      ...old,
+      libraries,
+    })
+    .write();
+};
+
 export const rawInsertContractAddressInDb = async (
   id: string,
   address: tEthereumAddress
-) =>
+) => {
+  const old = (await getDb().get(`${id}.${DRE.network.name}`).value()) || {};
   await getDb()
     .set(`${id}.${DRE.network.name}`, {
+      ...old,
       address,
     })
     .write();
+};
 
 export const getEthersSigners = async (): Promise<Signer[]> => {
   const ethersSigners = await Promise.all(await DRE.ethers.getSigners());
@@ -140,22 +167,33 @@ export const verifyContract = async (
   return instance;
 };
 
+export const normalizeLibraryAddresses = (
+  libraries:
+    | LiquidationLogicLibraryAddresses
+    | PoolCoreLibraryAddresses
+    | PoolMarketplaceLibraryAddresses
+    | PoolParametersLibraryAddresses
+    | PoolConfiguratorLibraryAddresses
+): LibraryAddresses => {
+  return Object.keys(libraries).reduce((ite, cur) => {
+    ite[cur.split(":")[1]] = libraries[cur];
+    return ite;
+  }, {});
+};
+
 export const withSaveAndVerify = async <ContractType extends Contract>(
   instance: ContractType,
   id: string,
   args: ConstructorArgs,
   verify = true,
+  libraries?: LibraryAddresses,
   signatures?: iFunctionSignature[]
 ): Promise<ContractType> => {
   await waitForTx(instance.deployTransaction);
-  await registerContractInJsonDb(id, instance, args);
+  await registerContractInJsonDb(id, instance, args, libraries, signatures);
 
   if (verify) {
     await verifyContract(id, instance, args);
-  }
-
-  if (signatures?.length) {
-    await insertFunctionSigaturesInDb(id, signatures);
   }
 
   return instance;
