@@ -6,7 +6,7 @@ import {
   FORK_MAINNET_CHAINID,
   HARDHAT_CHAINID,
 } from "./hardhat-constants";
-import {tEthereumAddress} from "./types";
+import {ConstructorArgs, LibraryAddresses, tEthereumAddress} from "./types";
 import axios from "axios";
 
 const ALREADY_VERIFIED = "Already Verified";
@@ -25,8 +25,9 @@ const unableVerifyError = "Fail - Unable to verify";
 
 type VerificationArgs = {
   address: string;
-  constructorArgs: string | number | string[] | number[];
+  constructorArgs: ConstructorArgs;
   relatedSources?: true;
+  libraries?: LibraryAddresses;
 };
 
 export const SUPPORTED_ETHERSCAN_NETWORKS = [
@@ -86,14 +87,8 @@ const setIsVerified = async (
 export const verifyEtherscanContract = async (
   contractId: string,
   address: string,
-  constructorArguments: (
-    | string
-    | number
-    | boolean
-    | string[]
-    | number[]
-    | boolean[]
-  )[] = []
+  constructorArguments: ConstructorArgs = [],
+  libraries?: LibraryAddresses
 ) => {
   const currentNetwork = DRE.network.name;
   const currentNetworkChainId = DRE.network.config.chainId;
@@ -137,13 +132,14 @@ export const verifyEtherscanContract = async (
     });
     fs.writeSync(
       fd,
-      `module.exports = ${JSON.stringify([...constructorArguments])};`
+      `module.exports = ${JSON.stringify(constructorArguments)};`
     );
 
     const params: VerificationArgs = {
       address: address,
       constructorArgs: path,
       relatedSources: true,
+      libraries,
     };
     await runTaskWithRetry("verify", params, times, msDelay, cleanup);
     await setIsVerified(contractId, address, currentNetwork);

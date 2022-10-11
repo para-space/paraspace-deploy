@@ -7,6 +7,7 @@ import {
   tEthereumAddress,
   eContractid,
   tStringTokenSmallUnits,
+  ConstructorArgs,
   // InitializableImmutableAdminUpgradeabilityProxy,
 } from "./types";
 import {
@@ -45,14 +46,7 @@ export type MockTokenMapERC721 = {[symbol: string]: MintableERC721};
 export const registerContractInJsonDb = async (
   contractId: string,
   contractInstance: Contract,
-  constructorArgs: (
-    | string
-    | number
-    | boolean
-    | string[]
-    | number[]
-    | boolean[]
-  )[] = []
+  constructorArgs: ConstructorArgs = []
 ) => {
   const currentNetwork = DRE.network.name;
   const FORK = process.env.FORK;
@@ -137,7 +131,7 @@ export const getEthersSignersAddresses = async (): Promise<
 export const verifyContract = async (
   id: string,
   instance: Contract,
-  args: (string | number | boolean | string[] | number[] | boolean[])[]
+  args: ConstructorArgs
 ) => {
   if (usingTenderly()) {
     await verifyAtTenderly(id, instance);
@@ -149,7 +143,7 @@ export const verifyContract = async (
 export const withSaveAndVerify = async <ContractType extends Contract>(
   instance: ContractType,
   id: string,
-  args: (string | number | boolean | string[] | number[] | boolean[])[],
+  args: ConstructorArgs,
   verify = true,
   signatures?: iFunctionSignature[]
 ): Promise<ContractType> => {

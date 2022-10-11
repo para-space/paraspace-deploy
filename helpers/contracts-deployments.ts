@@ -318,9 +318,9 @@ export const deployPoolLogic = async (verify?: boolean) => {
 export const deployLibraries = async (
   verify?: boolean
 ): Promise<
-  | PoolCoreLibraryAddresses
-  | PoolMarketplaceLibraryAddresses
-  | PoolParametersLibraryAddresses
+  PoolCoreLibraryAddresses &
+    PoolMarketplaceLibraryAddresses &
+    PoolParametersLibraryAddresses
 > => {
   const supplyLogic = await deploySupplyLogic(verify);
   const borrowLogic = await deployBorrowLogic(verify);
@@ -412,14 +412,14 @@ export const deployPoolComponents = async (
   const libraries = await deployLibraries(verify);
 
   const poolCore = await new PoolCore__factory(
-    libraries as PoolCoreLibraryAddresses,
+    libraries,
     await getFirstSigner()
   ).deploy(provider);
 
   await registerContractInJsonDb(eContractid.PoolCore, poolCore, [provider]);
 
   const poolParameters = await new PoolParameters__factory(
-    libraries as PoolParametersLibraryAddresses,
+    libraries,
     await getFirstSigner()
   ).deploy(provider);
 
@@ -428,7 +428,7 @@ export const deployPoolComponents = async (
   ]);
 
   const poolMarketplace = await new PoolMarketplace__factory(
-    libraries as PoolMarketplaceLibraryAddresses,
+    libraries,
     await getFirstSigner()
   ).deploy(provider);
 

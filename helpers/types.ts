@@ -6,6 +6,14 @@ export interface SymbolMap<T> {
 
 export type eNetwork = eEthereumNetwork;
 
+export type ConstructorArgs =
+  | string
+  | number
+  | boolean
+  | (string | string[] | number | boolean)[];
+
+export type LibraryAddresses = {[key: string]: string};
+
 export enum eEthereumNetwork {
   kovan = "kovan",
   ropsten = "ropsten",
