@@ -45,12 +45,12 @@ export const merkleTree = (tokenIds: ethers.BigNumber[]) => {
   };
 };
 
-const getLayers = (elements: Buffer[]) => {
+const getLayers = (elements: Buffer[]): Buffer[][] => {
   if (elements.length === 0) {
     throw new Error("empty tree");
   }
 
-  const layers = [];
+  const layers: Buffer[][] = [];
   layers.push(elements.map((el) => Buffer.from(keccak256(el).slice(2), "hex")));
 
   // Get next layer until we reach the root
@@ -61,7 +61,7 @@ const getLayers = (elements: Buffer[]) => {
   return layers;
 };
 
-const getNextLayer = (elements: Buffer[]) => {
+const getNextLayer = (elements: Buffer[]): Buffer[] => {
   return elements.reduce((layer: Buffer[], el, idx, arr) => {
     if (idx % 2 === 0) {
       // Hash the current element with its pair element

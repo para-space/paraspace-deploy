@@ -9,9 +9,9 @@ import {printContracts, waitForTx} from "../../../helpers/misc-utils";
 // import {deployNFTFOracle} from "./steps/0_nft_oracle";
 import {
   deployACLManager,
-  deployPool,
   deployPoolAddressesProvider,
   deployPoolAddressesProviderRegistry,
+  deployPoolComponents,
   deployPoolConfigurator,
   deployProtocolDataProvider,
   deployPunkGateway,
@@ -38,6 +38,7 @@ import {getMainnetDeployedContracts} from "./steps/0.5_deployed_tokens";
 import {ETH_USD_ORACLE, PUNKS, WPUNKS} from "./helpers/constants";
 
 import dotenv from "dotenv";
+import {ZERO_ADDRESS} from "../../../helpers/constants";
 
 dotenv.config();
 
@@ -102,13 +103,61 @@ const deployAll = async (main: Signer, treasury: Signer) => {
     )
   );
 
-  const poolImpl = await deployPool(addressesProvider.address, verify);
+  const {
+    poolCore,
+    poolParameters,
+    poolMarketplace,
+    poolCoreSelectors,
+    poolParametersSelectors,
+    poolMarketplaceSelectors,
+  } = await deployPoolComponents(addressesProvider.address, verify);
 
   await waitForTx(
-    await addressesProvider.setPoolImpl(poolImpl.address, {gasLimit: 1000000})
+    await addressesProvider.updatePoolImpl(
+      [
+        {
+          implAddress: poolParameters.address,
+          action: 0,
+          functionSelectors: poolParametersSelectors,
+        },
+      ],
+      ZERO_ADDRESS,
+      "0x"
+    )
+  );
+
+  await waitForTx(
+    await addressesProvider.updatePoolImpl(
+      [
+        {
+          implAddress: poolMarketplace.address,
+          action: 0,
+          functionSelectors: poolMarketplaceSelectors,
+        },
+      ],
+      ZERO_ADDRESS,
+      "0x"
+    )
   );
 
   const poolAddress = await addressesProvider.getPool();
+
+  await waitForTx(
+    await addressesProvider.updatePoolImpl(
+      [
+        {
+          implAddress: poolCore.address,
+          action: 0,
+          functionSelectors: poolCoreSelectors,
+        },
+      ],
+      poolAddress,
+      poolCore.interface.encodeFunctionData("initialize", [
+        addressesProvider.address,
+      ])
+    )
+  );
+
   const poolProxy = await getPool(poolAddress);
 
   await insertContractAddressInDb(eContractid.Pool, poolProxy.address);
