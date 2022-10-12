@@ -148,7 +148,7 @@ export enum eContractid {
   UniswapV3 = "UniswapV3",
   UniswapV3Factory = "UniswapV3Factory",
   UniswapV3SwapRouter = "UniswapV3SwapRouter",
-  NftDescriptorLibrary = "NftDescriptorLibrary",
+  NFTDescriptor = "NFTDescriptor",
   NonfungibleTokenPositionDescriptor = "NonfungibleTokenPositionDescriptor",
   NonfungiblePositionManager = "NonfungiblePositionManager",
   UniswapV3OracleWrapper = "UniswapV3OracleWrapper",

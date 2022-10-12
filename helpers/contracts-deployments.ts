@@ -334,7 +334,7 @@ export const deployPoolCoreLibraries = async (
     },
     verify
   );
-  const flashClaim = await deployFlashClaimLogic(verify);
+  const flashClaimLogic = await deployFlashClaimLogic(verify);
 
   return {
     ["contracts/protocol/libraries/logic/LiquidationLogic.sol:LiquidationLogic"]:
@@ -344,7 +344,7 @@ export const deployPoolCoreLibraries = async (
     ["contracts/protocol/libraries/logic/BorrowLogic.sol:BorrowLogic"]:
       borrowLogic.address,
     ["contracts/protocol/libraries/logic/FlashClaimLogic.sol:FlashClaimLogic"]:
-      flashClaim.address,
+      flashClaimLogic.address,
   };
 };
 
@@ -2138,7 +2138,7 @@ export const deployNonfungibleTokenPositionDescriptor = async (
 
   const nftDescriptorLibraryContract = await withSaveAndVerify(
     nFTDescriptorFactory,
-    eContractid.NftDescriptorLibrary,
+    eContractid.NFTDescriptor,
     [],
     verify
   );

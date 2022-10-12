@@ -74,17 +74,17 @@ export const registerContractInJsonDb = async (
     console.log();
   }
 
-  const data = {
+  const value = {
     address: contractInstance.address,
     deployer: contractInstance.deployTransaction.from,
     constructorArgs,
     verified: false,
   };
 
-  if (signatures?.length) data["signatures"] = signatures;
-  if (libraries) data["libraries"] = libraries;
+  if (libraries) value["libraries"] = libraries;
+  if (signatures?.length) value["signatures"] = signatures;
 
-  await getDb().set(`${contractId}.${currentNetwork}`, data).write();
+  await getDb().set(`${contractId}.${currentNetwork}`, value).write();
 };
 
 export const insertContractAddressInDb = async (
