@@ -160,7 +160,7 @@ const deployAll = async (main: Signer, treasury: Signer) => {
 
   const poolProxy = await getPool(poolAddress);
 
-  await insertContractAddressInDb(eContractid.Pool, poolProxy.address);
+  await insertContractAddressInDb(eContractid.PoolProxy, poolProxy.address);
 
   const poolConfiguratorImpl = await deployPoolConfigurator(verify);
   await waitForTx(
@@ -172,7 +172,7 @@ const deployAll = async (main: Signer, treasury: Signer) => {
     await addressesProvider.getPoolConfigurator()
   );
   await insertContractAddressInDb(
-    eContractid.PoolConfigurator,
+    eContractid.PoolConfiguratorProxy,
     poolConfiguratorProxy.address
   );
 

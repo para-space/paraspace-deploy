@@ -224,7 +224,7 @@ export const deployPoolConfigurator = async (verify?: boolean) => {
   );
   return withSaveAndVerify(
     poolConfiguratorImpl,
-    eContractid.PoolConfigurator,
+    eContractid.PoolConfiguratorProxy,
     [],
     verify,
     libraries
@@ -1546,7 +1546,7 @@ export const deployWETHGateway = async (
 ) =>
   withSaveAndVerify(
     await new WETHGateway__factory(await getFirstSigner()).deploy(weth, pool),
-    eContractid.WETHGateway,
+    eContractid.WETHGatewayImpl,
     [weth, pool],
     verify
   );
@@ -1584,10 +1584,13 @@ export const deployMoonBirdsGateway = async (
     lib,
     await getFirstSigner()
   ).deploy(...args);
-  await insertContractAddressInDb(eContractid.MoonBirdsGateway, impl.address);
+  await insertContractAddressInDb(
+    eContractid.MoonBirdsGatewayImpl,
+    impl.address
+  );
   return withSaveAndVerify(
     impl,
-    eContractid.MoonBirdsGateway,
+    eContractid.MoonBirdsGatewayImpl,
     [...args],
     verify
   );
@@ -1771,10 +1774,12 @@ export const deployPunkGateway = async (
   const punkImpl = await new WPunkGateway__factory(
     await getFirstSigner()
   ).deploy(...args);
-  await registerContractInJsonDb(eContractid.WPunkGateway, punkImpl, [...args]);
+  await registerContractInJsonDb(eContractid.WPunkGatewayImpl, punkImpl, [
+    ...args,
+  ]);
   return withSaveAndVerify(
     punkImpl,
-    eContractid.WPunkGateway,
+    eContractid.WPunkGatewayImpl,
     [...args],
     verify
   );
@@ -2217,7 +2222,7 @@ export const deployUniswapV3Gateway = async (
       uniswap,
       pool
     ),
-    eContractid.UniswapV3Gateway,
+    eContractid.UniswapV3GatewayImpl,
     [uniswap, pool],
     verify
   );

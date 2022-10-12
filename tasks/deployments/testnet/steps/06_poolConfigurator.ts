@@ -40,7 +40,7 @@ export const step_06 = async (verify = false) => {
       )
     );
     await insertContractAddressInDb(
-      eContractid.PoolConfigurator,
+      eContractid.PoolConfiguratorProxy,
       poolConfiguratorProxy.address
     );
   } catch (error) {

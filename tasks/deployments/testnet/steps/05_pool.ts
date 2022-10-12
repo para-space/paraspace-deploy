@@ -70,7 +70,7 @@ export const step_05 = async (verify = false) => {
 
     const poolProxy = await getPool(poolAddress);
 
-    await insertContractAddressInDb(eContractid.Pool, poolProxy.address);
+    await insertContractAddressInDb(eContractid.PoolProxy, poolProxy.address);
   } catch (error) {
     console.error(error);
     process.exit(1);
