@@ -9,6 +9,7 @@ import {
   tStringTokenSmallUnits,
   ConstructorArgs,
   LibraryAddresses,
+  ParaSpaceLibraryAddresses,
   // InitializableImmutableAdminUpgradeabilityProxy,
 } from "./types";
 import {
@@ -158,27 +159,25 @@ export const getEthersSignersAddresses = async (): Promise<
 export const verifyContract = async (
   id: string,
   instance: Contract,
-  args: ConstructorArgs
+  args: ConstructorArgs,
+  libraries?: LibraryAddresses
 ) => {
   if (usingTenderly()) {
     await verifyAtTenderly(id, instance);
   }
-  await verifyEtherscanContract(id, instance.address, args);
+  await verifyEtherscanContract(id, instance.address, args, libraries);
   return instance;
 };
 
 export const normalizeLibraryAddresses = (
-  libraries:
-    | LiquidationLogicLibraryAddresses
-    | PoolCoreLibraryAddresses
-    | PoolMarketplaceLibraryAddresses
-    | PoolParametersLibraryAddresses
-    | PoolConfiguratorLibraryAddresses
-): LibraryAddresses => {
-  return Object.keys(libraries).reduce((ite, cur) => {
-    ite[cur.split(":")[1]] = libraries[cur];
-    return ite;
-  }, {});
+  libraries?: ParaSpaceLibraryAddresses
+): LibraryAddresses | undefined => {
+  if (libraries) {
+    return Object.keys(libraries).reduce((ite, cur) => {
+      ite[cur.split(":")[1]] = libraries[cur];
+      return ite;
+    }, {})
+  }
 };
 
 export const withSaveAndVerify = async <ContractType extends Contract>(
@@ -186,14 +185,15 @@ export const withSaveAndVerify = async <ContractType extends Contract>(
   id: string,
   args: ConstructorArgs,
   verify = true,
-  libraries?: LibraryAddresses,
+  libraries?: ParaSpaceLibraryAddresses,
   signatures?: iFunctionSignature[]
 ): Promise<ContractType> => {
+  const normalizedLibraries = normalizeLibraryAddresses(libraries)
   await waitForTx(instance.deployTransaction);
-  await registerContractInJsonDb(id, instance, args, libraries, signatures);
+  await registerContractInJsonDb(id, instance, args, normalizedLibraries, signatures);
 
   if (verify) {
-    await verifyContract(id, instance, args);
+    await verifyContract(id, instance, args, normalizedLibraries);
   }
 
   return instance;

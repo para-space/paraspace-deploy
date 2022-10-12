@@ -1,4 +1,9 @@
 import {BigNumber} from "ethers";
+import {LiquidationLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/LiquidationLogic__factory";
+import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/pool/PoolConfigurator__factory";
+import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/PoolCore__factory";
+import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
+import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
 
 export interface SymbolMap<T> {
   [symbol: string]: T;
@@ -13,6 +18,12 @@ export type ConstructorArgs =
   | (string | string[] | number | boolean)[];
 
 export type LibraryAddresses = {[key: string]: string};
+
+export type ParaSpaceLibraryAddresses = LiquidationLogicLibraryAddresses
+    | PoolCoreLibraryAddresses
+    | PoolMarketplaceLibraryAddresses
+    | PoolParametersLibraryAddresses
+    | PoolConfiguratorLibraryAddresses
 
 export enum eEthereumNetwork {
   kovan = "kovan",

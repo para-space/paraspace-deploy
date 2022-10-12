@@ -226,7 +226,7 @@ export const deployPoolConfigurator = async (verify?: boolean) => {
     eContractid.PoolConfigurator,
     [],
     verify,
-    normalizeLibraryAddresses(libraries)
+    libraries
   );
 };
 
@@ -291,7 +291,7 @@ export const deployLiquidationLogic = async (
     eContractid.LiquidationLogic,
     [],
     verify,
-    normalizeLibraryAddresses(libraries)
+    libraries
   );
 };
 
@@ -449,7 +449,7 @@ export const deployPoolComponents = async (
       eContractid.PoolCore,
       [provider],
       verify,
-      normalizeLibraryAddresses(coreLibraries),
+      coreLibraries,
       poolCoreSelectors
     ),
     poolParameters: await withSaveAndVerify(
@@ -457,7 +457,7 @@ export const deployPoolComponents = async (
       eContractid.PoolParameters,
       [provider],
       verify,
-      normalizeLibraryAddresses(marketplaceLibraries),
+      marketplaceLibraries,
       poolParametersSelectors
     ),
     poolMarketplace: await withSaveAndVerify(
@@ -465,7 +465,7 @@ export const deployPoolComponents = async (
       eContractid.PoolMarketplace,
       [provider],
       verify,
-      normalizeLibraryAddresses(parametersLibraries),
+      parametersLibraries,
       poolMarketplaceSelectors
     ),
     poolCoreSelectors: poolCoreSelectors.map((s) => s.signature),
