@@ -238,6 +238,7 @@ const verifyProxyContract = async (
     };
     const {data} = await axios.post(
       `https://${ETHERSCAN_APIS[network]}/api?module=contract&action=verifyproxycontract&apikey=${process.env.ETHERSCAN_KEY}`,
+      `address=${address}`,
       {
         headers,
       }
