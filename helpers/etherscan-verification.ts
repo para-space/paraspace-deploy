@@ -93,6 +93,16 @@ export const verifyEtherscanContract = async (
 ) => {
   const currentNetwork = DRE.network.name;
   const currentNetworkChainId = DRE.network.config.chainId;
+  const verifyContract = process.env.ETHERSCAN_VERIFICATION_CONTRACT;
+
+  if (
+    verifyContract
+      ?.trim()
+      .split(/\s?,\s?/)
+      .every((c) => c !== contractId)
+  ) {
+    return;
+  }
 
   let isVerified = await getIsVerified(contractId, address, currentNetwork);
   if (isVerified) {

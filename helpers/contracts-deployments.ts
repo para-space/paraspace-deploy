@@ -1580,14 +1580,14 @@ export const deployMoonBirdsGateway = async (
   args: [tEthereumAddress, tEthereumAddress],
   verify?: boolean
 ) => {
-  const lib = {
+  const libraries = {
     ["contracts/misc/MoonBirdHelper.sol:MoonBirdHelper"]: (
       await deployMoonbirdHelper(verify)
     ).address,
   };
 
   const impl = await new MoonBirdsGateway__factory(
-    lib,
+    libraries,
     await getFirstSigner()
   ).deploy(...args);
   await insertContractAddressInDb(
@@ -1598,7 +1598,8 @@ export const deployMoonBirdsGateway = async (
     impl,
     eContractid.MoonBirdsGatewayImpl,
     [...args],
-    verify
+    verify,
+    libraries
   );
 };
 

@@ -136,15 +136,9 @@ export const printContracts = () => {
 export const verifyContracts = async (limit = 1) => {
   const db = getDb();
   const network = DRE.network.name;
-  const verifyContract = process.env.ETHERSCAN_VERIFICATION_CONTRACT;
-
   const entries = Object.entries<DbEntry>(db.getState()).filter(
     ([key, value]) => {
-      return (
-        (!verifyContract || verifyContract.split(/\s?,\s?/).includes(key)) &&
-        !!value[network] &&
-        Array.isArray(value[network].constructorArgs)
-      );
+      return !!value[network] && Array.isArray(value[network].constructorArgs);
     }
   );
 
