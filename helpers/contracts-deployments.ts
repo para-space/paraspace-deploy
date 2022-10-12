@@ -152,6 +152,7 @@ import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/po
 import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
 import {FormatTypes} from "ethers/lib/utils";
 import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/pool/PoolConfigurator__factory";
+import _ from "lodash";
 
 declare let hre: HardhatRuntimeEnvironment;
 
@@ -352,7 +353,13 @@ export const deployPoolMarketplaceLibraries = async (
   coreLibraries: PoolCoreLibraryAddresses,
   verify?: boolean
 ): Promise<PoolMarketplaceLibraryAddresses> => {
-  const marketplaceLogic = await deployMarketplaceLogic(coreLibraries, verify);
+  const marketplaceLogic = await deployMarketplaceLogic(
+    _.pick(coreLibraries, [
+      "contracts/protocol/libraries/logic/SupplyLogic.sol:SupplyLogic",
+      "contracts/protocol/libraries/logic/BorrowLogic.sol:BorrowLogic",
+    ]),
+    verify
+  );
   return {
     ["contracts/protocol/libraries/logic/MarketplaceLogic.sol:MarketplaceLogic"]:
       marketplaceLogic.address,
