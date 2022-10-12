@@ -11,7 +11,7 @@ import {
   getReservesSetupHelper,
   getPoolAddressesProvider,
   getPoolConfiguratorProxy,
-  getPool,
+  getPoolProxy,
 } from "./contracts-getters";
 import {rawInsertContractAddressInDb} from "./contracts-helpers";
 import {BigNumber, BigNumberish} from "ethers";
@@ -57,7 +57,7 @@ export const initReservesByHelper = async (
   const addressProvider = await getPoolAddressesProvider(
     poolAddressesProviderProxy
   );
-  const pool = await getPool(poolProxy);
+  const pool = await getPoolProxy(poolProxy);
   // CHUNK CONFIGURATION
   const initChunks = 4;
 

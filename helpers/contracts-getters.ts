@@ -92,6 +92,7 @@ import {
   INonfungiblePositionManager__factory,
   ISwapRouter__factory,
 } from "../../types";
+import {ZERO_ADDRESS} from "./constants";
 
 declare let hre: HardhatRuntimeEnvironment;
 
@@ -197,7 +198,7 @@ export const getLiquidationLogic = async (address?: tEthereumAddress) =>
 //     await getFirstSigner()
 //   );
 
-export const getPool = async (address?: tEthereumAddress) =>
+export const getPoolProxy = async (address?: tEthereumAddress) =>
   await IPool__factory.connect(
     address ||
       (
@@ -779,6 +780,20 @@ export const getProxyAdmin = async (proxyAddress: string) => {
     .decode(["address"], adminStorageSlot)
     .toString();
   return ethers.utils.getAddress(adminAddress);
+};
+
+export const isProxyAddress = async (proxyAddress: string) => {
+  const EIP1967_IMPLEMENTATION_SLOT =
+    "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc";
+  const implStorageSlot = await hre.ethers.provider.getStorageAt(
+    proxyAddress,
+    EIP1967_IMPLEMENTATION_SLOT,
+    "latest"
+  );
+  const implAddress = ethers.utils.defaultAbiCoder
+    .decode(["address"], implStorageSlot)
+    .toString();
+  return ethers.utils.getAddress(implAddress) != ZERO_ADDRESS;
 };
 
 export const getMockTokenFaucet = async (address?: tEthereumAddress) =>

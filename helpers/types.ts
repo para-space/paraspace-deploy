@@ -158,9 +158,9 @@ export enum eContractid {
   PTokenStETH = "PTokenStETH",
   FlashClaimRegistry = "FlashClaimRegistry",
   MockAirdropProject = "MockAirdropProject",
-  PoolCore = "PoolCore",
-  PoolMarketplace = "PoolMarketplace",
-  PoolParameters = "PoolParameters",
+  PoolCoreImpl = "PoolCoreImpl",
+  PoolMarketplaceImpl = "PoolMarketplaceImpl",
+  PoolParametersImpl = "PoolParametersImpl",
 }
 
 /*

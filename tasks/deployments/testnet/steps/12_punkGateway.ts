@@ -4,7 +4,7 @@ import {
 } from "../../../../helpers/contracts-deployments";
 import {
   getAllMockedTokens,
-  getPool,
+  getPoolProxy,
   getPoolAddressesProvider,
   getPunk,
 } from "../../../../helpers/contracts-getters";
@@ -18,7 +18,7 @@ export const step_12 = async (verify = false) => {
     const punks = await getPunk();
     const addressesProvider = await getPoolAddressesProvider();
     const poolAddress = await addressesProvider.getPool();
-    const poolProxy = await getPool(poolAddress);
+    const poolProxy = await getPoolProxy(poolAddress);
 
     const punkGateway = await deployPunkGateway(
       [punks.address, mockTokens.WPUNKS.address, poolProxy.address],

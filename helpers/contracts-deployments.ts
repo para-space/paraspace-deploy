@@ -427,25 +427,31 @@ export const deployPoolComponents = async (
     await getFirstSigner()
   ).deploy(provider);
 
-  await registerContractInJsonDb(eContractid.PoolCore, poolCore, [provider]);
+  await registerContractInJsonDb(eContractid.PoolCoreImpl, poolCore, [
+    provider,
+  ]);
 
   const poolParameters = await new PoolParameters__factory(
     parametersLibraries,
     await getFirstSigner()
   ).deploy(provider);
 
-  await registerContractInJsonDb(eContractid.PoolParameters, poolParameters, [
-    provider,
-  ]);
+  await registerContractInJsonDb(
+    eContractid.PoolParametersImpl,
+    poolParameters,
+    [provider]
+  );
 
   const poolMarketplace = await new PoolMarketplace__factory(
     marketplaceLibraries,
     await getFirstSigner()
   ).deploy(provider);
 
-  await registerContractInJsonDb(eContractid.PoolMarketplace, poolMarketplace, [
-    provider,
-  ]);
+  await registerContractInJsonDb(
+    eContractid.PoolMarketplaceImpl,
+    poolMarketplace,
+    [provider]
+  );
 
   const {poolCoreSelectors, poolParametersSelectors, poolMarketplaceSelectors} =
     checkPoolSignatures();
@@ -453,7 +459,7 @@ export const deployPoolComponents = async (
   return {
     poolCore: await withSaveAndVerify(
       poolCore,
-      eContractid.PoolCore,
+      eContractid.PoolCoreImpl,
       [provider],
       verify,
       coreLibraries,
@@ -461,7 +467,7 @@ export const deployPoolComponents = async (
     ),
     poolParameters: await withSaveAndVerify(
       poolParameters,
-      eContractid.PoolParameters,
+      eContractid.PoolParametersImpl,
       [provider],
       verify,
       parametersLibraries,
@@ -469,7 +475,7 @@ export const deployPoolComponents = async (
     ),
     poolMarketplace: await withSaveAndVerify(
       poolMarketplace,
-      eContractid.PoolMarketplace,
+      eContractid.PoolMarketplaceImpl,
       [provider],
       verify,
       marketplaceLibraries,

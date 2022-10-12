@@ -7,6 +7,7 @@ import {
 } from "./hardhat-constants";
 import {ConstructorArgs, LibraryAddresses, tEthereumAddress} from "./types";
 import axios from "axios";
+import {isProxyAddress} from "./contracts-getters";
 
 const ALREADY_VERIFIED = "Already Verified";
 
@@ -58,8 +59,8 @@ const getIsVerified = async (
   return (
     value?.address == address &&
     (value?.verified ||
-      (ETHERSCAN_APIS[network] &&
-        (await hasVerifiedSourceCode(address, network))))
+      ((await hasVerifiedSourceCode(address, network)) &&
+        (await setIsVerified(contractId, address, network))))
   );
 };
 
@@ -73,6 +74,10 @@ const setIsVerified = async (
   const value = await db.get(key).value();
   if (value?.address != address || value?.verified) {
     return;
+  }
+
+  if (await isProxyAddress(address)) {
+    await verifyProxyContract(address, network);
   }
 
   await db
@@ -91,10 +96,9 @@ export const verifyEtherscanContract = async (
 ) => {
   const currentNetwork = DRE.network.name;
   const currentNetworkChainId = DRE.network.config.chainId;
-  const isVerified = await getIsVerified(contractId, address, currentNetwork);
 
+  let isVerified = await getIsVerified(contractId, address, currentNetwork);
   if (isVerified) {
-    await setIsVerified(contractId, address, currentNetwork);
     return;
   }
 
@@ -133,15 +137,15 @@ export const verifyEtherscanContract = async (
       libraries,
     };
     await runTaskWithRetry("verify:verify", params, times, msDelay);
-    await setIsVerified(contractId, address, currentNetwork);
+    isVerified = true;
     // eslint-disable-next-line
   } catch (error: any) {
     const errMsg = error.message || error;
     console.error(errMsg);
-    if (errMsg.includes(ALREADY_VERIFIED)) {
-      await setIsVerified(contractId, address, currentNetwork);
-    }
+    isVerified = errMsg.includes(ALREADY_VERIFIED);
   }
+
+  if (isVerified) await setIsVerified(contractId, address, currentNetwork);
 };
 
 export const runTaskWithRetry = async (
@@ -202,16 +206,37 @@ const hasVerifiedSourceCode = async (
   address: tEthereumAddress,
   network: string
 ): Promise<boolean> => {
-  const apiBase = ETHERSCAN_APIS[network];
   try {
     const {data} = await axios.get(
-      `https://${apiBase}/api?module=contract&action=getsourcecode&address=${address}&apikey=${process.env.ETHERSCAN_KEY}`
+      `https://${ETHERSCAN_APIS[network]}/api?module=contract&action=getsourcecode&address=${address}&apikey=${process.env.ETHERSCAN_KEY}`
     );
     return (
       data.status === "1" &&
       data.message === "OK" &&
       data.result.length > 0 &&
       data.result.some(({SourceCode}) => !!SourceCode)
+    );
+  } catch (e) {
+    return false;
+  }
+};
+
+const verifyProxyContract = async (
+  address: tEthereumAddress,
+  network: string
+): Promise<boolean> => {
+  try {
+    const headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+    };
+    const {data} = await axios.post(
+      `https://${ETHERSCAN_APIS[network]}/api?module=contract&action=verifyproxycontract&apikey=${process.env.ETHERSCAN_KEY}`,
+      {
+        headers,
+      }
+    );
+    return (
+      data.status === "1" && data.message === "OK" && data.result.length > 0
     );
   } catch (e) {
     return false;
