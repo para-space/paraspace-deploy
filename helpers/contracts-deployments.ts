@@ -1932,7 +1932,7 @@ export const deployMarketplaceLogic = async (
     eContractid.MarketplaceLogic,
     [],
     verify,
-    normalizeLibraryAddresses(libraries)
+    libraries
   );
 };
 

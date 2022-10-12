@@ -174,9 +174,10 @@ export const normalizeLibraryAddresses = (
 ): LibraryAddresses | undefined => {
   if (libraries) {
     return Object.keys(libraries).reduce((ite, cur) => {
-      ite[cur.split(":")[1]] = libraries[cur];
+      const parts = cur.split(":");
+      ite[parts[parts.length - 1]] = libraries[cur];
       return ite;
-    }, {})
+    }, {});
   }
 };
 
@@ -188,9 +189,15 @@ export const withSaveAndVerify = async <ContractType extends Contract>(
   libraries?: ParaSpaceLibraryAddresses,
   signatures?: iFunctionSignature[]
 ): Promise<ContractType> => {
-  const normalizedLibraries = normalizeLibraryAddresses(libraries)
+  const normalizedLibraries = normalizeLibraryAddresses(libraries);
   await waitForTx(instance.deployTransaction);
-  await registerContractInJsonDb(id, instance, args, normalizedLibraries, signatures);
+  await registerContractInJsonDb(
+    id,
+    instance,
+    args,
+    normalizedLibraries,
+    signatures
+  );
 
   if (verify) {
     await verifyContract(id, instance, args, normalizedLibraries);

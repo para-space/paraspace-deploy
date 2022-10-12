@@ -148,7 +148,7 @@ export const runTaskWithRetry = async (
   task: string,
   params: VerificationArgs,
   times: number,
-  msDelay: number,
+  msDelay: number
 ) => {
   let counter = times;
   await delay(msDelay);

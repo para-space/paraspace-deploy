@@ -19,11 +19,13 @@ export type ConstructorArgs =
 
 export type LibraryAddresses = {[key: string]: string};
 
-export type ParaSpaceLibraryAddresses = LiquidationLogicLibraryAddresses
-    | PoolCoreLibraryAddresses
-    | PoolMarketplaceLibraryAddresses
-    | PoolParametersLibraryAddresses
-    | PoolConfiguratorLibraryAddresses
+export type ParaSpaceLibraryAddresses =
+  | LiquidationLogicLibraryAddresses
+  | PoolCoreLibraryAddresses
+  | PoolMarketplaceLibraryAddresses
+  | PoolParametersLibraryAddresses
+  | PoolConfiguratorLibraryAddresses
+  | {["NFTDescriptor"]: string};
 
 export enum eEthereumNetwork {
   kovan = "kovan",
