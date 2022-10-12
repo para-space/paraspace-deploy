@@ -1,5 +1,4 @@
 import fs from "fs";
-import {file} from "tmp-promise";
 import {DRE, getDb} from "./misc-utils";
 import {
   COVERAGE_CHAINID,
@@ -25,7 +24,7 @@ const unableVerifyError = "Fail - Unable to verify";
 
 type VerificationArgs = {
   address: string;
-  constructorArgs: ConstructorArgs;
+  constructorArguments: ConstructorArgs;
   relatedSources?: true;
   libraries?: LibraryAddresses;
 };
@@ -126,22 +125,14 @@ export const verifyEtherscanContract = async (
     const msDelay = 3000;
     const times = 3;
     // Write a temporal file to host complex parameters for buidler-etherscan https://github.com/nomiclabs/buidler/tree/development/packages/buidler-etherscan#complex-arguments
-    const {fd, path, cleanup} = await file({
-      prefix: "verify-params-",
-      postfix: ".js",
-    });
-    fs.writeSync(
-      fd,
-      `module.exports = ${JSON.stringify(constructorArguments)};`
-    );
 
     const params: VerificationArgs = {
-      address: address,
-      constructorArgs: path,
+      address,
+      constructorArguments,
       relatedSources: true,
       libraries,
     };
-    await runTaskWithRetry("verify", params, times, msDelay, cleanup);
+    await runTaskWithRetry("verify", params, times, msDelay);
     await setIsVerified(contractId, address, currentNetwork);
     // eslint-disable-next-line
   } catch (error: any) {
@@ -158,7 +149,6 @@ export const runTaskWithRetry = async (
   params: VerificationArgs,
   times: number,
   msDelay: number,
-  cleanup: () => void
 ) => {
   let counter = times;
   await delay(msDelay);
@@ -166,7 +156,6 @@ export const runTaskWithRetry = async (
   try {
     if (times > 1) {
       await DRE.run(task, params);
-      await cleanup();
       return Promise.resolve();
     } else if (times === 1) {
       console.log(
@@ -174,10 +163,8 @@ export const runTaskWithRetry = async (
       );
       delete params.relatedSources;
       await DRE.run(task, params);
-      await cleanup();
       return Promise.resolve();
     } else {
-      await cleanup();
       const errMsg =
         "[ETHERSCAN][ERROR] Errors after all the retries, check the logs for more information.";
       return Promise.reject(new Error(errMsg));
@@ -207,7 +194,7 @@ export const runTaskWithRetry = async (
       );
       delete params.relatedSources;
     }
-    await runTaskWithRetry(task, params, counter, msDelay, cleanup);
+    await runTaskWithRetry(task, params, counter, msDelay);
   }
 };
 
