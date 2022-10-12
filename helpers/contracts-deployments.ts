@@ -996,7 +996,7 @@ export const deployAllMockERC721Tokens = async (verify?: boolean) => {
             // code block
             break;
           case "MOONBIRD":
-            tokens[tokenSymbol] = await deployMoonbirds(
+            const moonbirdContract = await deployMoonbirds(
               [
                 "MOON",
                 "MOON",
@@ -1006,6 +1006,10 @@ export const deployAllMockERC721Tokens = async (verify?: boolean) => {
               ],
               verify
             );
+
+            await moonbirdContract.setNestingOpen(true);
+            tokens[tokenSymbol] = moonbirdContract;
+
             // code block
             break;
           case "MEEBITS":
