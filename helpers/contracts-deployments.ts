@@ -1780,9 +1780,6 @@ export const deployPunkGateway = async (
   const punkImpl = await new WPunkGateway__factory(
     await getFirstSigner()
   ).deploy(...args);
-  await registerContractInJsonDb(eContractid.WPunkGatewayImpl, punkImpl, [
-    ...args,
-  ]);
   return withSaveAndVerify(
     punkImpl,
     eContractid.WPunkGatewayImpl,
