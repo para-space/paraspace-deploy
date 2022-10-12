@@ -782,20 +782,6 @@ export const getProxyAdmin = async (proxyAddress: string) => {
   return ethers.utils.getAddress(adminAddress);
 };
 
-export const isProxyAddress = async (proxyAddress: string) => {
-  const EIP1967_IMPLEMENTATION_SLOT =
-    "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc";
-  const implStorageSlot = await hre.ethers.provider.getStorageAt(
-    proxyAddress,
-    EIP1967_IMPLEMENTATION_SLOT,
-    "latest"
-  );
-  const implAddress = ethers.utils.defaultAbiCoder
-    .decode(["address"], implStorageSlot)
-    .toString();
-  return ethers.utils.getAddress(implAddress) != ZERO_ADDRESS;
-};
-
 export const getMockTokenFaucet = async (address?: tEthereumAddress) =>
   await MockTokenFaucet__factory.connect(
     address ||

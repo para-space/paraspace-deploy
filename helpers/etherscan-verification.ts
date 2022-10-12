@@ -7,7 +7,6 @@ import {
 } from "./hardhat-constants";
 import {ConstructorArgs, LibraryAddresses, tEthereumAddress} from "./types";
 import axios from "axios";
-import {isProxyAddress} from "./contracts-getters";
 
 const ALREADY_VERIFIED = "Already Verified";
 
@@ -76,9 +75,7 @@ const setIsVerified = async (
     return;
   }
 
-  if (await isProxyAddress(address)) {
-    await verifyProxyContract(address, network);
-  }
+  await verifyProxyContract(address, network);
 
   await db
     .set(key, {
