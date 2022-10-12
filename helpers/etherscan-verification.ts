@@ -132,7 +132,7 @@ export const verifyEtherscanContract = async (
       relatedSources: true,
       libraries,
     };
-    await runTaskWithRetry("verify", params, times, msDelay);
+    await runTaskWithRetry("verify:verify", params, times, msDelay);
     await setIsVerified(contractId, address, currentNetwork);
     // eslint-disable-next-line
   } catch (error: any) {

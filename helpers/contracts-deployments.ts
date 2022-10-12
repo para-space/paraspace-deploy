@@ -457,7 +457,7 @@ export const deployPoolComponents = async (
       eContractid.PoolParameters,
       [provider],
       verify,
-      marketplaceLibraries,
+      parametersLibraries,
       poolParametersSelectors
     ),
     poolMarketplace: await withSaveAndVerify(
@@ -465,7 +465,7 @@ export const deployPoolComponents = async (
       eContractid.PoolMarketplace,
       [provider],
       verify,
-      parametersLibraries,
+      marketplaceLibraries,
       poolMarketplaceSelectors
     ),
     poolCoreSelectors: poolCoreSelectors.map((s) => s.signature),
