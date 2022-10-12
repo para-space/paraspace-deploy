@@ -2,7 +2,7 @@ import rawBRE from "hardhat";
 
 import {
   getParaSpaceOracle,
-  getPool,
+  getPoolProxy,
   getPoolAddressesProvider,
 } from "../../helpers/contracts-getters";
 import {getUiPoolDataProvider} from "../../helpers/contracts-getters";
@@ -13,7 +13,7 @@ const addhoc = async () => {
     "0x0cC1e31Ef750a5a9aFA1b5d25BD91f1BDf592Bdb"
   );
 
-  await getPool(await poolAddressesProvider.getPool());
+  await getPoolProxy(await poolAddressesProvider.getPool());
 
   const oracle = await getParaSpaceOracle(
     await poolAddressesProvider.getPriceOracle()

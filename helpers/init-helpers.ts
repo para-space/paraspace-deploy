@@ -11,7 +11,7 @@ import {
   getReservesSetupHelper,
   getPoolAddressesProvider,
   getPoolConfiguratorProxy,
-  getPool,
+  getPoolProxy,
 } from "./contracts-getters";
 import {rawInsertContractAddressInDb} from "./contracts-helpers";
 import {BigNumber, BigNumberish} from "ethers";
@@ -57,7 +57,7 @@ export const initReservesByHelper = async (
   const addressProvider = await getPoolAddressesProvider(
     poolAddressesProviderProxy
   );
-  const pool = await getPool(poolProxy);
+  const pool = await getPoolProxy(poolProxy);
   // CHUNK CONFIGURATION
   const initChunks = 4;
 
@@ -65,10 +65,6 @@ export const initReservesByHelper = async (
   const reserveTokens: string[] = [];
   const reserveInitDecimals: string[] = [];
   const reserveSymbols: string[] = [];
-
-  // const ERC20_ASSET_TYPE = 0;
-  // const ERC721_ASSET_TYPE = 1;
-  // const ERC1155_ASSET_TYPE = 2;
 
   const initInputParams: {
     xTokenImpl: string;
@@ -118,18 +114,6 @@ export const initReservesByHelper = async (
   let stableDebtTokenImplementationAddress = "";
   let variableDebtTokenImplementationAddress = "";
 
-  // NOT WORKING ON MATIC, DEPLOYING INDIVIDUAL IMPLs INSTEAD
-  // const tx1 = await waitForTx(
-  //   await stableAndVariableDeployer.initDeployment([ZERO_ADDRESS], ["1"])
-  // );
-  // console.log(tx1.events);
-  // tx1.events?.forEach((event, index) => {
-  //   stableDebtTokenImplementationAddress = event?.args?.stableToken;
-  //   variableDebtTokenImplementationAddress = event?.args?.variableToken;
-  //   rawInsertContractAddressInDb(`stableDebtTokenImpl`, stableDebtTokenImplementationAddress);
-  //   rawInsertContractAddressInDb(`variableDebtTokenImpl`, variableDebtTokenImplementationAddress);
-  // });
-  //gasUsage = gasUsage.add(tx1.gasUsed);
   if (!genericStableDebtTokenAddress) {
     stableDebtTokenImplementationAddress = await (
       await deployGenericStableDebtToken(pool.address, verify)
@@ -176,9 +160,6 @@ export const initReservesByHelper = async (
   nTokenMoonBirdImplementationAddress = nTokenMoonBirdImplementation.address;
 
   nTokenUniSwapV3ImplementationAddress = nTokenUniSwapV3.address;
-
-  rawInsertContractAddressInDb(`pTokenImpl`, pTokenImplementationAddress);
-  rawInsertContractAddressInDb(`nTokenImpl`, nTokenImplementationAddress);
 
   const delegatedAwareReserves = Object.entries(reservesParams).filter(
     ([, {xTokenImpl}]) => xTokenImpl === eContractid.DelegationAwarePToken

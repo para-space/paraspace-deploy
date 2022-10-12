@@ -1,10 +1,33 @@
 import {BigNumber} from "ethers";
+import {LiquidationLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/LiquidationLogic__factory";
+import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/pool/PoolConfigurator__factory";
+import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/PoolCore__factory";
+import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
+import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
+import {MoonBirdsGatewayLibraryAddresses} from "../../types/factories/ui/MoonBirdsGateway__factory";
 
 export interface SymbolMap<T> {
   [symbol: string]: T;
 }
 
 export type eNetwork = eEthereumNetwork;
+
+export type ConstructorArgs =
+  | string
+  | number
+  | boolean
+  | (string | string[] | number | boolean)[];
+
+export type LibraryAddresses = {[key: string]: string};
+
+export type ParaSpaceLibraryAddresses =
+  | LiquidationLogicLibraryAddresses
+  | PoolCoreLibraryAddresses
+  | PoolMarketplaceLibraryAddresses
+  | PoolParametersLibraryAddresses
+  | PoolConfiguratorLibraryAddresses
+  | MoonBirdsGatewayLibraryAddresses
+  | {["NFTDescriptor"]: string};
 
 export enum eEthereumNetwork {
   kovan = "kovan",
@@ -16,7 +39,6 @@ export enum eEthereumNetwork {
 }
 
 export enum eContractid {
-  Example = "Example",
   PoolAddressesProvider = "PoolAddressesProvider",
   MintableERC20 = "MintableERC20",
   MintableERC721 = "MintableERC721",
@@ -24,7 +46,7 @@ export enum eContractid {
   PoolAddressesProviderRegistry = "PoolAddressesProviderRegistry",
   ACLManager = "ACLManager",
   PoolParametersProvider = "PoolParametersProvider",
-  PoolConfigurator = "PoolConfigurator",
+  PoolConfiguratorProxy = "PoolConfiguratorProxy",
   ValidationLogic = "ValidationLogic",
   ReserveLogic = "ReserveLogic",
   GenericLogic = "GenericLogic",
@@ -36,9 +58,8 @@ export enum eContractid {
   PoolLogic = "PoolLogic",
   EModeLogic = "EModeLogic",
   ConfiguratorLogic = "ConfiguratorLogic",
-  Pool = "Pool",
+  PoolProxy = "PoolProxy",
   PriceOracle = "PriceOracle",
-  Proxy = "Proxy",
   MockAggregator = "MockAggregator",
   ParaSpaceOracle = "ParaSpaceOracle",
   DefaultReserveInterestRateStrategy = "DefaultReserveInterestRateStrategy",
@@ -75,12 +96,12 @@ export enum eContractid {
   UiPoolDataProvider = "UiPoolDataProvider",
   UiIncentiveDataProvider = "UiIncentiveDataProvider",
   WalletBalanceProvider = "WalletBalanceProvider",
-  WETHGateway = "WETHGateway",
+  WETHGatewayImpl = "WETHGatewayImpl",
   WETHGatewayProxy = "WETHGatewayProxy",
   ERC721OracleWrapper = "ERC721OracleWrapper",
   CryptoPunksMarket = "PUNKS",
   WPunk = "WPUNKS",
-  WPunkGateway = "WPunkGateway",
+  WPunkGatewayImpl = "WPunkGatewayImpl",
   WPunkGatewayProxy = "WPunkGatewayProxy",
   FlashClaimLogic = "FlashClaimLogic",
   NFTFloorOracle = "NFTFloorOracle",
@@ -98,8 +119,9 @@ export enum eContractid {
   Azuki = "AZUKI",
   CloneX = "CLONEX",
   OTHR = "OTHR",
-  MoonBirdsGateway = "MoonBirdsGateway",
+  MoonBirdsGatewayImpl = "MoonBirdsGatewayImpl",
   MoonBirdsGatewayProxy = "MoonBirdsGatewayProxy",
+  UniswapV3GatewayImpl = "UniswapV3GatewayImpl",
   UniswapV3GatewayProxy = "UniswapV3GatewayProxy",
   ConduitController = "ConduitController",
   PausableZoneController = "PausableZoneController",
@@ -127,11 +149,10 @@ export enum eContractid {
   UniswapV3 = "UniswapV3",
   UniswapV3Factory = "UniswapV3Factory",
   UniswapV3SwapRouter = "UniswapV3SwapRouter",
-  NftDescriptorLibrary = "NftDescriptorLibrary",
+  NFTDescriptor = "NFTDescriptor",
   NonfungibleTokenPositionDescriptor = "NonfungibleTokenPositionDescriptor",
   NonfungiblePositionManager = "NonfungiblePositionManager",
   UniswapV3OracleWrapper = "UniswapV3OracleWrapper",
-  UniswapV3Gateway = "UniswapV3Gateway",
   UniswapV3DynamicConfigsStrategy = "UniswapV3DynamicConfigsStrategy",
   StETH = "StETH",
   MockAToken = "MockAToken",
@@ -139,9 +160,9 @@ export enum eContractid {
   PTokenStETH = "PTokenStETH",
   FlashClaimRegistry = "FlashClaimRegistry",
   MockAirdropProject = "MockAirdropProject",
-  PoolCore = "PoolCore",
-  PoolMarketplace = "PoolMarketplace",
-  PoolParameters = "PoolParameters",
+  PoolCoreImpl = "PoolCoreImpl",
+  PoolMarketplaceImpl = "PoolMarketplaceImpl",
+  PoolParametersImpl = "PoolParametersImpl",
 }
 
 /*

@@ -26,7 +26,7 @@ import {
 import {eContractid, tEthereumAddress} from "../../../helpers/types";
 import {deployOracles} from "./steps/2_oracles";
 import {
-  getPool,
+  getPoolProxy,
   getPoolConfiguratorProxy,
 } from "../../../helpers/contracts-getters";
 import ParaSpaceConfig from "../../../market-config";
@@ -158,9 +158,9 @@ const deployAll = async (main: Signer, treasury: Signer) => {
     )
   );
 
-  const poolProxy = await getPool(poolAddress);
+  const poolProxy = await getPoolProxy(poolAddress);
 
-  await insertContractAddressInDb(eContractid.Pool, poolProxy.address);
+  await insertContractAddressInDb(eContractid.PoolProxy, poolProxy.address);
 
   const poolConfiguratorImpl = await deployPoolConfigurator(verify);
   await waitForTx(
@@ -172,7 +172,7 @@ const deployAll = async (main: Signer, treasury: Signer) => {
     await addressesProvider.getPoolConfigurator()
   );
   await insertContractAddressInDb(
-    eContractid.PoolConfigurator,
+    eContractid.PoolConfiguratorProxy,
     poolConfiguratorProxy.address
   );
 

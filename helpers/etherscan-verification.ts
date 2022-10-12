@@ -1,12 +1,11 @@
 import fs from "fs";
-import {file} from "tmp-promise";
 import {DRE, getDb} from "./misc-utils";
 import {
   COVERAGE_CHAINID,
   FORK_MAINNET_CHAINID,
   HARDHAT_CHAINID,
 } from "./hardhat-constants";
-import {tEthereumAddress} from "./types";
+import {ConstructorArgs, LibraryAddresses, tEthereumAddress} from "./types";
 import axios from "axios";
 
 const ALREADY_VERIFIED = "Already Verified";
@@ -25,8 +24,9 @@ const unableVerifyError = "Fail - Unable to verify";
 
 type VerificationArgs = {
   address: string;
-  constructorArgs: string | number | string[] | number[];
+  constructorArguments: ConstructorArgs;
   relatedSources?: true;
+  libraries?: LibraryAddresses;
 };
 
 export const SUPPORTED_ETHERSCAN_NETWORKS = [
@@ -58,8 +58,8 @@ const getIsVerified = async (
   return (
     value?.address == address &&
     (value?.verified ||
-      (ETHERSCAN_APIS[network] &&
-        (await hasVerifiedSourceCode(address, network))))
+      ((await hasVerifiedSourceCode(address, network)) &&
+        (await setIsVerified(contractId, address, network))))
   );
 };
 
@@ -75,6 +75,8 @@ const setIsVerified = async (
     return;
   }
 
+  await verifyProxyContract(address, network);
+
   await db
     .set(key, {
       ...value,
@@ -86,21 +88,24 @@ const setIsVerified = async (
 export const verifyEtherscanContract = async (
   contractId: string,
   address: string,
-  constructorArguments: (
-    | string
-    | number
-    | boolean
-    | string[]
-    | number[]
-    | boolean[]
-  )[] = []
+  constructorArguments: ConstructorArgs = [],
+  libraries?: LibraryAddresses
 ) => {
   const currentNetwork = DRE.network.name;
   const currentNetworkChainId = DRE.network.config.chainId;
-  const isVerified = await getIsVerified(contractId, address, currentNetwork);
+  const verifyContract = process.env.ETHERSCAN_VERIFICATION_CONTRACT;
 
+  if (
+    verifyContract
+      ?.trim()
+      .split(/\s?,\s?/)
+      .every((c) => c !== contractId)
+  ) {
+    return;
+  }
+
+  let isVerified = await getIsVerified(contractId, address, currentNetwork);
   if (isVerified) {
-    await setIsVerified(contractId, address, currentNetwork);
     return;
   }
 
@@ -131,38 +136,30 @@ export const verifyEtherscanContract = async (
     const msDelay = 3000;
     const times = 3;
     // Write a temporal file to host complex parameters for buidler-etherscan https://github.com/nomiclabs/buidler/tree/development/packages/buidler-etherscan#complex-arguments
-    const {fd, path, cleanup} = await file({
-      prefix: "verify-params-",
-      postfix: ".js",
-    });
-    fs.writeSync(
-      fd,
-      `module.exports = ${JSON.stringify([...constructorArguments])};`
-    );
 
     const params: VerificationArgs = {
-      address: address,
-      constructorArgs: path,
+      address,
+      constructorArguments,
       relatedSources: true,
+      libraries,
     };
-    await runTaskWithRetry("verify", params, times, msDelay, cleanup);
-    await setIsVerified(contractId, address, currentNetwork);
+    await runTaskWithRetry("verify:verify", params, times, msDelay);
+    isVerified = true;
     // eslint-disable-next-line
   } catch (error: any) {
     const errMsg = error.message || error;
     console.error(errMsg);
-    if (errMsg.includes(ALREADY_VERIFIED)) {
-      await setIsVerified(contractId, address, currentNetwork);
-    }
+    isVerified = errMsg.includes(ALREADY_VERIFIED);
   }
+
+  if (isVerified) await setIsVerified(contractId, address, currentNetwork);
 };
 
 export const runTaskWithRetry = async (
   task: string,
   params: VerificationArgs,
   times: number,
-  msDelay: number,
-  cleanup: () => void
+  msDelay: number
 ) => {
   let counter = times;
   await delay(msDelay);
@@ -170,7 +167,6 @@ export const runTaskWithRetry = async (
   try {
     if (times > 1) {
       await DRE.run(task, params);
-      await cleanup();
       return Promise.resolve();
     } else if (times === 1) {
       console.log(
@@ -178,10 +174,8 @@ export const runTaskWithRetry = async (
       );
       delete params.relatedSources;
       await DRE.run(task, params);
-      await cleanup();
       return Promise.resolve();
     } else {
-      await cleanup();
       const errMsg =
         "[ETHERSCAN][ERROR] Errors after all the retries, check the logs for more information.";
       return Promise.reject(new Error(errMsg));
@@ -211,7 +205,7 @@ export const runTaskWithRetry = async (
       );
       delete params.relatedSources;
     }
-    await runTaskWithRetry(task, params, counter, msDelay, cleanup);
+    await runTaskWithRetry(task, params, counter, msDelay);
   }
 };
 
@@ -219,16 +213,38 @@ const hasVerifiedSourceCode = async (
   address: tEthereumAddress,
   network: string
 ): Promise<boolean> => {
-  const apiBase = ETHERSCAN_APIS[network];
   try {
     const {data} = await axios.get(
-      `https://${apiBase}/api?module=contract&action=getsourcecode&address=${address}&apikey=${process.env.ETHERSCAN_KEY}`
+      `https://${ETHERSCAN_APIS[network]}/api?module=contract&action=getsourcecode&address=${address}&apikey=${process.env.ETHERSCAN_KEY}`
     );
     return (
       data.status === "1" &&
       data.message === "OK" &&
       data.result.length > 0 &&
       data.result.some(({SourceCode}) => !!SourceCode)
+    );
+  } catch (e) {
+    return false;
+  }
+};
+
+const verifyProxyContract = async (
+  address: tEthereumAddress,
+  network: string
+): Promise<boolean> => {
+  try {
+    const headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+    };
+    const {data} = await axios.post(
+      `https://${ETHERSCAN_APIS[network]}/api?module=contract&action=verifyproxycontract&apikey=${process.env.ETHERSCAN_KEY}`,
+      `address=${address}`,
+      {
+        headers,
+      }
+    );
+    return (
+      data.status === "1" && data.message === "OK" && data.result.length > 0
     );
   } catch (e) {
     return false;

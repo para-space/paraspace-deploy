@@ -92,6 +92,7 @@ import {
   INonfungiblePositionManager__factory,
   ISwapRouter__factory,
 } from "../../types";
+import {ZERO_ADDRESS} from "./constants";
 
 declare let hre: HardhatRuntimeEnvironment;
 
@@ -126,7 +127,7 @@ export const getPoolConfiguratorProxy = async (address?: tEthereumAddress) => {
     address ||
       (
         await getDb()
-          .get(`${eContractid.PoolConfigurator}.${DRE.network.name}`)
+          .get(`${eContractid.PoolConfiguratorProxy}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()
@@ -197,11 +198,13 @@ export const getLiquidationLogic = async (address?: tEthereumAddress) =>
 //     await getFirstSigner()
 //   );
 
-export const getPool = async (address?: tEthereumAddress) =>
+export const getPoolProxy = async (address?: tEthereumAddress) =>
   await IPool__factory.connect(
     address ||
       (
-        await getDb().get(`${eContractid.Pool}.${DRE.network.name}`).value()
+        await getDb()
+          .get(`${eContractid.PoolProxy}.${DRE.network.name}`)
+          .value()
       ).address,
     await getFirstSigner()
   );
@@ -484,7 +487,7 @@ export const getWETHGateway = async (address?: tEthereumAddress) =>
     address ||
       (
         await getDb()
-          .get(`${eContractid.WETHGateway}.${DRE.network.name}`)
+          .get(`${eContractid.WETHGatewayImpl}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()
@@ -506,7 +509,7 @@ export const getWPunkGateway = async (address?: tEthereumAddress) =>
     address ||
       (
         await getDb()
-          .get(`${eContractid.WPunkGateway}.${DRE.network.name}`)
+          .get(`${eContractid.WPunkGatewayImpl}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()
@@ -653,7 +656,7 @@ export const getMoonBirdsGateway = async (address?: tEthereumAddress) =>
     address ||
       (
         await getDb()
-          .get(`${eContractid.MoonBirdsGateway}.${DRE.network.name}`)
+          .get(`${eContractid.MoonBirdsGatewayImpl}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()
@@ -777,42 +780,6 @@ export const getProxyAdmin = async (proxyAddress: string) => {
     .decode(["address"], adminStorageSlot)
     .toString();
   return ethers.utils.getAddress(adminAddress);
-};
-
-export const getPoolLibraries = async () => {
-  return {
-    ["__$f598c634f2d943205ac23f707b80075cbb$__"]: (
-      await getDb()
-        .get(`${eContractid.LiquidationLogic}.${DRE.network.name}`)
-        .value()
-    ).address,
-    ["__$db79717e66442ee197e8271d032a066e34$__"]: (
-      await getDb()
-        .get(`${eContractid.SupplyLogic}.${DRE.network.name}`)
-        .value()
-    ).address,
-    ["__$e4b9550ff526a295e1233dea02821b9004$__"]: (
-      await getDb().get(`${eContractid.EModeLogic}.${DRE.network.name}`).value()
-    ).address,
-    ["__$c3724b8d563dc83a94e797176cddecb3b9$__"]: (
-      await getDb()
-        .get(`${eContractid.BorrowLogic}.${DRE.network.name}`)
-        .value()
-    ).address,
-    ["__$d5ddd09ae98762b8929dd85e54b218e259$__"]: (
-      await getDb()
-        .get(`${eContractid.FlashLoanLogic}.${DRE.network.name}`)
-        .value()
-    ).address,
-    ["__$563c746fa3df0f1858d85f6ef4258864be$__"]: (
-      await getDb().get(`${eContractid.PoolLogic}.${DRE.network.name}`).value()
-    ).address,
-    ["__$b06080f092f400a43662c3f835a4d9baa8$__"]: (
-      await getDb()
-        .get(`${eContractid.BridgeLogic}.${DRE.network.name}`)
-        .value()
-    ).address,
-  };
 };
 
 export const getMockTokenFaucet = async (address?: tEthereumAddress) =>

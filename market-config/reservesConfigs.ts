@@ -317,7 +317,7 @@ export const strategyUniswapV3: IReserveParams = {
   auctionStrategy: auctionStrategyZero,
   baseLTVAsCollateral: "3000",
   liquidationThreshold: "7000",
-  liquidationBonus: "10000",
+  liquidationBonus: "10500",
   borrowingEnabled: false,
   stableBorrowRateEnabled: false,
   reserveDecimals: "0",
