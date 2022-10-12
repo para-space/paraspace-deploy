@@ -1,5 +1,4 @@
 import {deployPoolAddressesProvider} from "../../../../helpers/contracts-deployments";
-import {isProxyAddress} from "../../../../helpers/contracts-getters";
 import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import ParaSpaceConfig from "../../../../market-config";
