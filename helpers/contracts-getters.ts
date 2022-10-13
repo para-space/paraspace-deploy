@@ -46,7 +46,6 @@ import {
   MockIncentivesController__factory,
   ERC721__factory,
   Moonbirds__factory,
-  MoonBirdsGateway__factory,
   ConduitController__factory,
   Seaport__factory,
   LooksRareExchange__factory,
@@ -651,34 +650,12 @@ export const getMoonBirds = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-export const getMoonBirdsGateway = async (address?: tEthereumAddress) =>
-  await MoonBirdsGateway__factory.connect(
-    address ||
-      (
-        await getDb()
-          .get(`${eContractid.MoonBirdsGatewayImpl}.${DRE.network.name}`)
-          .value()
-      ).address,
-    await getFirstSigner()
-  );
-
 export const getNTokenMoonBirds = async (address?: tEthereumAddress) =>
   await NTokenMoonBirds__factory.connect(
     address ||
       (
         await getDb()
           .get(`${eContractid.NTokenMoonBirds}.${DRE.network.name}`)
-          .value()
-      ).address,
-    await getFirstSigner()
-  );
-
-export const getMoonBirdsGatewayProxy = async (address?: tEthereumAddress) =>
-  await MoonBirdsGateway__factory.connect(
-    address ||
-      (
-        await getDb()
-          .get(`${eContractid.MoonBirdsGatewayProxy}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()

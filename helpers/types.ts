@@ -4,8 +4,6 @@ import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/p
 import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/PoolCore__factory";
 import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
 import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
-import {MoonBirdsGatewayLibraryAddresses} from "../../types/factories/ui/MoonBirdsGateway__factory";
-
 export interface SymbolMap<T> {
   [symbol: string]: T;
 }
@@ -26,7 +24,6 @@ export type ParaSpaceLibraryAddresses =
   | PoolMarketplaceLibraryAddresses
   | PoolParametersLibraryAddresses
   | PoolConfiguratorLibraryAddresses
-  | MoonBirdsGatewayLibraryAddresses
   | {["NFTDescriptor"]: string};
 
 export enum eEthereumNetwork {
@@ -119,8 +116,6 @@ export enum eContractid {
   Azuki = "AZUKI",
   CloneX = "CLONEX",
   OTHR = "OTHR",
-  MoonBirdsGatewayImpl = "MoonBirdsGatewayImpl",
-  MoonBirdsGatewayProxy = "MoonBirdsGatewayProxy",
   UniswapV3GatewayImpl = "UniswapV3GatewayImpl",
   UniswapV3GatewayProxy = "UniswapV3GatewayProxy",
   ConduitController = "ConduitController",

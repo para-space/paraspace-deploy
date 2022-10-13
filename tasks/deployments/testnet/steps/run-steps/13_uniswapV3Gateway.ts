@@ -1,5 +1,5 @@
 import rawBRE from "hardhat";
-import {step_13} from "../13_moonbirdsGateway";
+import {step_13} from "../13_uniswapV3Gateway";
 
 import dotenv from "dotenv";
 
@@ -11,7 +11,7 @@ async function main() {
   await rawBRE.run("set-DRE");
 
   await step_13(verify);
-  console.log("----------------- step 13 done ----------------- ");
+  console.log("----------------- step 14 done ----------------- ");
 }
 
 main()

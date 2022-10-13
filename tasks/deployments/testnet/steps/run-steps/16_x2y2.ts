@@ -1,10 +1,10 @@
 import rawBRE from "hardhat";
-import {step_17} from "../17_x2y2";
+import {step_16} from "../16_x2y2";
 
 async function main() {
   await rawBRE.run("set-DRE");
 
-  await step_17();
+  await step_16();
   console.log("----------------- step 17 done ----------------- ");
 }
 

@@ -11,8 +11,6 @@ import {
   deployMintableERC721,
   deployMockAggregator,
   deployMoonbirds,
-  deployMoonBirdsGateway,
-  deployMoonBirdsGatewayProxy,
   deployOTHR,
 } from "../../../../helpers/contracts-deployments";
 import {
@@ -165,7 +163,6 @@ const runScript = async () => {
         | Land
         | Meebits
         | Moonbirds;
-      // | Moonbirds;
     } = {};
 
     let counter = 0;
@@ -188,29 +185,7 @@ const runScript = async () => {
             "0x69C33aB569816F1D564a420490AbB894a44071Fb",
             "0x69C33aB569816F1D564a420490AbB894a44071Fb",
           ]);
-          // console.log("MOONBIRDS deployed");
-          //
-          const moonbirdsGateway = await deployMoonBirdsGateway([
-            tokens[tokenSymbol].address,
-            POOL,
-          ]);
-
-          const moonbirdsGatewayEncodedInitialize =
-            moonbirdsGateway.interface.encodeFunctionData(
-              "initialize"
-              // []
-            );
-          //
-          // // it is always 0x8129fc1c
-          // console.log(
-          //   "moonbirdsGatewayEncodedInitialize is ",
-          //   moonbirdsGatewayEncodedInitialize
-          // );
-          await deployMoonBirdsGatewayProxy(
-            await gatewayAdmin.getAddress(),
-            moonbirdsGateway.address,
-            moonbirdsGatewayEncodedInitialize
-          );
+          console.log("MOONBIRDS deployed");
         }
         // meebits
         if (counter === 1) {

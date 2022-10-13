@@ -108,7 +108,6 @@ import {
   X2Y2R1__factory,
   ERC721Delegate__factory,
   NTokenMoonBirds__factory,
-  MoonBirdsGateway__factory,
   UniswapV3OracleWrapper__factory,
   UniswapV3Gateway__factory,
   NTokenUniswapV3__factory,
@@ -1580,33 +1579,6 @@ export const deployWETHGatewayProxy = async (
   );
 };
 
-export const deployMoonBirdsGateway = async (
-  args: [tEthereumAddress, tEthereumAddress],
-  verify?: boolean
-) => {
-  const libraries = {
-    ["contracts/misc/MoonBirdHelper.sol:MoonBirdHelper"]: (
-      await deployMoonbirdHelper(verify)
-    ).address,
-  };
-
-  const impl = await new MoonBirdsGateway__factory(
-    libraries,
-    await getFirstSigner()
-  ).deploy(...args);
-  await insertContractAddressInDb(
-    eContractid.MoonBirdsGatewayImpl,
-    impl.address
-  );
-  return withSaveAndVerify(
-    impl,
-    eContractid.MoonBirdsGatewayImpl,
-    [...args],
-    verify,
-    libraries
-  );
-};
-
 export const deployMoonbirdHelper = async (verify?: boolean) => {
   const moonBirdHelperArtifact = await readArtifact(eContractid.MoonBirdHelper);
 
@@ -1619,25 +1591,6 @@ export const deployMoonbirdHelper = async (verify?: boolean) => {
   ).deployed();
 
   return withSaveAndVerify(moonBirdHelper, eContractid.PoolLogic, [], verify);
-};
-
-export const deployMoonBirdsGatewayProxy = async (
-  admin: string,
-  gateway: string,
-  initData: string,
-  verify?: boolean
-) => {
-  const moonGatewayProxy =
-    await new InitializableImmutableAdminUpgradeabilityProxy__factory(
-      await getFirstSigner()
-    ).deploy(admin);
-  await moonGatewayProxy["initialize(address,bytes)"](gateway, initData);
-  return withSaveAndVerify(
-    moonGatewayProxy,
-    eContractid.MoonBirdsGatewayProxy,
-    [admin],
-    verify
-  );
 };
 
 export const deployUniswapV3GatewayProxy = async (
