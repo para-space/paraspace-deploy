@@ -7,6 +7,7 @@ import {getPoolAddressesProvider} from "../../../../helpers/contracts-getters";
 import {X2Y2_ID} from "../../../../helpers/constants";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
+import rawBRE from "hardhat";
 
 export const step_17 = async (verify = false) => {
   try {
@@ -49,3 +50,17 @@ export const step_17 = async (verify = false) => {
     process.exit(1);
   }
 };
+
+async function main() {
+  await rawBRE.run("set-DRE");
+
+  await step_17();
+  console.log("----------------- step 17 done ----------------- ");
+}
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

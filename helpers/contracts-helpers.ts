@@ -10,7 +10,6 @@ import {
   ConstructorArgs,
   LibraryAddresses,
   ParaSpaceLibraryAddresses,
-  // InitializableImmutableAdminUpgradeabilityProxy,
 } from "./types";
 import {
   ConsiderationItem,
