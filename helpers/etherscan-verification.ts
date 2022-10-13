@@ -7,6 +7,7 @@ import {
 } from "./hardhat-constants";
 import {ConstructorArgs, LibraryAddresses, tEthereumAddress} from "./types";
 import axios from "axios";
+import minimatch from "minimatch";
 
 const ALREADY_VERIFIED = "Already Verified";
 
@@ -93,14 +94,10 @@ export const verifyEtherscanContract = async (
 ) => {
   const currentNetwork = DRE.network.name;
   const currentNetworkChainId = DRE.network.config.chainId;
-  const verifyContract = process.env.ETHERSCAN_VERIFICATION_CONTRACT;
+  const verifyContracts =
+    process.env.ETHERSCAN_VERIFICATION_CONTRACT?.trim().split(/\s?,\s?/);
 
-  if (
-    verifyContract
-      ?.trim()
-      .split(/\s?,\s?/)
-      .every((c) => c !== contractId)
-  ) {
+  if (verifyContracts?.every((p) => !minimatch(contractId, p))) {
     return;
   }
 
