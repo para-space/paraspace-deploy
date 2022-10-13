@@ -94,10 +94,10 @@ export const verifyEtherscanContract = async (
 ) => {
   const currentNetwork = DRE.network.name;
   const currentNetworkChainId = DRE.network.config.chainId;
-  const verifyContracts =
+  const verifyContract =
     process.env.ETHERSCAN_VERIFICATION_CONTRACT?.trim().split(/\s?,\s?/);
 
-  if (verifyContracts?.every((p) => !minimatch(contractId, p))) {
+  if (verifyContract?.every((p) => !minimatch(contractId, p))) {
     return;
   }
 
