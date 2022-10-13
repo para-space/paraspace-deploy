@@ -327,7 +327,6 @@ const runScript = async () => {
     liquidationThreshold: "7000",
     liquidationBonus: "10500",
     borrowingEnabled: false,
-    stableBorrowRateEnabled: false,
     reserveDecimals: "0",
     xTokenImpl: eContractid.NToken,
     reserveFactor: "0",
@@ -343,19 +342,13 @@ const runScript = async () => {
     CloneX: strategyNFT,
   };
 
-  const {
-    PTokenNamePrefix,
-    StableDebtTokenNamePrefix,
-    VariableDebtTokenNamePrefix,
-    SymbolPrefix,
-  } = config;
+  const {PTokenNamePrefix, VariableDebtTokenNamePrefix, SymbolPrefix} = config;
 
   const admin = await paraSpaceAdmin.getAddress();
   await initReservesByHelper(
     reservesParams,
     tokenSymbolToAddress,
     PTokenNamePrefix,
-    StableDebtTokenNamePrefix,
     VariableDebtTokenNamePrefix,
     SymbolPrefix,
     admin,

@@ -153,12 +153,8 @@ export const step_09 = async (verify = false) => {
 
       const config = ParaSpaceConfig;
 
-      const {
-        PTokenNamePrefix,
-        StableDebtTokenNamePrefix,
-        VariableDebtTokenNamePrefix,
-        SymbolPrefix,
-      } = config;
+      const {PTokenNamePrefix, VariableDebtTokenNamePrefix, SymbolPrefix} =
+        config;
       const treasuryAddress = config.ReserveFactorTreasuryAddress;
 
       // Add an IncentivesController
@@ -181,7 +177,6 @@ export const step_09 = async (verify = false) => {
         reservesParams,
         allReservesAddresses,
         PTokenNamePrefix,
-        StableDebtTokenNamePrefix,
         VariableDebtTokenNamePrefix,
         SymbolPrefix,
         admin,
@@ -334,12 +329,8 @@ export const step_09 = async (verify = false) => {
 
       const config = ParaSpaceConfig;
 
-      const {
-        PTokenNamePrefix,
-        StableDebtTokenNamePrefix,
-        VariableDebtTokenNamePrefix,
-        SymbolPrefix,
-      } = config;
+      const {PTokenNamePrefix, VariableDebtTokenNamePrefix, SymbolPrefix} =
+        config;
       const treasuryAddress = config.ReserveFactorTreasuryAddress;
 
       // Add an IncentivesController
@@ -351,7 +342,6 @@ export const step_09 = async (verify = false) => {
         reservesParams,
         allReservesAddresses,
         PTokenNamePrefix,
-        StableDebtTokenNamePrefix,
         VariableDebtTokenNamePrefix,
         SymbolPrefix,
         admin,

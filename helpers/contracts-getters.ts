@@ -11,10 +11,8 @@ import {
   MintableERC20__factory,
   MintableERC721__factory,
   // MockFlashLoanReceiver__factory,
-  MockStableDebtToken__factory,
   MockVariableDebtToken__factory,
   PriceOracle__factory,
-  StableDebtToken__factory,
   VariableDebtToken__factory,
   WETH9Mocked__factory,
   ParaSpaceOracle__factory,
@@ -258,17 +256,6 @@ export const getNToken = async (address?: tEthereumAddress) =>
     address ||
       (
         await getDb().get(`${eContractid.NToken}.${DRE.network.name}`).value()
-      ).address,
-    await getFirstSigner()
-  );
-
-export const getStableDebtToken = async (address?: tEthereumAddress) =>
-  await StableDebtToken__factory.connect(
-    address ||
-      (
-        await getDb()
-          .get(`${eContractid.StableDebtToken}.${DRE.network.name}`)
-          .value()
       ).address,
     await getFirstSigner()
   );
@@ -536,26 +523,6 @@ export const getMockVariableDebtToken = async (address?: tEthereumAddress) =>
       ).address,
     await getFirstSigner()
   );
-
-export const getMockStableDebtToken = async (address?: tEthereumAddress) =>
-  await MockStableDebtToken__factory.connect(
-    address ||
-      (
-        await getDb()
-          .get(`${eContractid.MockStableDebtToken}.${DRE.network.name}`)
-          .value()
-      ).address,
-    await getFirstSigner()
-  );
-
-// export const getMockPool = async (address?: tEthereumAddress) =>
-//   await MockPool__factory.connect(
-//     address ||
-//     (
-//       await getDb().get(`${eContractid.MockPool}.${DRE.network.name}`).value()
-//     ).address,
-//     await getFirstSigner()
-//   );
 
 export const getMockInitializableImple = async (address?: tEthereumAddress) =>
   await MockInitializableImple__factory.connect(

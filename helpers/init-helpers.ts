@@ -20,7 +20,6 @@ import {
   deployDelegationAwarePTokenImpl,
   deployGenericPTokenImpl,
   deployGenericNTokenImpl,
-  deployGenericStableDebtToken,
   deployGenericVariableDebtToken,
   deployGenericMoonbirdNTokenImpl,
   deployUniswapV3NTokenImpl,
@@ -34,7 +33,6 @@ export const initReservesByHelper = async (
   reservesParams: iMultiPoolsAssets<IReserveParams>,
   tokenAddresses: {[symbol: string]: tEthereumAddress},
   xTokenNamePrefix: string,
-  stableDebtTokenNamePrefix: string,
   variableDebtTokenNamePrefix: string,
   symbolPrefix: string,
   admin: tEthereumAddress,
@@ -43,7 +41,6 @@ export const initReservesByHelper = async (
   verify: boolean,
   genericPTokenImplAddress?: tEthereumAddress,
   genericNTokenImplAddress?: tEthereumAddress,
-  genericStableDebtTokenAddress?: tEthereumAddress,
   genericVariableDebtTokenAddress?: tEthereumAddress,
   defaultReserveInterestRateStrategyAddress?: tEthereumAddress,
   defaultReserveAuctionStrategyAddress?: tEthereumAddress,
@@ -69,7 +66,6 @@ export const initReservesByHelper = async (
   const initInputParams: {
     xTokenImpl: string;
     assetType: BigNumberish;
-    stableDebtTokenImpl: string;
     variableDebtTokenImpl: string;
     underlyingAssetDecimals: BigNumberish;
     interestRateStrategyAddress: string;
@@ -82,19 +78,12 @@ export const initReservesByHelper = async (
     xTokenSymbol: string;
     variableDebtTokenName: string;
     variableDebtTokenSymbol: string;
-    stableDebtTokenName: string;
-    stableDebtTokenSymbol: string;
     params: string;
     atomicPricing?: boolean;
   }[] = [];
 
   let strategyRates: [
     string, // addresses provider
-    string,
-    string,
-    string,
-    string,
-    string,
     string,
     string,
     string,
@@ -111,16 +100,7 @@ export const initReservesByHelper = async (
   let nTokenImplementationAddress = "";
   let nTokenMoonBirdImplementationAddress = "";
   let nTokenUniSwapV3ImplementationAddress = "";
-  let stableDebtTokenImplementationAddress = "";
   let variableDebtTokenImplementationAddress = "";
-
-  if (!genericStableDebtTokenAddress) {
-    stableDebtTokenImplementationAddress = await (
-      await deployGenericStableDebtToken(pool.address, verify)
-    ).address;
-  } else {
-    stableDebtTokenImplementationAddress = genericStableDebtTokenAddress;
-  }
 
   if (!genericVariableDebtTokenAddress) {
     variableDebtTokenImplementationAddress = await (
@@ -205,11 +185,6 @@ export const initReservesByHelper = async (
       baseVariableBorrowRate,
       variableRateSlope1,
       variableRateSlope2,
-      stableRateSlope1,
-      stableRateSlope2,
-      baseStableRateOffset,
-      stableRateExcessOffset,
-      optimalStableToTotalDebtRatio,
     } = strategy;
     const {
       maxPriceMultiplier,
@@ -227,11 +202,6 @@ export const initReservesByHelper = async (
         baseVariableBorrowRate,
         variableRateSlope1,
         variableRateSlope2,
-        stableRateSlope1,
-        stableRateSlope2,
-        baseStableRateOffset,
-        stableRateExcessOffset,
-        optimalStableToTotalDebtRatio,
       ];
       if (defaultReserveInterestRateStrategyAddress) {
         strategyAddresses[strategy.name] =
@@ -335,7 +305,6 @@ export const initReservesByHelper = async (
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       xTokenImpl: xTokenToUse!,
       assetType: xTokenType[reserveSymbols[i]] == "nft" ? 1 : 0,
-      stableDebtTokenImpl: stableDebtTokenImplementationAddress,
       variableDebtTokenImpl: variableDebtTokenImplementationAddress,
       underlyingAssetDecimals: reserveInitDecimals[i],
       interestRateStrategyAddress: strategyAddressPerAsset[reserveSymbols[i]],
@@ -351,8 +320,6 @@ export const initReservesByHelper = async (
           : `p${symbolPrefix}${reserveSymbols[i]}`,
       variableDebtTokenName: `${variableDebtTokenNamePrefix} ${symbolPrefix}${reserveSymbols[i]}`,
       variableDebtTokenSymbol: `vDebt${symbolPrefix}${reserveSymbols[i]}`,
-      stableDebtTokenName: `${stableDebtTokenNamePrefix} ${reserveSymbols[i]}`,
-      stableDebtTokenSymbol: `sDebt${symbolPrefix}${reserveSymbols[i]}`,
       params: "0x10",
     });
   }
@@ -444,7 +411,6 @@ export const configureReservesByHelper = async (
     reserveFactor: BigNumberish;
     borrowCap: BigNumberish;
     supplyCap: BigNumberish;
-    stableBorrowingEnabled: boolean;
     borrowingEnabled: boolean;
   }[] = [];
 
@@ -457,7 +423,6 @@ export const configureReservesByHelper = async (
       reserveFactor,
       borrowCap,
       supplyCap,
-      stableBorrowRateEnabled,
       borrowingEnabled,
     },
   ] of Object.entries(reservesParams) as [string, IReserveParams][]) {
@@ -494,7 +459,6 @@ export const configureReservesByHelper = async (
       reserveFactor,
       borrowCap,
       supplyCap,
-      stableBorrowingEnabled: stableBorrowRateEnabled,
       borrowingEnabled: borrowingEnabled,
     });
 

@@ -73,11 +73,9 @@ export enum eContractid {
   NTokenUniswapV3 = "NTokenUniswapV3",
   MockPToken = "MockPToken",
   DelegationAwarePToken = "DelegationAwarePToken",
-  MockStableDebtToken = "MockStableDebtToken",
   MockVariableDebtToken = "MockVariableDebtToken",
   ProtocolDataProvider = "ProtocolDataProvider",
   IERC20Detailed = "IERC20Detailed",
-  StableDebtToken = "StableDebtToken",
   VariableDebtToken = "VariableDebtToken",
   FeeProvider = "FeeProvider",
   TokenDistributor = "TokenDistributor",
@@ -394,11 +392,6 @@ export interface IInterestRateStrategyParams {
   baseVariableBorrowRate: string;
   variableRateSlope1: string;
   variableRateSlope2: string;
-  stableRateSlope1: string;
-  stableRateSlope2: string;
-  baseStableRateOffset: string;
-  stableRateExcessOffset: string;
-  optimalStableToTotalDebtRatio: string;
 }
 
 export interface IAuctionStrategyParams {
@@ -415,7 +408,6 @@ export interface IAuctionStrategyParams {
 
 export interface IReserveBorrowParams {
   borrowingEnabled: boolean;
-  stableBorrowRateEnabled: boolean;
   reserveDecimals: string;
   borrowCap: string;
 }
@@ -468,7 +460,6 @@ export interface IRate {
 export interface ICommonConfiguration {
   MarketId: string;
   PTokenNamePrefix: string;
-  StableDebtTokenNamePrefix: string;
   VariableDebtTokenNamePrefix: string;
   SymbolPrefix: string;
   ProviderId: number;

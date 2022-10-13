@@ -76,7 +76,6 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   // BASIC INFO
   MarketId: "ParaSpaceMM",
   PTokenNamePrefix: "ParaSpace Derivative Token",
-  StableDebtTokenNamePrefix: "ParaSpace stable debt token",
   VariableDebtTokenNamePrefix: "ParaSpace variable debt token",
   SymbolPrefix: "",
   ProviderId: 1, // Overridden in index.ts
