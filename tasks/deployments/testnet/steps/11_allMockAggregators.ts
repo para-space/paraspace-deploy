@@ -1,4 +1,4 @@
-import {ethers} from "ethers";
+import {constants} from "ethers";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import {
   UNISWAP_V3_FACTORY,
@@ -46,7 +46,7 @@ import {ETH_USD_ORACLE} from "../helpers/constants";
 
 declare let hre: HardhatRuntimeEnvironment;
 
-export const step_09 = async (verify = false) => {
+export const step_11 = async (verify = false) => {
   // hardhat local node
   if (
     hre.network.config.chainId === HARDHAT_CHAINID ||
@@ -106,7 +106,7 @@ export const step_09 = async (verify = false) => {
           aggregators,
           fallbackOracle.address,
           mockTokens.WETH.address,
-          ethers.constants.WeiPerEther.toString(),
+          constants.WeiPerEther.toString(),
         ],
         verify
       );
@@ -286,7 +286,7 @@ export const step_09 = async (verify = false) => {
           aggregators,
           fallbackOracle.address,
           mockTokens.WETH.address,
-          ethers.constants.WeiPerEther.toString(),
+          constants.WeiPerEther.toString(),
         ],
         verify
       );

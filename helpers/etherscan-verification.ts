@@ -56,12 +56,15 @@ const getIsVerified = async (
   network: string
 ) => {
   const value = await getDb().get(`${contractId}.${network}`).value();
-  return (
+  const isVerified =
     value?.address == address &&
-    (value?.verified ||
-      ((await hasVerifiedSourceCode(address, network)) &&
-        (await setIsVerified(contractId, address, network))))
-  );
+    (value?.verified || (await hasVerifiedSourceCode(address, network)));
+
+  if (!value?.verified && isVerified) {
+    await setIsVerified(contractId, address, network);
+  }
+
+  return isVerified;
 };
 
 const setIsVerified = async (

@@ -4,7 +4,7 @@ import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import ParaSpaceConfig from "../../../../market-config";
 
-export const step_04 = async (verify = false) => {
+export const step_06 = async (verify = false) => {
   const {paraSpaceAdmin} = await getParaSpaceAdmins();
   const paraSpaceAdminAddress = await paraSpaceAdmin.getAddress();
   const addressesProvider = await getPoolAddressesProvider();

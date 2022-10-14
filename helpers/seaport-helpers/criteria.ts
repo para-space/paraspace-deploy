@@ -1,10 +1,10 @@
-import {ethers} from "ethers";
+import {utils, BigNumber} from "ethers";
 
-const {keccak256} = ethers.utils;
+const {keccak256} = utils;
 
 type BufferElementPositionIndex = {[key: string]: number};
 
-export const merkleTree = (tokenIds: ethers.BigNumber[]) => {
+export const merkleTree = (tokenIds: BigNumber[]) => {
   const elements = tokenIds
     .map((tokenId) =>
       Buffer.from(tokenId.toHexString().slice(2).padStart(64, "0"), "hex")
@@ -29,7 +29,7 @@ export const merkleTree = (tokenIds: ethers.BigNumber[]) => {
 
   const proofs = Object.fromEntries(
     elements.map((el) => [
-      ethers.BigNumber.from(el).toString(),
+      BigNumber.from(el).toString(),
       getHexProof(el, bufferElementPositionIndex, layers),
     ])
   );

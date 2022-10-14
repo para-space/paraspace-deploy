@@ -12,7 +12,7 @@ import {setInitialAssetPricesInOracle} from "../../../../helpers/oracles-helpers
 import ParaSpaceConfig from "../../../../market-config";
 import {NFT_PROJECTS_WITH_FLOOR_PRICE} from "../../full-deployment/helpers/constants";
 
-export const step_08 = async (verify = false) => {
+export const step_10 = async (verify = false) => {
   try {
     const ALL_ASSETS_INITIAL_PRICES =
       ParaSpaceConfig.Mocks.AllAssetsInitialPrices;
@@ -20,7 +20,7 @@ export const step_08 = async (verify = false) => {
     const punks = await getPunk();
 
     //for testnet we only deploy but still use mock price instead
-    const nft_floor_oracle = await deployNftFloorPriceOracle(
+    const nftFloorOracle = await deployNftFloorPriceOracle(
       NFT_PROJECTS_WITH_FLOOR_PRICE,
       verify
     );

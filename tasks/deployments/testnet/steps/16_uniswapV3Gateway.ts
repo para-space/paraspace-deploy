@@ -1,35 +1,34 @@
 import {
-  deployMoonBirdsGateway,
-  deployMoonBirdsGatewayProxy,
+  deployUniswapV3Gateway,
+  deployUniswapV3GatewayProxy,
 } from "../../../../helpers/contracts-deployments";
 import {
   getAllMockedTokens,
-  getPoolProxy,
   getPoolAddressesProvider,
 } from "../../../../helpers/contracts-getters";
 import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 
-export const step_13 = async (verify = false) => {
+export const step_16 = async (verify = false) => {
   const {gatewayAdmin} = await getParaSpaceAdmins();
 
   try {
     const mockTokens = await getAllMockedTokens();
     const addressesProvider = await getPoolAddressesProvider();
     const poolAddress = await addressesProvider.getPool();
-    const poolProxy = await getPoolProxy(poolAddress);
 
-    const moonbirdsGateway = await deployMoonBirdsGateway(
-      [mockTokens["MOONBIRD"].address, poolProxy.address],
+    const uniswapV3Gateway = await deployUniswapV3Gateway(
+      mockTokens.UniswapV3.address,
+      poolAddress,
       verify
     );
 
-    const moonbirdsGatewayEncodedInitialize =
-      moonbirdsGateway.interface.encodeFunctionData("initialize");
+    const uniswapV3GatewayEncodedInitialize =
+      uniswapV3Gateway.interface.encodeFunctionData("initialize");
 
-    await deployMoonBirdsGatewayProxy(
+    await deployUniswapV3GatewayProxy(
       await gatewayAdmin.getAddress(),
-      moonbirdsGateway.address,
-      moonbirdsGatewayEncodedInitialize,
+      uniswapV3Gateway.address,
+      uniswapV3GatewayEncodedInitialize,
       verify
     );
   } catch (error) {

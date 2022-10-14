@@ -1,4 +1,4 @@
-import {Contract, ethers} from "ethers";
+import {Contract, constants} from "ethers";
 import {
   deployERC721OracleWrapper,
   deployParaSpaceFallbackOracle,
@@ -118,7 +118,7 @@ export const deployOracles = async (
       aggregators,
       fallbackOracle.address,
       deployedTokens.WETH.address,
-      ethers.constants.WeiPerEther.toString(),
+      constants.WeiPerEther.toString(),
     ],
     verify
   );

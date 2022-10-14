@@ -1,4 +1,3 @@
-import {ethers} from "hardhat";
 import {
   RunInput,
   X2Y2Order,
@@ -9,6 +8,7 @@ import {
 } from "@x2y2-io/sdk/dist/types";
 import {BigNumber, Signature, Signer, utils, Wallet} from "ethers";
 import {latest} from "./contracts-helpers";
+import {DRE} from "./misc-utils";
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
 import {convertSignatureToEIP2098} from "./seaport-helpers/encoding";
 import {accounts} from "../test-wallets";
@@ -52,7 +52,7 @@ const settleDetailParamType = `tuple(uint8 op, uint256 orderIdx, uint256 itemIdx
 const settleSharedParamType = `tuple(uint256 salt, uint256 deadline, uint256 amountToEth, uint256 amountToWeth, address user, bool canFail)`;
 
 export const encodeItemData = (data) => {
-  return ethers.utils.defaultAbiCoder.encode(
+  return DRE.ethers.utils.defaultAbiCoder.encode(
     ["tuple(address token, uint256 tokenId)[]"],
     [data]
   );
@@ -115,8 +115,8 @@ export const X2Y2_EIP_712_TYPE = {
 };
 
 export const hashItem = (order: X2Y2Order, item: X2Y2OrderItem) => {
-  return ethers.utils.keccak256(
-    ethers.utils.defaultAbiCoder.encode(
+  return DRE.ethers.utils.keccak256(
+    DRE.ethers.utils.defaultAbiCoder.encode(
       [
         "uint256",
         "address",
@@ -179,14 +179,14 @@ function getNetworkMeta() {
 }
 
 function randomSalt() {
-  var randomHex = ethers.BigNumber.from(
-    ethers.utils.randomBytes(16)
+  var randomHex = DRE.ethers.BigNumber.from(
+    DRE.ethers.utils.randomBytes(16)
   ).toHexString();
-  return ethers.utils.hexZeroPad(randomHex, 64);
+  return DRE.ethers.utils.hexZeroPad(randomHex, 64);
 }
 
 export const signSellOrder = async (signer, order: X2Y2Order) => {
-  const orderData = ethers.utils.defaultAbiCoder.encode(orderParamTypes, [
+  const orderData = DRE.ethers.utils.defaultAbiCoder.encode(orderParamTypes, [
     order.salt,
     order.user,
     order.network,
@@ -198,8 +198,10 @@ export const signSellOrder = async (signer, order: X2Y2Order) => {
     order.items.length,
     order.items,
   ]);
-  const orderHash = ethers.utils.keccak256(orderData); // signMessage
-  const orderSig = await signer.signMessage(ethers.utils.arrayify(orderHash));
+  const orderHash = DRE.ethers.utils.keccak256(orderData); // signMessage
+  const orderSig = await signer.signMessage(
+    DRE.ethers.utils.arrayify(orderHash)
+  );
   order.r = "0x" + orderSig.slice(2, 66);
   order.s = "0x" + orderSig.slice(66, 130);
   order.v = parseInt(orderSig.slice(130, 132), 16);
@@ -262,7 +264,7 @@ async function signOrder(signer: Signer, order: X2Y2Order): Promise<void> {
     order.items.length,
     order.items,
   ]);
-  const orderHash = ethers.utils.keccak256(orderData);
+  const orderHash = DRE.ethers.utils.keccak256(orderData);
   // signMessage
   const orderSig = await signer.signMessage(utils.arrayify(orderHash));
   order.r = `0x${orderSig.slice(2, 66)}`;
@@ -340,8 +342,8 @@ export const hashRuninput = (input: RunInput): string => {
     i.aucIncDurationSecs,
     i.fees.map((j) => [j.percentage, j.to]),
   ]);
-  return ethers.utils.keccak256(
-    ethers.utils.defaultAbiCoder.encode(
+  return DRE.ethers.utils.keccak256(
+    DRE.ethers.utils.defaultAbiCoder.encode(
       [`${settleSharedParamType}`, "uint256", `${settleDetailParamType}[]`],
       [
         [

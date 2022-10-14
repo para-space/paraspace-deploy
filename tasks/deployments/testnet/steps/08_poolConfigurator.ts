@@ -12,7 +12,7 @@ import {waitForTx} from "../../../../helpers/misc-utils";
 import {eContractid} from "../../../../helpers/types";
 import ParaSpaceConfig from "../../../../market-config";
 
-export const step_06 = async (verify = false) => {
+export const step_08 = async (verify = false) => {
   const {riskAdmin} = await getParaSpaceAdmins();
   const riskAdminAddress = await riskAdmin.getAddress();
   const addressesProvider = await getPoolAddressesProvider();
