@@ -1,4 +1,4 @@
-import {ethers} from "ethers";
+import {constants} from "ethers";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import {
   UNISWAP_V3_FACTORY,
@@ -43,17 +43,10 @@ import {eContractid, tEthereumAddress} from "../../../../helpers/types";
 import ParaSpaceConfig from "../../../../market-config";
 import {auctionStrategyLinear} from "../../../../market-config/auctionStrategies";
 import {ETH_USD_ORACLE} from "../helpers/constants";
-import rawBRE from "hardhat";
-
-import dotenv from "dotenv";
-
-dotenv.config();
-
-const verify = process.env.ETHERSCAN_VERIFICATION === "true" ? true : false;
 
 declare let hre: HardhatRuntimeEnvironment;
 
-export const step_09 = async (verify = false) => {
+export const step_11 = async (verify = false) => {
   // hardhat local node
   if (
     hre.network.config.chainId === HARDHAT_CHAINID ||
@@ -113,7 +106,7 @@ export const step_09 = async (verify = false) => {
           aggregators,
           fallbackOracle.address,
           mockTokens.WETH.address,
-          ethers.constants.WeiPerEther.toString(),
+          constants.WeiPerEther.toString(),
         ],
         verify
       );
@@ -293,7 +286,7 @@ export const step_09 = async (verify = false) => {
           aggregators,
           fallbackOracle.address,
           mockTokens.WETH.address,
-          ethers.constants.WeiPerEther.toString(),
+          constants.WeiPerEther.toString(),
         ],
         verify
       );
@@ -400,17 +393,3 @@ export const step_09 = async (verify = false) => {
     }
   }
 };
-
-async function main() {
-  await rawBRE.run("set-DRE");
-
-  await step_09(verify);
-  console.log("----------------- step 09 done ----------------- ");
-}
-
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });

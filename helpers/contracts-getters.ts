@@ -1,4 +1,4 @@
-import {ethers} from "hardhat";
+import {utils} from "ethers";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import {
   ProtocolDataProvider__factory,
@@ -776,10 +776,10 @@ export const getProxyAdmin = async (proxyAddress: string) => {
     EIP1967_ADMIN_SLOT,
     "latest"
   );
-  const adminAddress = ethers.utils.defaultAbiCoder
+  const adminAddress = utils.defaultAbiCoder
     .decode(["address"], adminStorageSlot)
     .toString();
-  return ethers.utils.getAddress(adminAddress);
+  return utils.getAddress(adminAddress);
 };
 
 export const getMockTokenFaucet = async (address?: tEthereumAddress) =>

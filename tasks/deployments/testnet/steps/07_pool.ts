@@ -8,15 +8,8 @@ import {
 import {insertContractAddressInDb} from "../../../../helpers/contracts-helpers";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {eContractid} from "../../../../helpers/types";
-import rawBRE from "hardhat";
 
-import dotenv from "dotenv";
-
-dotenv.config();
-
-const verify = process.env.ETHERSCAN_VERIFICATION === "true" ? true : false;
-
-export const step_05 = async (verify = false) => {
+export const step_07 = async (verify = false) => {
   const addressesProvider = await getPoolAddressesProvider();
 
   try {
@@ -83,17 +76,3 @@ export const step_05 = async (verify = false) => {
     process.exit(1);
   }
 };
-
-async function main() {
-  await rawBRE.run("set-DRE");
-
-  await step_05(verify);
-  console.log("----------------- step 05 done ----------------- ");
-}
-
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });

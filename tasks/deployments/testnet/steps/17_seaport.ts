@@ -23,9 +23,8 @@ import {
   getParaSpaceAdmins,
 } from "../../../../helpers/contracts-helpers";
 import {eContractid} from "../../../../helpers/types";
-import rawBRE from "hardhat";
 
-export const step_15 = async (verify = false) => {
+export const step_17 = async (verify = false) => {
   try {
     const {paraSpaceAdmin} = await getParaSpaceAdmins();
     const mockTokens = await getAllMockedTokens();
@@ -83,17 +82,3 @@ export const step_15 = async (verify = false) => {
     process.exit(1);
   }
 };
-
-async function main() {
-  await rawBRE.run("set-DRE");
-
-  await step_15();
-  console.log("----------------- step 15 done ----------------- ");
-}
-
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });

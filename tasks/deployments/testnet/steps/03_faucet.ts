@@ -3,14 +3,8 @@ import {
   getPunk,
 } from "../../../../helpers/contracts-getters";
 import {deployFaucet} from "../token_faucet";
-import dotenv from "dotenv";
-import rawBRE from "hardhat";
 
-dotenv.config();
-
-const verify = process.env.ETHERSCAN_VERIFICATION === "true" ? true : false;
-
-export const step_01 = async (verify = false) => {
+export const step_03 = async (verify = false) => {
   try {
     const mockTokens = await getAllMockedTokens();
     const punks = await getPunk();
@@ -45,17 +39,3 @@ export const step_01 = async (verify = false) => {
     process.exit(1);
   }
 };
-
-async function main() {
-  await rawBRE.run("set-DRE");
-
-  await step_01(verify);
-  console.log("----------------- step 01 done ----------------- ");
-}
-
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });

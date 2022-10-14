@@ -17,9 +17,8 @@ import {
 } from "../../../../helpers/contracts-getters";
 import {LOOKSRARE_ID} from "../../../../helpers/constants";
 import {waitForTx} from "../../../../helpers/misc-utils";
-import rawBRE from "hardhat";
 
-export const step_16 = async (verify = false) => {
+export const step_18 = async (verify = false) => {
   try {
     const mockTokens = await getAllMockedTokens();
     const currencyManager = await deployCurrencyManager(verify);
@@ -88,17 +87,3 @@ export const step_16 = async (verify = false) => {
     process.exit(1);
   }
 };
-
-async function main() {
-  await rawBRE.run("set-DRE");
-
-  await step_16();
-  console.log("----------------- step 16 done ----------------- ");
-}
-
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
