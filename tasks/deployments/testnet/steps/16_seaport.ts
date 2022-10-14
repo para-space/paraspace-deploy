@@ -24,7 +24,7 @@ import {
 } from "../../../../helpers/contracts-helpers";
 import {eContractid} from "../../../../helpers/types";
 
-export const step_17 = async (verify = false) => {
+export const step_16 = async (verify = false) => {
   try {
     const {paraSpaceAdmin} = await getParaSpaceAdmins();
     const mockTokens = await getAllMockedTokens();

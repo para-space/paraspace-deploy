@@ -8,7 +8,7 @@ import {
 } from "../../../../helpers/contracts-getters";
 import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 
-export const step_16 = async (verify = false) => {
+export const step_15 = async (verify = false) => {
   const {gatewayAdmin} = await getParaSpaceAdmins();
 
   try {

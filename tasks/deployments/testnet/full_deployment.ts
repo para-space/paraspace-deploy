@@ -17,10 +17,10 @@ import {step_13} from "./steps/13_wethGateway";
 import {step_14} from "./steps/14_punkGateway";
 import {step_15} from "./steps/15_moonbirdsGateway";
 import {step_16} from "./steps/16_uniswapV3Gateway";
-import {step_17} from "./steps/17_seaport";
-import {step_18} from "./steps/18_looksrare";
-import {step_19} from "./steps/19_x2y2";
-import {step_20} from "./steps/20_flashClaimRegistry";
+import {step_16} from "./steps/16_seaport";
+import {step_17} from "./steps/17_looksrare";
+import {step_19} from "./steps/18_x2y2";
+import {step_20} from "./steps/19_flashClaimRegistry";
 
 import dotenv from "dotenv";
 
@@ -99,11 +99,11 @@ const buildTestEnv = async () => {
   console.log("------------ step 16 done ------------ ");
 
   // deploy seaport
-  await step_17(verify);
+  await step_16(verify);
   console.log("------------ step 17 done ------------ ");
 
   // deploy looksrare
-  await step_18(verify);
+  await step_17(verify);
   console.log("------------ step 18 done ------------ ");
 
   // deploy x2y2

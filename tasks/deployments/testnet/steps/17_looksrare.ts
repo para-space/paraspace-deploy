@@ -18,7 +18,7 @@ import {
 import {LOOKSRARE_ID} from "../../../../helpers/constants";
 import {waitForTx} from "../../../../helpers/misc-utils";
 
-export const step_18 = async (verify = false) => {
+export const step_17 = async (verify = false) => {
   try {
     const mockTokens = await getAllMockedTokens();
     const currencyManager = await deployCurrencyManager(verify);
