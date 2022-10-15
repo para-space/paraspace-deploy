@@ -1,5 +1,5 @@
 import low from "lowdb";
-import FileSync from "lowdb/adapters/FileSync";
+import Base from "lowdb/adapters/Base";
 import {Wallet, ContractTransaction, BigNumber, utils} from "ethers";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import {
@@ -14,7 +14,10 @@ import mapLimit from "async/mapLimit";
 import {verifyEtherscanContract} from "./etherscan-verification";
 import {ABI} from "hardhat-deploy/dist/types";
 
-export const getDb = () => low(new FileSync("./deployed-contracts.json"));
+let db: any = {};
+
+export const getDb = () =>
+  low({read: () => db, write: (state) => (db = state)} as any);
 
 export let DRE: HardhatRuntimeEnvironment;
 
