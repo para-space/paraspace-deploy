@@ -7,7 +7,7 @@ import {
   getProtocolDataProvider,
 } from "../../../../helpers/contracts-getters";
 
-export const step_18 = async (verify = false) => {
+export const step_19 = async (verify = false) => {
   try {
     const addressesProvider = await getPoolAddressesProvider();
     const poolAddress = await addressesProvider.getPool();

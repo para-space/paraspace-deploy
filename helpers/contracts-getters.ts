@@ -1,4 +1,4 @@
-import {ethers} from "hardhat";
+import {utils} from "ethers";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import {
   ProtocolDataProvider__factory,
@@ -44,7 +44,6 @@ import {
   MockIncentivesController__factory,
   ERC721__factory,
   Moonbirds__factory,
-  MoonBirdsGateway__factory,
   ConduitController__factory,
   Seaport__factory,
   LooksRareExchange__factory,
@@ -618,17 +617,6 @@ export const getMoonBirds = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-export const getMoonBirdsGateway = async (address?: tEthereumAddress) =>
-  await MoonBirdsGateway__factory.connect(
-    address ||
-      (
-        await getDb()
-          .get(`${eContractid.MoonBirdsGatewayImpl}.${DRE.network.name}`)
-          .value()
-      ).address,
-    await getFirstSigner()
-  );
-
 export const getNTokenMoonBirds = async (address?: tEthereumAddress) =>
   await NTokenMoonBirds__factory.connect(
     address ||
@@ -639,23 +627,6 @@ export const getNTokenMoonBirds = async (address?: tEthereumAddress) =>
       ).address,
     await getFirstSigner()
   );
-
-export const getMoonBirdsGatewayProxy = async (address?: tEthereumAddress) =>
-  await MoonBirdsGateway__factory.connect(
-    address ||
-      (
-        await getDb()
-          .get(`${eContractid.MoonBirdsGatewayProxy}.${DRE.network.name}`)
-          .value()
-      ).address,
-    await getFirstSigner()
-  );
-
-// TODO: add getdb
-export const getUniswapV3Pool = async (address: tEthereumAddress) => {
-  console.log("Getting", address);
-  return await UniswapV3Pool__factory.connect(address, await getFirstSigner());
-};
 
 export const getUniswapV3Factory = async (address?: tEthereumAddress) =>
   await UniswapV3Factory__factory.connect(
@@ -743,10 +714,10 @@ export const getProxyAdmin = async (proxyAddress: string) => {
     EIP1967_ADMIN_SLOT,
     "latest"
   );
-  const adminAddress = ethers.utils.defaultAbiCoder
+  const adminAddress = utils.defaultAbiCoder
     .decode(["address"], adminStorageSlot)
     .toString();
-  return ethers.utils.getAddress(adminAddress);
+  return utils.getAddress(adminAddress);
 };
 
 export const getMockTokenFaucet = async (address?: tEthereumAddress) =>

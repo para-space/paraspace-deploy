@@ -9,7 +9,7 @@ import {insertContractAddressInDb} from "../../../../helpers/contracts-helpers";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {eContractid} from "../../../../helpers/types";
 
-export const step_05 = async (verify = false) => {
+export const step_07 = async (verify = false) => {
   const addressesProvider = await getPoolAddressesProvider();
 
   try {

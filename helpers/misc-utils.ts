@@ -2,7 +2,12 @@ import low from "lowdb";
 import FileSync from "lowdb/adapters/FileSync";
 import {Wallet, ContractTransaction, BigNumber, utils} from "ethers";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
-import {eContractid, iFunctionSignature, tEthereumAddress} from "./types";
+import {
+  ConstructorArgs,
+  eContractid,
+  iFunctionSignature,
+  tEthereumAddress,
+} from "./types";
 import {Fragment, isAddress} from "ethers/lib/utils";
 import {isZeroAddress} from "ethereumjs-util";
 import mapLimit from "async/mapLimit";
@@ -107,7 +112,7 @@ export interface DbEntry {
   [network: string]: {
     deployer: string;
     address: string;
-    constructorArgs: (string | number | string[] | number[])[];
+    constructorArgs: ConstructorArgs;
     verified: boolean;
   };
 }

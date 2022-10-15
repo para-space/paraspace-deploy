@@ -1,6 +1,6 @@
 import {
-  deployMoonBirdsGateway,
-  deployMoonBirdsGatewayProxy,
+  deployWETHGateway,
+  deployWETHGatewayProxy,
 } from "../../../../helpers/contracts-deployments";
 import {
   getAllMockedTokens,
@@ -18,18 +18,19 @@ export const step_13 = async (verify = false) => {
     const poolAddress = await addressesProvider.getPool();
     const poolProxy = await getPoolProxy(poolAddress);
 
-    const moonbirdsGateway = await deployMoonBirdsGateway(
-      [mockTokens["MOONBIRD"].address, poolProxy.address],
+    const wethGateway = await deployWETHGateway(
+      mockTokens.WETH.address,
+      poolProxy.address,
       verify
     );
 
-    const moonbirdsGatewayEncodedInitialize =
-      moonbirdsGateway.interface.encodeFunctionData("initialize");
+    const wethGatewayEncodedInitialize =
+      wethGateway.interface.encodeFunctionData("initialize");
 
-    await deployMoonBirdsGatewayProxy(
+    await deployWETHGatewayProxy(
       await gatewayAdmin.getAddress(),
-      moonbirdsGateway.address,
-      moonbirdsGatewayEncodedInitialize,
+      wethGateway.address,
+      wethGatewayEncodedInitialize,
       verify
     );
   } catch (error) {

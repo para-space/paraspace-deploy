@@ -3,7 +3,7 @@ import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {getPoolAddressesProvider} from "../../../../helpers/contracts-getters";
 
-export const step_03 = async (verify = false) => {
+export const step_05 = async (verify = false) => {
   const {paraSpaceAdmin, emergencyAdmin} = await getParaSpaceAdmins();
   const paraspaceAdmin = await paraSpaceAdmin.getAddress();
   const emergencyAdminAddress = await emergencyAdmin.getAddress();

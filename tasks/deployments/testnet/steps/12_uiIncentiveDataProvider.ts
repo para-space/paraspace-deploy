@@ -1,6 +1,6 @@
 import {deployUiIncentiveDataProvider} from "../../../../helpers/contracts-deployments";
 
-export const step_10 = async (verify = false) => {
+export const step_12 = async (verify = false) => {
   try {
     return await deployUiIncentiveDataProvider(verify);
   } catch (error) {

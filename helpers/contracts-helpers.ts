@@ -1,7 +1,7 @@
 import {constants, Contract, Signer} from "ethers";
 import {signTypedData_v4} from "eth-sig-util";
 import {fromRpcSig, ECDSASignature} from "ethereumjs-util";
-import {getDb, DRE, waitForTx, impersonateAccountsHardhat} from "./misc-utils";
+import {DRE, getDb, waitForTx, impersonateAccountsHardhat} from "./misc-utils";
 import {
   iFunctionSignature,
   tEthereumAddress,
@@ -10,7 +10,6 @@ import {
   ConstructorArgs,
   LibraryAddresses,
   ParaSpaceLibraryAddresses,
-  // InitializableImmutableAdminUpgradeabilityProxy,
 } from "./types";
 import {
   ConsiderationItem,
@@ -30,7 +29,6 @@ import {
   Seaport,
 } from "../../types";
 import {MintableERC721} from "../../types";
-import {ethers} from "hardhat";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import {getIErc20Detailed} from "./contracts-getters";
 import {getDefenderRelaySigner, usingDefender} from "./defender-utils";
@@ -213,7 +211,7 @@ export const convertToCurrencyDecimals = async (
   const token = await getIErc20Detailed(tokenAddress);
   const decimals = (await token.decimals()).toString();
 
-  return ethers.utils.parseUnits(amount, decimals);
+  return DRE.ethers.utils.parseUnits(amount, decimals);
 };
 
 export const buildPermitParams = (
@@ -349,7 +347,9 @@ export const impersonateAddress = async (
 
 export const latest = async (): Promise<number> => {
   return (
-    await ethers.provider.getBlock(await ethers.provider.getBlockNumber())
+    await DRE.ethers.provider.getBlock(
+      await DRE.ethers.provider.getBlockNumber()
+    )
   ).timestamp;
 };
 
@@ -367,10 +367,10 @@ export const createSeaportOrder = async <
   const domainData = {
     name: "ParaSpace",
     version: "1.1",
-    chainId: (await ethers.provider.getNetwork()).chainId,
+    chainId: (await DRE.ethers.provider.getNetwork()).chainId,
     verifyingContract: seaport.address,
   };
-  const constants = ethers.constants;
+  const constants = DRE.ethers.constants;
 
   const orderParameters: OrderParameters = {
     offerer: signer.address,
@@ -391,7 +391,7 @@ export const createSeaportOrder = async <
     counter: await seaport.getCounter(signer.address),
   };
 
-  const signature = await ethers.provider
+  const signature = await DRE.ethers.provider
     .getSigner(signer.address)
     ._signTypedData(domainData, eip712OrderType, orderComponents);
 
@@ -411,7 +411,10 @@ export const createZone = async (
 ) => {
   const tx = await pausableZoneController.createZone(salt ?? randomHex());
 
-  const zoneContract = await ethers.getContractFactory("PausableZone", owner);
+  const zoneContract = await DRE.ethers.getContractFactory(
+    "PausableZone",
+    owner
+  );
 
   const events = await decodeEvents(tx, [
     {eventName: "ZoneCreated", contract: pausableZoneController},

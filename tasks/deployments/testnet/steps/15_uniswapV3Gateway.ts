@@ -1,37 +1,34 @@
 import {
-  deployPunkGateway,
-  deployPunkGatewayProxy,
+  deployUniswapV3Gateway,
+  deployUniswapV3GatewayProxy,
 } from "../../../../helpers/contracts-deployments";
 import {
   getAllMockedTokens,
-  getPoolProxy,
   getPoolAddressesProvider,
-  getPunk,
 } from "../../../../helpers/contracts-getters";
 import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 
-export const step_12 = async (verify = false) => {
+export const step_15 = async (verify = false) => {
   const {gatewayAdmin} = await getParaSpaceAdmins();
 
   try {
     const mockTokens = await getAllMockedTokens();
-    const punks = await getPunk();
     const addressesProvider = await getPoolAddressesProvider();
     const poolAddress = await addressesProvider.getPool();
-    const poolProxy = await getPoolProxy(poolAddress);
 
-    const punkGateway = await deployPunkGateway(
-      [punks.address, mockTokens.WPUNKS.address, poolProxy.address],
+    const uniswapV3Gateway = await deployUniswapV3Gateway(
+      mockTokens.UniswapV3.address,
+      poolAddress,
       verify
     );
 
-    const punkGatewayEncodedInitialize =
-      punkGateway.interface.encodeFunctionData("initialize");
+    const uniswapV3GatewayEncodedInitialize =
+      uniswapV3Gateway.interface.encodeFunctionData("initialize");
 
-    await deployPunkGatewayProxy(
+    await deployUniswapV3GatewayProxy(
       await gatewayAdmin.getAddress(),
-      punkGateway.address,
-      punkGatewayEncodedInitialize,
+      uniswapV3Gateway.address,
+      uniswapV3GatewayEncodedInitialize,
       verify
     );
   } catch (error) {

@@ -8,7 +8,7 @@ import {X2Y2_ID} from "../../../../helpers/constants";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 
-export const step_17 = async (verify = false) => {
+export const step_18 = async (verify = false) => {
   try {
     const {paraSpaceAdmin} = await getParaSpaceAdmins();
     const addressesProvider = await getPoolAddressesProvider();
