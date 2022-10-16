@@ -43,11 +43,8 @@ import {
   MintableERC721__factory,
   MockAggregator__factory,
   MockPToken__factory,
-  // MockFlashLoanReceiver__factory,
-  MockStableDebtToken__factory,
   MockVariableDebtToken__factory,
   PriceOracle__factory,
-  StableDebtToken__factory,
   VariableDebtToken__factory,
   WETH9Mocked__factory,
   ConfiguratorLogic__factory,
@@ -618,18 +615,7 @@ export const deployDefaultReserveAuctionStrategy = async (
   );
 
 export const deployDefaultReserveInterestRateStrategy = async (
-  args: [
-    tEthereumAddress,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string
-  ],
+  args: [tEthereumAddress, string, string, string, string],
   verify?: boolean
 ) =>
   withSaveAndVerify(
@@ -638,19 +624,6 @@ export const deployDefaultReserveInterestRateStrategy = async (
     ).deploy(...args),
     eContractid.DefaultReserveInterestRateStrategy,
     [...args],
-    verify
-  );
-
-export const deployGenericStableDebtToken = async (
-  poolAddress: tEthereumAddress,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new StableDebtToken__factory(await getFirstSigner()).deploy(
-      poolAddress
-    ),
-    eContractid.StableDebtToken,
-    [poolAddress],
     verify
   );
 
@@ -1340,39 +1313,6 @@ export const deployInitializableImmutableAdminUpgradeabilityProxy = async (
     [...args],
     verify
   );
-
-export const deployMockStableDebtToken = async (
-  args: [
-    tEthereumAddress,
-    tEthereumAddress,
-    tEthereumAddress,
-    string,
-    string,
-    string
-  ],
-  verify?: boolean
-) => {
-  const instance = await withSaveAndVerify(
-    await new MockStableDebtToken__factory(await getFirstSigner()).deploy(
-      args[0]
-    ),
-    eContractid.MockStableDebtToken,
-    [args[0]],
-    verify
-  );
-
-  await instance.initialize(
-    args[0],
-    args[1],
-    args[2],
-    "18",
-    args[3],
-    args[4],
-    args[5]
-  );
-
-  return instance;
-};
 
 export const deployWETHMocked = async (verify?: boolean) =>
   withSaveAndVerify(

@@ -106,7 +106,6 @@ const runScript = async () => {
     liquidationThreshold: "6500",
     liquidationBonus: "11000",
     borrowingEnabled: false,
-    stableBorrowRateEnabled: false,
     reserveDecimals: "0",
     xTokenImpl: eContractid.NToken,
     reserveFactor: "0",
@@ -122,12 +121,7 @@ const runScript = async () => {
 
   const config = ParaSpaceConfig;
 
-  const {
-    PTokenNamePrefix,
-    StableDebtTokenNamePrefix,
-    VariableDebtTokenNamePrefix,
-    SymbolPrefix,
-  } = config;
+  const {PTokenNamePrefix, VariableDebtTokenNamePrefix, SymbolPrefix} = config;
   const treasuryAddress = config.ReserveFactorTreasuryAddress;
 
   const admin = await (await getFirstSigner()).getAddress();
@@ -136,7 +130,6 @@ const runScript = async () => {
     reservesParams,
     allTokenAddresses,
     PTokenNamePrefix,
-    StableDebtTokenNamePrefix,
     VariableDebtTokenNamePrefix,
     SymbolPrefix,
     admin,

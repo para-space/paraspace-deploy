@@ -221,12 +221,7 @@ const deployAll = async (main: Signer, treasury: Signer) => {
 
   const config = ParaSpaceConfig;
 
-  const {
-    PTokenNamePrefix,
-    StableDebtTokenNamePrefix,
-    VariableDebtTokenNamePrefix,
-    SymbolPrefix,
-  } = config;
+  const {PTokenNamePrefix, VariableDebtTokenNamePrefix, SymbolPrefix} = config;
   // const treasuryAddress = config.ReserveFactorTreasuryAddress;
 
   // Add an IncentivesController
@@ -236,7 +231,6 @@ const deployAll = async (main: Signer, treasury: Signer) => {
     reservesParams,
     allReservesAddresses,
     PTokenNamePrefix,
-    StableDebtTokenNamePrefix,
     VariableDebtTokenNamePrefix,
     SymbolPrefix,
     mainAdmin,
