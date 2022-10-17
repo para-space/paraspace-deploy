@@ -1,5 +1,4 @@
 import low from "lowdb";
-import Base from "lowdb/adapters/Base";
 import {Wallet, ContractTransaction, BigNumber, utils} from "ethers";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import {
@@ -17,7 +16,7 @@ import {ABI} from "hardhat-deploy/dist/types";
 let db: any = {};
 
 export const getDb = () =>
-  low({read: () => db, write: (state) => (db = state)} as any);
+  low({read: () => db, write: (state: any) => (db = state)} as any);
 
 export let DRE: HardhatRuntimeEnvironment;
 
