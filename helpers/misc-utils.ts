@@ -12,11 +12,9 @@ import {isZeroAddress} from "ethereumjs-util";
 import mapLimit from "async/mapLimit";
 import {verifyEtherscanContract} from "./etherscan-verification";
 import {ABI} from "hardhat-deploy/dist/types";
+import {getAdapter} from "./db-adapter";
 
-let db: any = {};
-
-export const getDb = () =>
-  low({read: () => db, write: (state: any) => (db = state)} as any);
+export const getDb = () => low(getAdapter(process.env.NETWORK ?? "hardhat"));
 
 export let DRE: HardhatRuntimeEnvironment;
 
