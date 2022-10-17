@@ -228,7 +228,7 @@ export const getUiPoolDataProvider = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-export const getUiIncentiveDataProviderV3__factory = async (
+export const getUiIncentiveDataProviderV3 = async (
   address?: tEthereumAddress
 ) =>
   await UiIncentiveDataProvider__factory.connect(
