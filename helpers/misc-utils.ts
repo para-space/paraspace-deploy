@@ -14,7 +14,7 @@ import {verifyEtherscanContract} from "./etherscan-verification";
 import {ABI} from "hardhat-deploy/dist/types";
 import {getAdapter} from "./db-adapter";
 
-export const getDb = () => low(getAdapter(process.env.NETWORK ?? "hardhat"));
+export const getDb = () => low(getAdapter(process.env.DB_PATH ?? ":memory:"));
 
 export let DRE: HardhatRuntimeEnvironment;
 

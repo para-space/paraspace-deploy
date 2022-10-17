@@ -10,7 +10,5 @@ class MemoryAdapter {
   }
 }
 
-export const getAdapter = (network: string): any =>
-  network === "hardhat"
-    ? new MemoryAdapter()
-    : new FileAdapter("./deployed-contracts.json");
+export const getAdapter = (file: string): any =>
+  file === ":memory:" ? new MemoryAdapter() : new FileAdapter(file);
