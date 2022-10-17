@@ -1,5 +1,4 @@
 import low from "lowdb";
-import FileSync from "lowdb/adapters/FileSync";
 import {Wallet, ContractTransaction, BigNumber, utils} from "ethers";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import {
@@ -13,8 +12,9 @@ import {isZeroAddress} from "ethereumjs-util";
 import mapLimit from "async/mapLimit";
 import {verifyEtherscanContract} from "./etherscan-verification";
 import {ABI} from "hardhat-deploy/dist/types";
+import {getAdapter} from "./db-adapter";
 
-export const getDb = () => low(new FileSync("./deployed-contracts.json"));
+export const getDb = () => low(getAdapter(process.env.DB_PATH ?? ":memory:"));
 
 export let DRE: HardhatRuntimeEnvironment;
 
