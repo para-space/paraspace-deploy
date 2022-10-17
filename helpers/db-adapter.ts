@@ -1,12 +1,12 @@
 import {default as FileAdapter} from "lowdb/adapters/FileSync";
 
 class MemoryAdapter {
-  state: any;
+  static state: any = {};
   read() {
-    return this.state;
+    return MemoryAdapter.state;
   }
-  write(state: any) {
-    this.state = state;
+  write(_state: any) {
+    MemoryAdapter.state = _state;
   }
 }
 
