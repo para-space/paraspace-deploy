@@ -117,8 +117,6 @@ export enum eContractid {
   OTHR = "OTHR",
   MoonBirdsGatewayImpl = "MoonBirdsGatewayImpl",
   MoonBirdsGatewayProxy = "MoonBirdsGatewayProxy",
-  UniswapV3GatewayImpl = "UniswapV3GatewayImpl",
-  UniswapV3GatewayProxy = "UniswapV3GatewayProxy",
   ConduitController = "ConduitController",
   PausableZoneController = "PausableZoneController",
   ConduitKey = "ConduitKey",
