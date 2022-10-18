@@ -106,7 +106,6 @@ import {
   ERC721Delegate__factory,
   NTokenMoonBirds__factory,
   UniswapV3OracleWrapper__factory,
-  UniswapV3Gateway__factory,
   NTokenUniswapV3__factory,
   MarketplaceLogic__factory,
   SeaportAdapter__factory,
@@ -1532,24 +1531,6 @@ export const deployMoonbirdHelper = async (verify?: boolean) => {
 
   return withSaveAndVerify(moonBirdHelper, eContractid.PoolLogic, [], verify);
 };
-export const deployUniswapV3GatewayProxy = async (
-  admin: string,
-  gateway: string,
-  initData: string,
-  verify?: boolean
-) => {
-  const uniswapV3GatewayProxy =
-    await new InitializableImmutableAdminUpgradeabilityProxy__factory(
-      await getFirstSigner()
-    ).deploy(admin);
-  await uniswapV3GatewayProxy["initialize(address,bytes)"](gateway, initData);
-  return withSaveAndVerify(
-    uniswapV3GatewayProxy,
-    eContractid.UniswapV3GatewayProxy,
-    [admin],
-    verify
-  );
-};
 
 export const deployMeebits = async (
   args: [tEthereumAddress, tEthereumAddress, tEthereumAddress],
@@ -2111,21 +2092,6 @@ export const deployNonfungiblePositionManager = async (
     verify
   );
 };
-
-export const deployUniswapV3Gateway = async (
-  uniswap: string,
-  pool: string,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new UniswapV3Gateway__factory(await getFirstSigner()).deploy(
-      uniswap,
-      pool
-    ),
-    eContractid.UniswapV3GatewayImpl,
-    [uniswap, pool],
-    verify
-  );
 
 export const deployUniswapSwapRouter = async (
   args: [string, string],

@@ -56,8 +56,6 @@ import {
   Conduit__factory,
   NTokenMoonBirds__factory,
   UniswapV3Factory__factory,
-  UniswapV3Pool__factory,
-  UniswapV3Gateway__factory,
   UniswapV3OracleWrapper__factory,
   NTokenUniswapV3__factory,
   UniswapV3DynamicConfigsStrategy__factory,
@@ -849,17 +847,6 @@ export const getMockIncentivesController = async (address?: tEthereumAddress) =>
       (
         await getDb()
           .get(`${eContractid.MockIncentivesController}.${DRE.network.name}`)
-          .value()
-      ).address,
-    await getFirstSigner()
-  );
-
-export const getUniswapV3Gateway = async (address?: tEthereumAddress) =>
-  await UniswapV3Gateway__factory.connect(
-    address ||
-      (
-        await getDb()
-          .get(`${eContractid.UniswapV3GatewayProxy}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()
