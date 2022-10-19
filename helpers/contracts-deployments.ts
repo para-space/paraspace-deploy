@@ -213,14 +213,9 @@ export const deployPoolConfigurator = async (verify?: boolean) => {
     libraries,
     await getFirstSigner()
   ).deploy();
-  await registerContractInJsonDb(
-    eContractid.PoolConfiguratorImpl,
-    poolConfiguratorImpl,
-    []
-  );
   return withSaveAndVerify(
     poolConfiguratorImpl,
-    eContractid.PoolConfiguratorProxy,
+    eContractid.PoolConfiguratorImpl,
     [],
     verify,
     libraries
@@ -439,31 +434,15 @@ export const deployPoolComponents = async (
     await getFirstSigner()
   ).deploy(provider);
 
-  await registerContractInJsonDb(eContractid.PoolCoreImpl, poolCore, [
-    provider,
-  ]);
-
   const poolParameters = await new PoolParameters__factory(
     parametersLibraries,
     await getFirstSigner()
   ).deploy(provider);
 
-  await registerContractInJsonDb(
-    eContractid.PoolParametersImpl,
-    poolParameters,
-    [provider]
-  );
-
   const poolMarketplace = await new PoolMarketplace__factory(
     marketplaceLibraries,
     await getFirstSigner()
   ).deploy(provider);
-
-  await registerContractInJsonDb(
-    eContractid.PoolMarketplaceImpl,
-    poolMarketplace,
-    [provider]
-  );
 
   const {poolCoreSelectors, poolParametersSelectors, poolMarketplaceSelectors} =
     checkPoolSignatures();
@@ -2020,16 +1999,11 @@ export const deployERC721Delegate = async (verify?: boolean) =>
   );
 
 export const deployUniswapV3 = async (args: [], verify?: boolean) => {
-  const uniswapV3FactoryImpl = await new UniswapV3Factory__factory(
+  const uniswapV3Factory = await new UniswapV3Factory__factory(
     await getFirstSigner()
   ).deploy(...args);
-  await registerContractInJsonDb(
-    eContractid.UniswapV3Factory,
-    uniswapV3FactoryImpl,
-    [...args]
-  );
   return withSaveAndVerify(
-    uniswapV3FactoryImpl,
+    uniswapV3Factory,
     eContractid.UniswapV3Factory,
     [...args],
     verify

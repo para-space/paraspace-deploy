@@ -13,7 +13,7 @@ import {
   getPoolConfiguratorProxy,
   getPoolProxy,
 } from "./contracts-getters";
-import {rawInsertContractAddressInDb} from "./contracts-helpers";
+import {insertContractAddressInDb} from "./contracts-helpers";
 import {BigNumber, BigNumberish} from "ethers";
 import {
   deployDefaultReserveInterestRateStrategy,
@@ -155,7 +155,7 @@ export const initReservesByHelper = async (
         delegationAwarePTokenImplementation.address;
     }
 
-    rawInsertContractAddressInDb(
+    insertContractAddressInDb(
       `delegationAwarePTokenImpl`,
       delegationAwarePTokenImplementationAddress
     );
@@ -215,7 +215,7 @@ export const initReservesByHelper = async (
         ).address;
         // This causes the last strategy to be printed twice, once under "DefaultReserveInterestRateStrategy"
         // and once under the actual `strategyASSET` key.
-        rawInsertContractAddressInDb(
+        insertContractAddressInDb(
           strategy.name,
           strategyAddresses[strategy.name]
         );
@@ -242,7 +242,7 @@ export const initReservesByHelper = async (
             verify
           )
         ).address;
-        rawInsertContractAddressInDb(
+        insertContractAddressInDb(
           auctionStrategy.name,
           auctionStrategyAddresses[auctionStrategy.name]
         );

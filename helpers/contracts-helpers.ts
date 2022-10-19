@@ -124,19 +124,6 @@ export const insertLibrariesInDb = async (
     .write();
 };
 
-export const rawInsertContractAddressInDb = async (
-  id: string,
-  address: tEthereumAddress
-) => {
-  const old = (await getDb().get(`${id}.${DRE.network.name}`).value()) || {};
-  await getDb()
-    .set(`${id}.${DRE.network.name}`, {
-      ...old,
-      address,
-    })
-    .write();
-};
-
 export const getEthersSigners = async (): Promise<Signer[]> => {
   const ethersSigners = await Promise.all(await DRE.ethers.getSigners());
 
