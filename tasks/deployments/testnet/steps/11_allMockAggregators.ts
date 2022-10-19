@@ -136,18 +136,20 @@ export const step_11 = async (verify = false) => {
 
       const reservesParams = ParaSpaceConfig.ReservesConfig;
 
-      const testHelpers = await deployProtocolDataProvider(
+      const protocolDataProvider = await deployProtocolDataProvider(
         addressesProvider.address,
         verify
       );
 
       await insertContractAddressInDb(
         eContractid.ProtocolDataProvider,
-        testHelpers.address
+        protocolDataProvider.address
       );
       const admin = await paraSpaceAdmin.getAddress();
 
-      await addressesProvider.setPoolDataProvider(testHelpers.address);
+      await addressesProvider.setProtocolDataProvider(
+        protocolDataProvider.address
+      );
 
       console.log("Initialize configuration");
 
@@ -194,7 +196,7 @@ export const step_11 = async (verify = false) => {
       await configureReservesByHelper(
         reservesParams,
         allReservesAddresses,
-        testHelpers,
+        protocolDataProvider,
         admin
       );
 
@@ -323,7 +325,7 @@ export const step_11 = async (verify = false) => {
       );
       const admin = await paraSpaceAdmin.getAddress();
 
-      await addressesProvider.setPoolDataProvider(testHelpers.address);
+      await addressesProvider.setProtocolDataProvider(testHelpers.address);
 
       console.log("Initialize configuration");
 
