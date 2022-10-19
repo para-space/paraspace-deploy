@@ -213,7 +213,7 @@ const deployAll = async (main: Signer, treasury: Signer) => {
     testHelpers.address
   );
 
-  await addressesProvider.setPoolDataProvider(testHelpers.address, {
+  await addressesProvider.setProtocolDataProvider(testHelpers.address, {
     gasLimit: 1000000,
   });
 

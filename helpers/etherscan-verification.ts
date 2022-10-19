@@ -109,8 +109,6 @@ export const verifyEtherscanContract = async (
     return;
   }
 
-  // hardhat = 31337
-  // forked mainnet = 522
   if (
     currentNetworkChainId === HARDHAT_CHAINID ||
     currentNetworkChainId === FORK_MAINNET_CHAINID ||

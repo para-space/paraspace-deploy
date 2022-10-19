@@ -7,6 +7,7 @@ import {
   ERC721TokenContractId,
 } from "./types";
 import {
+  AuctionLogic__factory,
   // IPool__factory,
   MintableERC20,
   MintableERC721,
@@ -138,7 +139,6 @@ import {HardhatRuntimeEnvironment} from "hardhat/types";
 import ParaSpaceConfig from "../market-config";
 import {Address} from "hardhat-deploy/dist/types";
 import {COVERAGE_CHAINID, HARDHAT_CHAINID} from "./hardhat-constants";
-import {UNISWAP_V3_POSITION_MANAGER_ADDRESS} from "./constants";
 import {Contract} from "ethers";
 import {LiquidationLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/LiquidationLogic__factory";
 import {MarketplaceLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/MarketplaceLogic__factory";
@@ -148,6 +148,7 @@ import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/poo
 import {FormatTypes} from "ethers/lib/utils";
 import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/pool/PoolConfigurator__factory";
 import _ from "lodash";
+import {UNISWAP_V3_POSITION_MANAGER_ADDRESS} from "../tasks/deployments/testnet/helpers/constants";
 
 declare let hre: HardhatRuntimeEnvironment;
 
@@ -212,14 +213,9 @@ export const deployPoolConfigurator = async (verify?: boolean) => {
     libraries,
     await getFirstSigner()
   ).deploy();
-  await registerContractInJsonDb(
-    eContractid.PoolConfiguratorImpl,
-    poolConfiguratorImpl,
-    []
-  );
   return withSaveAndVerify(
     poolConfiguratorImpl,
-    eContractid.PoolConfiguratorProxy,
+    eContractid.PoolConfiguratorImpl,
     [],
     verify,
     libraries
@@ -291,6 +287,19 @@ export const deployLiquidationLogic = async (
   );
 };
 
+export const deployAuctionLogic = async (verify?: boolean) => {
+  const auctionLibrary = await new AuctionLogic__factory(
+    await getFirstSigner()
+  ).deploy();
+
+  return withSaveAndVerify(
+    auctionLibrary,
+    eContractid.AuctionLogic,
+    [],
+    verify
+  );
+};
+
 export const deployBridgeLogic = async (verify?: boolean) => {
   const bridgeLogicArtifact = await readArtifact(eContractid.BridgeLogic);
   const bridgeLogicFactory = await DRE.ethers.getContractFactory(
@@ -323,6 +332,7 @@ export const deployPoolCoreLibraries = async (
 ): Promise<PoolCoreLibraryAddresses> => {
   const supplyLogic = await deploySupplyLogic(verify);
   const borrowLogic = await deployBorrowLogic(verify);
+  const auctionLogic = await deployAuctionLogic(verify);
   const liquidationLogic = await deployLiquidationLogic(
     {
       ["contracts/protocol/libraries/logic/SupplyLogic.sol:SupplyLogic"]:
@@ -333,6 +343,8 @@ export const deployPoolCoreLibraries = async (
   const flashClaimLogic = await deployFlashClaimLogic(verify);
 
   return {
+    ["contracts/protocol/libraries/logic/AuctionLogic.sol:AuctionLogic"]:
+      auctionLogic.address,
     ["contracts/protocol/libraries/logic/LiquidationLogic.sol:LiquidationLogic"]:
       liquidationLogic.address,
     ["contracts/protocol/libraries/logic/SupplyLogic.sol:SupplyLogic"]:
@@ -422,31 +434,15 @@ export const deployPoolComponents = async (
     await getFirstSigner()
   ).deploy(provider);
 
-  await registerContractInJsonDb(eContractid.PoolCoreImpl, poolCore, [
-    provider,
-  ]);
-
   const poolParameters = await new PoolParameters__factory(
     parametersLibraries,
     await getFirstSigner()
   ).deploy(provider);
 
-  await registerContractInJsonDb(
-    eContractid.PoolParametersImpl,
-    poolParameters,
-    [provider]
-  );
-
   const poolMarketplace = await new PoolMarketplace__factory(
     marketplaceLibraries,
     await getFirstSigner()
   ).deploy(provider);
-
-  await registerContractInJsonDb(
-    eContractid.PoolMarketplaceImpl,
-    poolMarketplace,
-    [provider]
-  );
 
   const {poolCoreSelectors, poolParametersSelectors, poolMarketplaceSelectors} =
     checkPoolSignatures();
@@ -600,7 +596,8 @@ export const deployMockReserveAuctionStrategy = async (
     verify
   );
 
-export const deployDefaultReserveAuctionStrategy = async (
+export const deployReserveAuctionStrategy = async (
+  strategyName: string,
   args: [string, string, string, string, string, string],
   verify?: boolean
 ) =>
@@ -608,12 +605,13 @@ export const deployDefaultReserveAuctionStrategy = async (
     await new DefaultReserveAuctionStrategy__factory(
       await getFirstSigner()
     ).deploy(...args),
-    eContractid.DefaultReserveAuctionStrategy,
+    strategyName,
     [...args],
     verify
   );
 
-export const deployDefaultReserveInterestRateStrategy = async (
+export const deployReserveInterestRateStrategy = async (
+  strategyName: string,
   args: [tEthereumAddress, string, string, string, string],
   verify?: boolean
 ) =>
@@ -621,7 +619,7 @@ export const deployDefaultReserveInterestRateStrategy = async (
     await new DefaultReserveInterestRateStrategy__factory(
       await getFirstSigner()
     ).deploy(...args),
-    eContractid.DefaultReserveInterestRateStrategy,
+    strategyName,
     [...args],
     verify
   );
@@ -1043,7 +1041,8 @@ export const deployAllMockERC721Tokens = async (verify?: boolean) => {
           case "UniswapV3":
             insertContractAddressInDb(
               eContractid.UniswapV3,
-              UNISWAP_V3_POSITION_MANAGER_ADDRESS
+              UNISWAP_V3_POSITION_MANAGER_ADDRESS,
+              false
             );
             tokens[tokenSymbol] = await getMintableERC721(
               UNISWAP_V3_POSITION_MANAGER_ADDRESS
@@ -2003,16 +2002,11 @@ export const deployERC721Delegate = async (verify?: boolean) =>
   );
 
 export const deployUniswapV3 = async (args: [], verify?: boolean) => {
-  const uniswapV3FactoryImpl = await new UniswapV3Factory__factory(
+  const uniswapV3Factory = await new UniswapV3Factory__factory(
     await getFirstSigner()
   ).deploy(...args);
-  await registerContractInJsonDb(
-    eContractid.UniswapV3Factory,
-    uniswapV3FactoryImpl,
-    [...args]
-  );
   return withSaveAndVerify(
-    uniswapV3FactoryImpl,
+    uniswapV3Factory,
     eContractid.UniswapV3Factory,
     [...args],
     verify

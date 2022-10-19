@@ -1,4 +1,3 @@
-import {MOCK_USD_PRICE_IN_WEI} from "../../../../helpers/constants";
 import {
   deployPriceOracle,
   deployNftFloorPriceOracle,
@@ -11,6 +10,7 @@ import {waitForTx} from "../../../../helpers/misc-utils";
 import {setInitialAssetPricesInOracle} from "../../../../helpers/oracles-helpers";
 import ParaSpaceConfig from "../../../../market-config";
 import {NFT_PROJECTS_WITH_FLOOR_PRICE} from "../../full-deployment/helpers/constants";
+import {MOCK_USD_PRICE_IN_WEI} from "../helpers/constants";
 
 export const step_10 = async (verify = false) => {
   try {
