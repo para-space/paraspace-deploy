@@ -52,12 +52,6 @@ import {
 
 export type MockTokenMap = {[symbol: string]: MintableERC20};
 export type MockTokenMapERC721 = {[symbol: string]: MintableERC721};
-
-export const isLocalTestnet = () =>
-  [HARDHAT_CHAINID, COVERAGE_CHAINID].includes(DRE.network.config.chainId!);
-
-export const isFork = () => DRE.network.config.chainId === FORK_MAINNET_CHAINID;
-
 export const registerContractInJsonDb = async (
   id: string,
   instance: Contract,
@@ -68,7 +62,7 @@ export const registerContractInJsonDb = async (
   const currentNetwork = DRE.network.name;
   const FORK = process.env.FORK;
   const key = `${id}.${DRE.network.name}`;
-  if (isFork() || !isLocalTestnet()) {
+  if (FORK || (currentNetwork !== "hardhat" && currentNetwork !== "coverage")) {
     console.log(`*** ${id} ***\n`);
     console.log(`Network: ${currentNetwork}`);
     console.log(`tx: ${instance.deployTransaction.hash}`);
