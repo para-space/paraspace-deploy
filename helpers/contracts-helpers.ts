@@ -44,37 +44,45 @@ import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/Pool
 import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
 import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
 import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/pool/PoolConfigurator__factory";
+import {
+  COVERAGE_CHAINID,
+  FORK_MAINNET_CHAINID,
+  HARDHAT_CHAINID,
+} from "./hardhat-constants";
 
 export type MockTokenMap = {[symbol: string]: MintableERC20};
 export type MockTokenMapERC721 = {[symbol: string]: MintableERC721};
 
+export const isLocalTestnet = () =>
+  [HARDHAT_CHAINID, COVERAGE_CHAINID].includes(DRE.network.config.chainId!);
+
+export const isFork = () => DRE.network.config.chainId === FORK_MAINNET_CHAINID;
+
 export const registerContractInJsonDb = async (
-  contractId: string,
-  contractInstance: Contract,
+  id: string,
+  instance: Contract,
   constructorArgs: ConstructorArgs = [],
   libraries?: LibraryAddresses,
   signatures?: iFunctionSignature[]
 ) => {
   const currentNetwork = DRE.network.name;
   const FORK = process.env.FORK;
-  if (
-    FORK ||
-    (currentNetwork !== "hardhat" && !currentNetwork.includes("coverage"))
-  ) {
-    console.log(`*** ${contractId} ***\n`);
+  const key = `${id}.${DRE.network.name}`;
+  if (isFork() || !isLocalTestnet()) {
+    console.log(`*** ${id} ***\n`);
     console.log(`Network: ${currentNetwork}`);
-    console.log(`tx: ${contractInstance.deployTransaction.hash}`);
-    console.log(`contract address: ${contractInstance.address}`);
-    console.log(`deployer address: ${contractInstance.deployTransaction.from}`);
-    console.log(`gas price: ${contractInstance.deployTransaction.gasPrice}`);
-    console.log(`gas used: ${contractInstance.deployTransaction.gasLimit}`);
+    console.log(`tx: ${instance.deployTransaction.hash}`);
+    console.log(`contract address: ${instance.address}`);
+    console.log(`deployer address: ${instance.deployTransaction.from}`);
+    console.log(`gas price: ${instance.deployTransaction.gasPrice}`);
+    console.log(`gas used: ${instance.deployTransaction.gasLimit}`);
     console.log(`\n******`);
     console.log();
   }
 
   const value = {
-    address: contractInstance.address,
-    deployer: contractInstance.deployTransaction.from,
+    address: instance.address,
+    deployer: instance.deployTransaction.from,
     constructorArgs,
     verified: false,
   };
@@ -82,7 +90,7 @@ export const registerContractInJsonDb = async (
   if (libraries) value["libraries"] = libraries;
   if (signatures?.length) value["signatures"] = signatures;
 
-  await getDb().set(`${contractId}.${currentNetwork}`, value).write();
+  await getDb().set(key, value).write();
 };
 
 export const insertContractAddressInDb = async (
@@ -90,7 +98,8 @@ export const insertContractAddressInDb = async (
   address: tEthereumAddress,
   verifiable = true
 ) => {
-  const old = (await getDb().get(`${id}.${DRE.network.name}`).value()) || {};
+  const key = `${id}.${DRE.network.name}`;
+  const old = (await getDb().get(key).value()) || {};
   const newValue = {
     ...old,
     address,
@@ -98,33 +107,7 @@ export const insertContractAddressInDb = async (
   if (!Array.isArray(newValue.constructorArgs) && verifiable) {
     newValue["constructorArgs"] = [];
   }
-  await getDb().set(`${id}.${DRE.network.name}`, newValue).write();
-};
-
-export const insertFunctionSigaturesInDb = async (
-  id: eContractid | string,
-  functions: iFunctionSignature[]
-) => {
-  const old = (await getDb().get(`${id}.${DRE.network.name}`).value()) || {};
-  await getDb()
-    .set(`${id}.${DRE.network.name}`, {
-      ...old,
-      functions,
-    })
-    .write();
-};
-
-export const insertLibrariesInDb = async (
-  id: eContractid | string,
-  libraries: LibraryAddresses
-) => {
-  const old = (await getDb().get(`${id}.${DRE.network.name}`).value()) || {};
-  await getDb()
-    .set(`${id}.${DRE.network.name}`, {
-      ...old,
-      libraries,
-    })
-    .write();
+  await getDb().set(key, newValue).write();
 };
 
 export const getEthersSigners = async (): Promise<Signer[]> => {

@@ -8,6 +8,7 @@ import {
 import {ConstructorArgs, LibraryAddresses, tEthereumAddress} from "./types";
 import axios from "axios";
 import minimatch from "minimatch";
+import {isFork, isLocalTestnet} from "./contracts-helpers";
 
 const ALREADY_VERIFIED = "Already Verified";
 
@@ -109,13 +110,7 @@ export const verifyEtherscanContract = async (
     return;
   }
 
-  // hardhat = 31337
-  // forked mainnet = 522
-  if (
-    currentNetworkChainId === HARDHAT_CHAINID ||
-    currentNetworkChainId === FORK_MAINNET_CHAINID ||
-    currentNetworkChainId === COVERAGE_CHAINID
-  ) {
+  if (isFork() || isLocalTestnet()) {
     return;
   }
 
