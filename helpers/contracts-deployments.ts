@@ -7,6 +7,7 @@ import {
   ERC721TokenContractId,
 } from "./types";
 import {
+  AuctionLogic__factory,
   // IPool__factory,
   MintableERC20,
   MintableERC721,
@@ -291,6 +292,19 @@ export const deployLiquidationLogic = async (
   );
 };
 
+export const deployAuctionLogic = async (verify?: boolean) => {
+  const auctionLibrary = await new AuctionLogic__factory(
+    await getFirstSigner()
+  ).deploy();
+
+  return withSaveAndVerify(
+    auctionLibrary,
+    eContractid.AuctionLogic,
+    [],
+    verify
+  );
+};
+
 export const deployBridgeLogic = async (verify?: boolean) => {
   const bridgeLogicArtifact = await readArtifact(eContractid.BridgeLogic);
   const bridgeLogicFactory = await DRE.ethers.getContractFactory(
@@ -323,6 +337,7 @@ export const deployPoolCoreLibraries = async (
 ): Promise<PoolCoreLibraryAddresses> => {
   const supplyLogic = await deploySupplyLogic(verify);
   const borrowLogic = await deployBorrowLogic(verify);
+  const auctionLogic = await deployAuctionLogic(verify);
   const liquidationLogic = await deployLiquidationLogic(
     {
       ["contracts/protocol/libraries/logic/SupplyLogic.sol:SupplyLogic"]:
@@ -333,6 +348,8 @@ export const deployPoolCoreLibraries = async (
   const flashClaimLogic = await deployFlashClaimLogic(verify);
 
   return {
+    ["contracts/protocol/libraries/logic/AuctionLogic.sol:AuctionLogic"]:
+      auctionLogic.address,
     ["contracts/protocol/libraries/logic/LiquidationLogic.sol:LiquidationLogic"]:
       liquidationLogic.address,
     ["contracts/protocol/libraries/logic/SupplyLogic.sol:SupplyLogic"]:
