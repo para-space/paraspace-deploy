@@ -139,7 +139,6 @@ import {HardhatRuntimeEnvironment} from "hardhat/types";
 import ParaSpaceConfig from "../market-config";
 import {Address} from "hardhat-deploy/dist/types";
 import {COVERAGE_CHAINID, HARDHAT_CHAINID} from "./hardhat-constants";
-import {UNISWAP_V3_POSITION_MANAGER_ADDRESS} from "./constants";
 import {Contract} from "ethers";
 import {LiquidationLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/LiquidationLogic__factory";
 import {MarketplaceLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/MarketplaceLogic__factory";
@@ -149,6 +148,7 @@ import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/poo
 import {FormatTypes} from "ethers/lib/utils";
 import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/pool/PoolConfigurator__factory";
 import _ from "lodash";
+import {UNISWAP_V3_POSITION_MANAGER_ADDRESS} from "../tasks/deployments/testnet/helpers/constants";
 
 declare let hre: HardhatRuntimeEnvironment;
 
