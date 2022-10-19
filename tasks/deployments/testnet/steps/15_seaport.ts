@@ -74,7 +74,7 @@ export const step_15 = async (verify = false) => {
     await waitForTx(
       await addressesProvider.setWETH(mockTokens["WETH"].address)
     );
-    await insertContractAddressInDb(eContractid.ConduitKey, conduitKey);
+    await insertContractAddressInDb(eContractid.ConduitKey, conduitKey, false);
     await insertContractAddressInDb(eContractid.Conduit, conduit);
     await insertContractAddressInDb(eContractid.PausableZone, zone);
   } catch (error) {

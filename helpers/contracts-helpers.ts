@@ -87,15 +87,18 @@ export const registerContractInJsonDb = async (
 
 export const insertContractAddressInDb = async (
   id: eContractid | string,
-  address: tEthereumAddress
+  address: tEthereumAddress,
+  verifiable = true
 ) => {
   const old = (await getDb().get(`${id}.${DRE.network.name}`).value()) || {};
-  await getDb()
-    .set(`${id}.${DRE.network.name}`, {
-      ...old,
-      address,
-    })
-    .write();
+  const newValue = {
+    ...old,
+    address,
+  };
+  if (!Array.isArray(newValue.constructorArgs) && verifiable) {
+    newValue["constructorArgs"] = [];
+  }
+  await getDb().set(`${id}.${DRE.network.name}`, newValue).write();
 };
 
 export const insertFunctionSigaturesInDb = async (

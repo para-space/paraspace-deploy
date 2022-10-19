@@ -16,14 +16,14 @@ import {
 import {insertContractAddressInDb} from "./contracts-helpers";
 import {BigNumber, BigNumberish} from "ethers";
 import {
-  deployDefaultReserveInterestRateStrategy,
+  deployReserveInterestRateStrategy,
   deployDelegationAwarePTokenImpl,
   deployGenericPTokenImpl,
   deployGenericNTokenImpl,
   deployGenericVariableDebtToken,
   deployGenericMoonbirdNTokenImpl,
   deployUniswapV3NTokenImpl,
-  deployDefaultReserveAuctionStrategy,
+  deployReserveAuctionStrategy,
   deployPTokenStETH,
   deployPTokenAToken,
 } from "./contracts-deployments";
@@ -157,7 +157,8 @@ export const initReservesByHelper = async (
 
     insertContractAddressInDb(
       `delegationAwarePTokenImpl`,
-      delegationAwarePTokenImplementationAddress
+      delegationAwarePTokenImplementationAddress,
+      false
     );
   }
 
@@ -206,19 +207,19 @@ export const initReservesByHelper = async (
       if (defaultReserveInterestRateStrategyAddress) {
         strategyAddresses[strategy.name] =
           defaultReserveInterestRateStrategyAddress;
+        insertContractAddressInDb(
+          strategy.name,
+          strategyAddresses[strategy.name],
+          false
+        );
       } else {
         strategyAddresses[strategy.name] = (
-          await deployDefaultReserveInterestRateStrategy(
+          await deployReserveInterestRateStrategy(
+            strategy.name,
             rateStrategies[strategy.name],
             verify
           )
         ).address;
-        // This causes the last strategy to be printed twice, once under "DefaultReserveInterestRateStrategy"
-        // and once under the actual `strategyASSET` key.
-        insertContractAddressInDb(
-          strategy.name,
-          strategyAddresses[strategy.name]
-        );
       }
     }
     if (!auctionStrategyAddresses[auctionStrategy.name]) {
@@ -227,10 +228,16 @@ export const initReservesByHelper = async (
       } else if (defaultReserveAuctionStrategyAddress) {
         auctionStrategyAddresses[auctionStrategy.name] =
           defaultReserveAuctionStrategyAddress;
+        insertContractAddressInDb(
+          auctionStrategy.name,
+          auctionStrategyAddresses[auctionStrategy.name],
+          false
+        );
       } else {
         // Strategy does not exist, create a new one
         auctionStrategyAddresses[auctionStrategy.name] = (
-          await deployDefaultReserveAuctionStrategy(
+          await deployReserveAuctionStrategy(
+            auctionStrategy.name,
             [
               maxPriceMultiplier,
               minExpPriceMultiplier,
@@ -242,10 +249,6 @@ export const initReservesByHelper = async (
             verify
           )
         ).address;
-        insertContractAddressInDb(
-          auctionStrategy.name,
-          auctionStrategyAddresses[auctionStrategy.name]
-        );
       }
     }
 

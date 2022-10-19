@@ -23,10 +23,7 @@ import {
   getPriceOracle,
   getUniswapV3Factory,
 } from "../../../../helpers/contracts-getters";
-import {
-  getParaSpaceAdmins,
-  insertContractAddressInDb,
-} from "../../../../helpers/contracts-helpers";
+import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 import {
   COVERAGE_CHAINID,
   GOERLI_CHAINID,
@@ -139,11 +136,6 @@ export const step_11 = async (verify = false) => {
       const protocolDataProvider = await deployProtocolDataProvider(
         addressesProvider.address,
         verify
-      );
-
-      await insertContractAddressInDb(
-        eContractid.ProtocolDataProvider,
-        protocolDataProvider.address
       );
       const admin = await paraSpaceAdmin.getAddress();
 
@@ -314,18 +306,16 @@ export const step_11 = async (verify = false) => {
 
       const reservesParams = ParaSpaceConfig.ReservesConfig;
 
-      const testHelpers = await deployProtocolDataProvider(
+      const protocolDataProvider = await deployProtocolDataProvider(
         addressesProvider.address,
         verify
       );
 
-      await insertContractAddressInDb(
-        eContractid.ProtocolDataProvider,
-        testHelpers.address
-      );
       const admin = await paraSpaceAdmin.getAddress();
 
-      await addressesProvider.setProtocolDataProvider(testHelpers.address);
+      await addressesProvider.setProtocolDataProvider(
+        protocolDataProvider.address
+      );
 
       console.log("Initialize configuration");
 
@@ -355,7 +345,7 @@ export const step_11 = async (verify = false) => {
       await configureReservesByHelper(
         reservesParams,
         allReservesAddresses,
-        testHelpers,
+        protocolDataProvider,
         admin
       );
 

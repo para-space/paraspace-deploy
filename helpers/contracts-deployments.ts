@@ -596,7 +596,8 @@ export const deployMockReserveAuctionStrategy = async (
     verify
   );
 
-export const deployDefaultReserveAuctionStrategy = async (
+export const deployReserveAuctionStrategy = async (
+  strategyName: string,
   args: [string, string, string, string, string, string],
   verify?: boolean
 ) =>
@@ -604,12 +605,13 @@ export const deployDefaultReserveAuctionStrategy = async (
     await new DefaultReserveAuctionStrategy__factory(
       await getFirstSigner()
     ).deploy(...args),
-    eContractid.DefaultReserveAuctionStrategy,
+    strategyName,
     [...args],
     verify
   );
 
-export const deployDefaultReserveInterestRateStrategy = async (
+export const deployReserveInterestRateStrategy = async (
+  strategyName: string,
   args: [tEthereumAddress, string, string, string, string],
   verify?: boolean
 ) =>
@@ -617,7 +619,7 @@ export const deployDefaultReserveInterestRateStrategy = async (
     await new DefaultReserveInterestRateStrategy__factory(
       await getFirstSigner()
     ).deploy(...args),
-    eContractid.DefaultReserveInterestRateStrategy,
+    strategyName,
     [...args],
     verify
   );
@@ -1039,7 +1041,8 @@ export const deployAllMockERC721Tokens = async (verify?: boolean) => {
           case "UniswapV3":
             insertContractAddressInDb(
               eContractid.UniswapV3,
-              UNISWAP_V3_POSITION_MANAGER_ADDRESS
+              UNISWAP_V3_POSITION_MANAGER_ADDRESS,
+              false
             );
             tokens[tokenSymbol] = await getMintableERC721(
               UNISWAP_V3_POSITION_MANAGER_ADDRESS

@@ -143,6 +143,7 @@ export const verifyContracts = async (limit = 1) => {
   const network = DRE.network.name;
   const entries = Object.entries<DbEntry>(db.getState()).filter(
     ([key, value]) => {
+      // constructorArgs must be Array to make the contract verifiable
       return !!value[network] && Array.isArray(value[network].constructorArgs);
     }
   );
