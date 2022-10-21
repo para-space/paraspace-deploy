@@ -107,7 +107,7 @@ const runScript = async () => {
     liquidationBonus: "11000",
     borrowingEnabled: false,
     reserveDecimals: "0",
-    xTokenImpl: eContractid.NToken,
+    xTokenImpl: eContractid.NTokenImpl,
     reserveFactor: "0",
     borrowCap: "0",
     supplyCap: "0",

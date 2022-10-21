@@ -243,7 +243,9 @@ export const getPToken = async (address?: tEthereumAddress) =>
   await PToken__factory.connect(
     address ||
       (
-        await getDb().get(`${eContractid.PToken}.${DRE.network.name}`).value()
+        await getDb()
+          .get(`${eContractid.PTokenImpl}.${DRE.network.name}`)
+          .value()
       ).address,
     await getFirstSigner()
   );
@@ -252,7 +254,9 @@ export const getNToken = async (address?: tEthereumAddress) =>
   await NToken__factory.connect(
     address ||
       (
-        await getDb().get(`${eContractid.NToken}.${DRE.network.name}`).value()
+        await getDb()
+          .get(`${eContractid.NTokenImpl}.${DRE.network.name}`)
+          .value()
       ).address,
     await getFirstSigner()
   );
@@ -262,7 +266,7 @@ export const getVariableDebtToken = async (address?: tEthereumAddress) =>
     address ||
       (
         await getDb()
-          .get(`${eContractid.VariableDebtToken}.${DRE.network.name}`)
+          .get(`${eContractid.VariableDebtTokenImpl}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()
@@ -620,7 +624,7 @@ export const getNTokenMoonBirds = async (address?: tEthereumAddress) =>
     address ||
       (
         await getDb()
-          .get(`${eContractid.NTokenMoonBirds}.${DRE.network.name}`)
+          .get(`${eContractid.NTokenMoonBirdsImpl}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()
@@ -680,7 +684,7 @@ export const getNTokenUniswapV3 = async (address?: tEthereumAddress) =>
     address ||
       (
         await getDb()
-          .get(`${eContractid.NTokenUniswapV3}.${DRE.network.name}`)
+          .get(`${eContractid.NTokenUniswapV3Impl}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()
@@ -880,7 +884,7 @@ export const getPTokenStETH = async (address?: tEthereumAddress) =>
     address ||
       (
         await getDb()
-          .get(`${eContractid.PTokenStETH}.${DRE.network.name}`)
+          .get(`${eContractid.PTokenStETHImpl}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()
@@ -902,7 +906,7 @@ export const getPTokenAToken = async (address?: tEthereumAddress) =>
     address ||
       (
         await getDb()
-          .get(`${eContractid.PTokenAToken}.${DRE.network.name}`)
+          .get(`${eContractid.PTokenATokenImpl}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()

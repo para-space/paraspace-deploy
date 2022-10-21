@@ -632,7 +632,7 @@ export const deployGenericVariableDebtToken = async (
     await new VariableDebtToken__factory(await getFirstSigner()).deploy(
       poolAddress
     ),
-    eContractid.VariableDebtToken,
+    eContractid.VariableDebtTokenImpl,
     [poolAddress],
     verify
   );
@@ -657,7 +657,7 @@ export const deployGenericPToken = async (
 ) => {
   const instance = await withSaveAndVerify(
     await new PToken__factory(await getFirstSigner()).deploy(poolAddress),
-    eContractid.PToken,
+    eContractid.PTokenImpl,
     [poolAddress],
     verify
   );
@@ -682,7 +682,7 @@ export const deployGenericPTokenImpl = async (
 ) =>
   withSaveAndVerify(
     await new PToken__factory(await getFirstSigner()).deploy(poolAddress),
-    eContractid.PToken,
+    eContractid.PTokenImpl,
     [poolAddress],
     verify
   );
@@ -697,7 +697,7 @@ export const deployGenericNTokenImpl = async (
       poolAddress,
       atomicPricing
     ),
-    eContractid.NToken,
+    eContractid.NTokenImpl,
     [poolAddress, atomicPricing],
     verify
   );
@@ -710,7 +710,7 @@ export const deployUniswapV3NTokenImpl = async (
     await new NTokenUniswapV3__factory(await getFirstSigner()).deploy(
       poolAddress
     ),
-    eContractid.NTokenUniswapV3,
+    eContractid.NTokenUniswapV3Impl,
     [poolAddress],
     verify
   );
@@ -723,7 +723,7 @@ export const deployGenericMoonbirdNTokenImpl = async (
     await new NTokenMoonBirds__factory(await getFirstSigner()).deploy(
       poolAddress
     ),
-    eContractid.NTokenMoonBirds,
+    eContractid.NTokenMoonBirdsImpl,
     [poolAddress],
     verify
   );
@@ -750,7 +750,7 @@ export const deployDelegationAwarePToken = async (
     await new DelegationAwarePToken__factory(await getFirstSigner()).deploy(
       poolAddress
     ),
-    eContractid.DelegationAwarePToken,
+    eContractid.DelegationAwarePTokenImpl,
     [poolAddress],
     verify
   );
@@ -777,7 +777,7 @@ export const deployDelegationAwarePTokenImpl = async (
     await new DelegationAwarePToken__factory(await getFirstSigner()).deploy(
       poolAddress
     ),
-    eContractid.DelegationAwarePToken,
+    eContractid.DelegationAwarePTokenImpl,
     [poolAddress],
     verify
   );
@@ -2145,7 +2145,7 @@ export const deployPTokenAToken = async (
 ) =>
   withSaveAndVerify(
     await new PTokenAToken__factory(await getFirstSigner()).deploy(poolAddress),
-    eContractid.PTokenAToken,
+    eContractid.PTokenATokenImpl,
     [poolAddress],
     verify
   );
@@ -2156,7 +2156,7 @@ export const deployPTokenStETH = async (
 ) =>
   withSaveAndVerify(
     await new PTokenStETH__factory(await getFirstSigner()).deploy(poolAddress),
-    eContractid.PTokenStETH,
+    eContractid.PTokenStETHImpl,
     [poolAddress],
     verify
   );

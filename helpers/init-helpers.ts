@@ -142,35 +142,34 @@ export const initReservesByHelper = async (
   nTokenUniSwapV3ImplementationAddress = nTokenUniSwapV3.address;
 
   const delegatedAwareReserves = Object.entries(reservesParams).filter(
-    ([, {xTokenImpl}]) => xTokenImpl === eContractid.DelegationAwarePToken
+    ([, {xTokenImpl}]) => xTokenImpl === eContractid.DelegationAwarePTokenImpl
   ) as [string, IReserveParams][];
 
   if (delegatedAwareReserves.length > 0) {
     if (delegationAwarePTokenImpl) {
       delegationAwarePTokenImplementationAddress = delegationAwarePTokenImpl;
+      insertContractAddressInDb(
+        eContractid.DelegationAwarePTokenImpl,
+        delegationAwarePTokenImplementationAddress,
+        false
+      );
     } else {
       const delegationAwarePTokenImplementation =
         await deployDelegationAwarePTokenImpl(pool.address, verify);
       delegationAwarePTokenImplementationAddress =
         delegationAwarePTokenImplementation.address;
     }
-
-    insertContractAddressInDb(
-      `delegationAwarePTokenImpl`,
-      delegationAwarePTokenImplementationAddress,
-      false
-    );
   }
 
   const reserves = Object.entries(reservesParams).filter(
     ([, {xTokenImpl}]) =>
-      xTokenImpl === eContractid.DelegationAwarePToken ||
-      xTokenImpl === eContractid.PToken ||
-      xTokenImpl === eContractid.NToken ||
-      xTokenImpl === eContractid.NTokenMoonBirds ||
-      xTokenImpl === eContractid.NTokenUniswapV3 ||
-      xTokenImpl === eContractid.StETH ||
-      xTokenImpl === eContractid.PTokenAToken
+      xTokenImpl === eContractid.DelegationAwarePTokenImpl ||
+      xTokenImpl === eContractid.PTokenImpl ||
+      xTokenImpl === eContractid.NTokenImpl ||
+      xTokenImpl === eContractid.NTokenMoonBirdsImpl ||
+      xTokenImpl === eContractid.NTokenUniswapV3Impl ||
+      xTokenImpl === eContractid.PTokenStETHImpl ||
+      xTokenImpl === eContractid.PTokenATokenImpl
   ) as [string, IReserveParams][];
 
   for (const [symbol, params] of reserves) {
@@ -266,9 +265,15 @@ export const initReservesByHelper = async (
       auctionStrategyAddressPerAsset[symbol]
     );
 
-    if (xTokenImpl === eContractid.DelegationAwarePToken) {
+    if (xTokenImpl === eContractid.DelegationAwarePTokenImpl) {
       xTokenType[symbol] = "delegation aware";
-    } else if (xTokenImpl === eContractid.NToken) {
+    } else if (
+      [
+        eContractid.NTokenImpl,
+        eContractid.NTokenMoonBirdsImpl,
+        eContractid.NTokenUniswapV3Impl,
+      ].includes(xTokenImpl)
+    ) {
       xTokenType[symbol] = "nft";
     } else {
       xTokenType[symbol] = "generic";
