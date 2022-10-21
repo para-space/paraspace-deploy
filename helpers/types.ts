@@ -265,6 +265,7 @@ export enum ProtocolErrors {
   AUCTIONED_BALANCE_NOT_ZERO = "116", //auctioned balance not zero
 
   LIQUIDATOR_CAN_NOT_BE_SELF = "117", //user can not liquidate himself
+  UNIV3_NOT_ALLOWED = "119", //flash claim is not allowed for UniswapV3
   // SafeCast
   SAFECAST_UINT128_OVERFLOW = "SafeCast: value doesn't fit in 128 bits",
 
