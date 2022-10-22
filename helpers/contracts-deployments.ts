@@ -138,7 +138,11 @@ import {MintableDelegationERC20} from "../../types";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import ParaSpaceConfig from "../market-config";
 import {Address} from "hardhat-deploy/dist/types";
-import {COVERAGE_CHAINID, HARDHAT_CHAINID} from "./hardhat-constants";
+import {
+  COVERAGE_CHAINID,
+  GOERLI_CHAINID,
+  HARDHAT_CHAINID,
+} from "./hardhat-constants";
 import {Contract} from "ethers";
 import {LiquidationLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/LiquidationLogic__factory";
 import {MarketplaceLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/MarketplaceLogic__factory";
@@ -149,6 +153,7 @@ import {FormatTypes} from "ethers/lib/utils";
 import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/pool/PoolConfigurator__factory";
 import _ from "lodash";
 import {UNISWAP_V3_POSITION_MANAGER_ADDRESS} from "../tasks/deployments/testnet/helpers/constants";
+import {WETH} from "../tasks/deployments/testnet/helpers/constants";
 
 declare let hre: HardhatRuntimeEnvironment;
 
@@ -796,19 +801,27 @@ export const deployAllMockERC20Tokens = async (verify?: boolean) => {
 
   for (const tokenSymbol of Object.keys(TokenContractId)) {
     const db = getDb();
-    const contract_address = db
+    const contractAddress = db
       .get(`${tokenSymbol.toUpperCase()}.${DRE.network.name}`)
       .value()?.address;
 
     // if contract address is already in db, then skip to next tokenSymbol
-    if (contract_address) {
+    if (contractAddress) {
       console.log("contract address is already in db ", tokenSymbol);
       continue;
     } else {
       console.log("deploying now ", tokenSymbol);
 
       if (tokenSymbol === "WETH") {
-        tokens[tokenSymbol] = await deployWETHMocked(verify);
+        if (
+          hre.network.config.chainId === HARDHAT_CHAINID ||
+          hre.network.config.chainId === COVERAGE_CHAINID
+        ) {
+          tokens[tokenSymbol] = await deployWETHMocked(verify);
+        } else {
+          insertContractAddressInDb(eContractid.WETHMocked, WETH, false);
+          tokens[tokenSymbol] = await getWETHMocked(WETH);
+        }
         continue;
       }
 
@@ -819,6 +832,7 @@ export const deployAllMockERC20Tokens = async (verify?: boolean) => {
         );
         continue;
       }
+
       if (tokenSymbol === "aWETH") {
         tokens[tokenSymbol] = await deployMockAToken(
           [tokenSymbol, tokenSymbol, "18"],
@@ -860,12 +874,12 @@ export const deployAllMockERC721Tokens = async (verify?: boolean) => {
 
   for (const tokenSymbol of Object.keys(ERC721TokenContractId)) {
     const db = getDb();
-    const contract_address = db
+    const contractAddress = db
       .get(`${tokenSymbol}.${DRE.network.name}`)
       .value()?.address;
 
     // if contract address is already in db, then skip to next tokenSymbol
-    if (contract_address) {
+    if (contractAddress) {
       console.log("contract address is already in db ", tokenSymbol);
       continue;
     } else {
