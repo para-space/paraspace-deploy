@@ -279,6 +279,8 @@ export enum ProtocolErrors {
   INVALID_FROM_BALANCE_AFTER_TRANSFER = "Invalid from balance after transfer",
   INVALID_TO_BALANCE_AFTER_TRANSFER = "Invalid from balance after transfer",
   INVALID_HF = "Invalid health factor",
+  //disable calls
+  EMEGENCY_DISABLE_CALL = "emergency disable call",
 }
 
 export type tEthereumAddress = string;
