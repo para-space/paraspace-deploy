@@ -817,9 +817,9 @@ export const deployAllMockERC20Tokens = async (verify?: boolean) => {
           hre.network.config.chainId === HARDHAT_CHAINID ||
           hre.network.config.chainId === COVERAGE_CHAINID
         ) {
-          insertContractAddressInDb(eContractid.WETHMocked, WETH, false);
           tokens[tokenSymbol] = await deployWETHMocked(verify);
         } else {
+          insertContractAddressInDb(eContractid.WETHMocked, WETH, false);
           tokens[tokenSymbol] = await getWETHMocked(WETH);
         }
         continue;
