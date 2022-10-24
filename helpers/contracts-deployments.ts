@@ -25,6 +25,7 @@ import {
 } from "./contracts-getters";
 import {
   getEthersSignersAddresses,
+  isLocalTestnet,
   normalizeLibraryAddresses,
 } from "./contracts-helpers";
 import {
@@ -138,11 +139,6 @@ import {MintableDelegationERC20} from "../../types";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import ParaSpaceConfig from "../market-config";
 import {Address} from "hardhat-deploy/dist/types";
-import {
-  COVERAGE_CHAINID,
-  GOERLI_CHAINID,
-  HARDHAT_CHAINID,
-} from "./hardhat-constants";
 import {Contract} from "ethers";
 import {LiquidationLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/LiquidationLogic__factory";
 import {MarketplaceLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/MarketplaceLogic__factory";
@@ -813,10 +809,7 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
       console.log("deploying now ", tokenSymbol);
 
       if (tokenSymbol === "WETH") {
-        if (
-          hre.network.config.chainId === HARDHAT_CHAINID ||
-          hre.network.config.chainId === COVERAGE_CHAINID
-        ) {
+        if (isLocalTestnet(DRE)) {
           tokens[tokenSymbol] = await deployWETHMocked(verify);
         } else {
           insertContractAddressInDb(eContractid.WETHMocked, WETH, false);
@@ -886,10 +879,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
       console.log("deploying now ", tokenSymbol);
 
       // we are using hardhat, we want to use mock ERC721 contracts
-      if (
-        hre.network.config.chainId === HARDHAT_CHAINID ||
-        hre.network.config.chainId === COVERAGE_CHAINID
-      ) {
+      if (isLocalTestnet(DRE)) {
         if (tokenSymbol === "WPUNKS") {
           const cryptoPunksMarket = await deployCryptoPunksMarket([], verify);
           tokens["PUNKS"] = cryptoPunksMarket;
@@ -1022,7 +1012,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
               .value().address;
             tokens[tokenSymbol] = await deployMeebits(
               [
-                punkAddress, // our rinkeby punks address
+                punkAddress,
                 "0x0000000000000000000000000000000000000000",
                 "0x69C33aB569816F1D564a420490AbB894a44071Fb", // shared wallet account 1
               ],

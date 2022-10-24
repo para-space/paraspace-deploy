@@ -30,10 +30,13 @@ export type ParaSpaceLibraryAddresses =
 export enum eEthereumNetwork {
   kovan = "kovan",
   ropsten = "ropsten",
+  goerli = "goerli",
   main = "main",
   coverage = "coverage",
   hardhat = "hardhat",
   tenderlyMain = "tenderlyMain",
+  ganache = "ganache",
+  parallel = "parallel",
 }
 
 export enum eContractid {
@@ -425,8 +428,11 @@ export interface iEthereumParamsPerNetwork<T> {
   [eEthereumNetwork.coverage]: T;
   [eEthereumNetwork.kovan]: T;
   [eEthereumNetwork.ropsten]: T;
+  [eEthereumNetwork.goerli]: T;
   [eEthereumNetwork.main]: T;
   [eEthereumNetwork.hardhat]: T;
+  [eEthereumNetwork.ganache]: T;
+  [eEthereumNetwork.parallel]: T;
   [eEthereumNetwork.tenderlyMain]: T;
 }
 

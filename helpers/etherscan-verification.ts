@@ -1,13 +1,9 @@
 import fs from "fs";
 import {DRE, getDb} from "./misc-utils";
-import {
-  COVERAGE_CHAINID,
-  FORK_MAINNET_CHAINID,
-  HARDHAT_CHAINID,
-} from "./hardhat-constants";
 import {ConstructorArgs, LibraryAddresses, tEthereumAddress} from "./types";
 import axios from "axios";
 import minimatch from "minimatch";
+import {isForkMainnet, isLocalTestnet} from "./contracts-helpers";
 
 const ALREADY_VERIFIED = "Already Verified";
 
@@ -109,11 +105,7 @@ export const verifyEtherscanContract = async (
     return;
   }
 
-  if (
-    currentNetworkChainId === HARDHAT_CHAINID ||
-    currentNetworkChainId === FORK_MAINNET_CHAINID ||
-    currentNetworkChainId === COVERAGE_CHAINID
-  ) {
+  if (isLocalTestnet(DRE) || isForkMainnet(DRE)) {
     return;
   }
 

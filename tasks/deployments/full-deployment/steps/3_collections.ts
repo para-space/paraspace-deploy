@@ -43,8 +43,8 @@ import {
 } from "../../../../../types";
 import {
   FORK_MAINNET_CHAINID,
+  GOERLI_CHAINID,
   MAINNET_CHAINID,
-  RINKEBY_CHAINID,
 } from "../../../../helpers/hardhat-constants";
 import {auctionStrategyExp} from "../../../../market-config/auctionStrategies";
 
@@ -174,7 +174,7 @@ const runScript = async () => {
       );
 
       // rinkeby deploy actual tokens
-      if (network === RINKEBY_CHAINID || DRE.network.name === "localhost") {
+      if (network === GOERLI_CHAINID || DRE.network.name === "localhost") {
         console.log("rinkeby or local host ------------------- ");
         // moonbirds
         if (counter === 0) {

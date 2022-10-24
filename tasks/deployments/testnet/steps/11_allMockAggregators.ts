@@ -19,18 +19,16 @@ import {
   getPriceOracle,
   getUniswapV3Factory,
 } from "../../../../helpers/contracts-getters";
-import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 import {
-  COVERAGE_CHAINID,
-  GOERLI_CHAINID,
-  HARDHAT_CHAINID,
-  RINKEBY_CHAINID,
-} from "../../../../helpers/hardhat-constants";
+  getParaSpaceAdmins,
+  isLocalTestnet,
+  isPublicTestnet,
+} from "../../../../helpers/contracts-helpers";
 import {
   configureReservesByHelper,
   initReservesByHelper,
 } from "../../../../helpers/init-helpers";
-import {waitForTx} from "../../../../helpers/misc-utils";
+import {DRE, waitForTx} from "../../../../helpers/misc-utils";
 import {deployAllMockAggregators} from "../../../../helpers/oracles-helpers";
 import {eContractid, tEthereumAddress} from "../../../../helpers/types";
 import ParaSpaceConfig from "../../../../market-config";
@@ -45,10 +43,7 @@ declare let hre: HardhatRuntimeEnvironment;
 
 export const step_11 = async (verify = false) => {
   // hardhat local node
-  if (
-    hre.network.config.chainId === HARDHAT_CHAINID ||
-    hre.network.config.chainId === COVERAGE_CHAINID
-  ) {
+  if (isLocalTestnet(DRE)) {
     try {
       const MOCK_CHAINLINK_AGGREGATORS_PRICES =
         ParaSpaceConfig.Mocks.AllAssetsInitialPrices;
@@ -218,11 +213,8 @@ export const step_11 = async (verify = false) => {
       process.exit(1);
     }
   }
-  // rinkeby, goerli
-  if (
-    hre.network.config.chainId === RINKEBY_CHAINID ||
-    hre.network.config.chainId === GOERLI_CHAINID
-  ) {
+  // goerli
+  if (isPublicTestnet(DRE)) {
     try {
       const MOCK_CHAINLINK_AGGREGATORS_PRICES =
         ParaSpaceConfig.Mocks.AllAssetsInitialPrices;
