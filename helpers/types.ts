@@ -463,14 +463,6 @@ export interface ICommonConfiguration {
   AuctionRecoveryHealthFactor: string | number;
   ProtocolGlobalParams: IProtocolGlobalConfig;
   Mocks: IMocksConfig;
-  ProviderRegistry: tEthereumAddress | undefined;
-  ProviderRegistryOwner: tEthereumAddress | undefined;
-  PoolConfigurator: tEthereumAddress | undefined;
-  Pool: tEthereumAddress | undefined;
-  TokenDistributor: tEthereumAddress | undefined;
-  ParaSpaceOracle: tEthereumAddress | undefined;
-  FallbackOracle: tEthereumAddress | undefined;
-  ChainlinkAggregator: tEthereumAddress | undefined;
   ParaSpaceAdmin: tEthereumAddress | undefined;
   ParaSpaceAdminIndex: number;
   EmergencyAdmin: tEthereumAddress | undefined;
@@ -483,9 +475,6 @@ export interface ICommonConfiguration {
   GatewayAdminIndex: number;
   ReserveAssets: SymbolMap<tEthereumAddress> | SymbolMap<undefined>;
   ReservesConfig: iMultiPoolsAssets<IReserveParams>;
-  PTokenDomainSeparator: string;
-  WETH: tEthereumAddress | undefined;
-  WrappedNativeToken: tEthereumAddress | undefined;
   ReserveFactorTreasuryAddress: tEthereumAddress;
   IncentivesController: tEthereumAddress | undefined;
 }

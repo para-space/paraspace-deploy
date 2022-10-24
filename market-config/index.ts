@@ -76,7 +76,7 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   // BASIC INFO
   MarketId: "ParaSpaceMM",
   PTokenNamePrefix: "ParaSpace Derivative Token",
-  VariableDebtTokenNamePrefix: "ParaSpace variable debt token",
+  VariableDebtTokenNamePrefix: "ParaSpace Variable Debt Token",
   SymbolPrefix: "",
   ProviderId: 1, // Overridden in index.ts
   MaxUserAtomicTokensAllowed: 256,
@@ -102,18 +102,6 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   // Gateway Admin, for polkadot evm only 5 accounts initialized
   // so change index no more than it here
   GatewayAdminIndex: 4,
-  ProviderRegistry: undefined,
-  ProviderRegistryOwner: undefined,
-  PoolConfigurator: undefined,
-  Pool: undefined,
-  TokenDistributor: undefined,
-  ParaSpaceOracle: undefined,
-  FallbackOracle: undefined,
-  ChainlinkAggregator: undefined,
-  PTokenDomainSeparator:
-    "0xbae024d959c6a022dc5ed37294cd39c141034b2ae5f02a955cce75c930a81bf5",
-  WETH: undefined,
-  WrappedNativeToken: undefined,
   ReserveFactorTreasuryAddress: TREASURY_MULTISIG,
   IncentivesController: undefined,
 
