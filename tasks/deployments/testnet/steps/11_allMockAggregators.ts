@@ -33,11 +33,7 @@ import {deployAllMockAggregators} from "../../../../helpers/oracles-helpers";
 import {eContractid, tEthereumAddress} from "../../../../helpers/types";
 import ParaSpaceConfig from "../../../../market-config";
 import {auctionStrategyLinear} from "../../../../market-config/auctionStrategies";
-import {
-  ETH_USD_ORACLE,
-  UNISWAP_V3_FACTORY,
-  UNISWAP_V3_POSITION_MANAGER_ADDRESS,
-} from "../helpers/constants";
+import {ETH_USD_ORACLE} from "../helpers/constants";
 
 declare let hre: HardhatRuntimeEnvironment;
 
@@ -276,8 +272,8 @@ export const step_11 = async (verify = false) => {
       );
 
       const uniswapWrapper = await deployUniswapV3OracleWrapper(
-        UNISWAP_V3_FACTORY,
-        UNISWAP_V3_POSITION_MANAGER_ADDRESS,
+        ParaSpaceConfig.Uniswap.V3.Factory,
+        ParaSpaceConfig.Uniswap.V3.NFTPositionManager,
         addressesProvider.address,
         verify
       );

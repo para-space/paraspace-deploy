@@ -147,9 +147,7 @@ import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/po
 import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
 import {FormatTypes} from "ethers/lib/utils";
 import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/pool/PoolConfigurator__factory";
-import _ from "lodash";
-import {UNISWAP_V3_POSITION_MANAGER_ADDRESS} from "../tasks/deployments/testnet/helpers/constants";
-import {WETH} from "../tasks/deployments/testnet/helpers/constants";
+import {pick} from "lodash";
 
 declare let hre: HardhatRuntimeEnvironment;
 
@@ -362,7 +360,7 @@ export const deployPoolMarketplaceLibraries = async (
   verify?: boolean
 ): Promise<PoolMarketplaceLibraryAddresses> => {
   const marketplaceLogic = await deployMarketplaceLogic(
-    _.pick(coreLibraries, [
+    pick(coreLibraries, [
       "contracts/protocol/libraries/logic/SupplyLogic.sol:SupplyLogic",
       "contracts/protocol/libraries/logic/BorrowLogic.sol:BorrowLogic",
     ]),
@@ -812,8 +810,12 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
         if (isLocalTestnet(DRE)) {
           tokens[tokenSymbol] = await deployWETHMocked(verify);
         } else {
-          insertContractAddressInDb(eContractid.WETHMocked, WETH, false);
-          tokens[tokenSymbol] = await getWETHMocked(WETH);
+          insertContractAddressInDb(
+            eContractid.WETHMocked,
+            ParaSpaceConfig.WETH,
+            false
+          );
+          tokens[tokenSymbol] = await getWETHMocked(ParaSpaceConfig.WETH);
         }
         continue;
       }
@@ -1045,11 +1047,11 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
           case "UniswapV3":
             insertContractAddressInDb(
               eContractid.UniswapV3,
-              UNISWAP_V3_POSITION_MANAGER_ADDRESS,
+              ParaSpaceConfig.Uniswap.V3.NFTPositionManager,
               false
             );
             tokens[tokenSymbol] = await getMintableERC721(
-              UNISWAP_V3_POSITION_MANAGER_ADDRESS
+              ParaSpaceConfig.Uniswap.V3.NFTPositionManager
             );
             break;
           default:

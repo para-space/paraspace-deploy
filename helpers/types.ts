@@ -377,7 +377,8 @@ export enum ERC721TokenContractId {
 
 export interface IReserveParams
   extends IReserveBorrowParams,
-    IReserveCollateralParams {
+  IReserveCollateralParams {
+  address?: tEthereumAddress;
   xTokenImpl: eContractid;
   reserveFactor: string;
   supplyCap: string;
@@ -451,7 +452,27 @@ export interface IProtocolGlobalConfig {
   ParaSpaceReferral: string;
 }
 
+export interface IUniswapV2Config {
+  Factory: tEthereumAddress;
+  Router: tEthereumAddress;
+}
+
+export interface IUniswapV3Config {
+  Factory: tEthereumAddress;
+  NFTPositionManager: tEthereumAddress;
+}
+
+export interface IMarketplaceConfig {
+  Seaport: tEthereumAddress;
+}
+
+export interface IUniswapConfig {
+  V2: IUniswapV2Config;
+  V3: IUniswapV3Config;
+}
+
 export interface IMocksConfig {
+  USDPriceInWEI: string;
   AllAssetsInitialPrices: iAssetBase<string>;
 }
 
@@ -479,10 +500,11 @@ export interface ICommonConfiguration {
 
   GatewayAdmin: tEthereumAddress | undefined;
   GatewayAdminIndex: number;
-  ReserveAssets: SymbolMap<tEthereumAddress> | SymbolMap<undefined>;
+  WETH: tEthereumAddress;
+  Uniswap: IUniswapConfig;
+  Marketplace: IMarketplaceConfig;
   ReservesConfig: iMultiPoolsAssets<IReserveParams>;
   ReserveFactorTreasuryAddress: tEthereumAddress;
-  IncentivesController: tEthereumAddress | undefined;
 }
 
 export interface IParaSpaceConfiguration extends ICommonConfiguration {

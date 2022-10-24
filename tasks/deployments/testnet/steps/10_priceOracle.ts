@@ -7,7 +7,6 @@ import {waitForTx} from "../../../../helpers/misc-utils";
 import {setInitialAssetPricesInOracle} from "../../../../helpers/oracles-helpers";
 import ParaSpaceConfig from "../../../../market-config";
 import {NFT_PROJECTS_WITH_FLOOR_PRICE} from "../../full-deployment/helpers/constants";
-import {MOCK_USD_PRICE_IN_WEI} from "../helpers/constants";
 
 export const step_10 = async (verify = false) => {
   try {
@@ -23,7 +22,9 @@ export const step_10 = async (verify = false) => {
     );
 
     const fallbackOracle = await deployPriceOracle(verify);
-    await waitForTx(await fallbackOracle.setEthUsdPrice(MOCK_USD_PRICE_IN_WEI));
+    await waitForTx(
+      await fallbackOracle.setEthUsdPrice(ParaSpaceConfig.Mocks.USDPriceInWEI)
+    );
     await setInitialAssetPricesInOracle(
       ALL_ASSETS_INITIAL_PRICES,
       {

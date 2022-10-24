@@ -15,7 +15,6 @@ import {
   PARASPACE_SEAPORT_ID,
 } from "../../../../helpers/constants";
 import {waitForTx} from "../../../../helpers/misc-utils";
-import {OPENSEA_SEAPORT} from "../helpers/constants";
 import {
   createZone,
   insertContractAddressInDb,
@@ -23,6 +22,7 @@ import {
   getParaSpaceAdmins,
 } from "../../../../helpers/contracts-helpers";
 import {eContractid} from "../../../../helpers/types";
+import ParaSpaceConfig from "../../../../market-config";
 
 export const step_15 = async (verify = false) => {
   try {
@@ -65,9 +65,9 @@ export const step_15 = async (verify = false) => {
     await waitForTx(
       await addressesProvider.setMarketplace(
         OPENSEA_SEAPORT_ID,
-        OPENSEA_SEAPORT,
+        ParaSpaceConfig.Marketplace.Seaport,
         seaportAdapter.address,
-        OPENSEA_SEAPORT,
+        ParaSpaceConfig.Marketplace.Seaport,
         false
       )
     );

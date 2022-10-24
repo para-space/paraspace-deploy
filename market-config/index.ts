@@ -89,7 +89,6 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
     OneAddress: "0x0000000000000000000000000000000000000001",
     ParaSpaceReferral: "0",
   },
-
   // MARKET CONFIGURATION
   ParaSpaceAdmin: undefined,
   // DONT CHANGE THIS!!!
@@ -103,15 +102,20 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   // so change index no more than it here
   GatewayAdminIndex: 4,
   ReserveFactorTreasuryAddress: TREASURY_MULTISIG,
-  IncentivesController: undefined,
-
-  // MOCK ORACLES
-  Mocks: {
-    AllAssetsInitialPrices: {
-      ...MOCK_CHAINLINK_AGGREGATORS_PRICES,
+  WETH: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+  Uniswap: {
+    V2: {
+      Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+      Router: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+    },
+    V3: {
+      Factory: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+      NFTPositionManager: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
     },
   },
-
+  Marketplace: {
+    Seaport: "0x00000000006c3852cbEf3e08E8dF289169EdE581",
+  },
   // RESERVE ASSETS - CONFIG, ASSETS, BORROW RATES,
   ReservesConfig: {
     DAI: strategyDAI,
@@ -135,10 +139,12 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
     CLONEX: strategyClonex,
     UniswapV3: strategyUniswapV3,
   },
-  ReserveAssets: {
-    [eEthereumNetwork.hardhat]: undefined,
-    [eEthereumNetwork.coverage]: undefined,
-    [eEthereumNetwork.tenderlyMain]: undefined,
+  // MOCK ORACLES
+  Mocks: {
+    USDPriceInWEI: "5848466240000000",
+    AllAssetsInitialPrices: {
+      ...MOCK_CHAINLINK_AGGREGATORS_PRICES,
+    },
   },
 };
 
