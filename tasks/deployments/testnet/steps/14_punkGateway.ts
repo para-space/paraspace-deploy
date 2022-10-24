@@ -3,7 +3,7 @@ import {
   deployPunkGatewayProxy,
 } from "../../../../helpers/contracts-deployments";
 import {
-  getAllMockedTokens,
+  getAllTokens,
   getPoolProxy,
   getPoolAddressesProvider,
   getPunk,
@@ -14,7 +14,7 @@ export const step_14 = async (verify = false) => {
   const {gatewayAdmin} = await getParaSpaceAdmins();
 
   try {
-    const mockTokens = await getAllMockedTokens();
+    const mockTokens = await getAllTokens();
     const punks = await getPunk();
     const addressesProvider = await getPoolAddressesProvider();
     const poolAddress = await addressesProvider.getPool();

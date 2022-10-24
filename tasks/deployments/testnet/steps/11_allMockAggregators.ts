@@ -11,7 +11,7 @@ import {
   deployWalletBalanceProvider,
 } from "../../../../helpers/contracts-deployments";
 import {
-  getAllMockedTokens,
+  getAllTokens,
   getNonfungiblePositionManager,
   getPairsTokenAggregator,
   getPoolAddressesProvider,
@@ -52,7 +52,7 @@ export const step_11 = async (verify = false) => {
     try {
       const MOCK_CHAINLINK_AGGREGATORS_PRICES =
         ParaSpaceConfig.Mocks.AllAssetsInitialPrices;
-      const mockTokens = await getAllMockedTokens();
+      const mockTokens = await getAllTokens();
       const addressesProvider = await getPoolAddressesProvider();
       const fallbackOracle = await getPriceOracle();
       const {paraSpaceAdmin} = await getParaSpaceAdmins();
@@ -226,7 +226,7 @@ export const step_11 = async (verify = false) => {
     try {
       const MOCK_CHAINLINK_AGGREGATORS_PRICES =
         ParaSpaceConfig.Mocks.AllAssetsInitialPrices;
-      const mockTokens = await getAllMockedTokens();
+      const mockTokens = await getAllTokens();
       const addressesProvider = await getPoolAddressesProvider();
       const fallbackOracle = await getPriceOracle();
       const {paraSpaceAdmin} = await getParaSpaceAdmins();

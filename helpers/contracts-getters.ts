@@ -72,8 +72,8 @@ import {
 // import {PoolLibraryAddresses} from "../types/Pool__factory";
 import {
   getEthersSigners,
-  MockTokenMap,
-  MockTokenMapERC721,
+  ERC20TokenMap,
+  ERC721TokenMap,
 } from "./contracts-helpers";
 import {DRE, getDb, notFalsyOrZeroAddress} from "./misc-utils";
 import {
@@ -351,10 +351,10 @@ export const getParaSpaceOracle = async (address?: tEthereumAddress) =>
 //     await getFirstSigner()
 //   );
 
-export const getAllMockedTokens = async () => {
+export const getAllTokens = async () => {
   const db = getDb();
-  const tokens1: MockTokenMap = await Object.keys(TokenContractId).reduce<
-    Promise<MockTokenMap>
+  const tokens1: ERC20TokenMap = await Object.keys(TokenContractId).reduce<
+    Promise<ERC20TokenMap>
   >(async (acc, tokenSymbol) => {
     const accumulator = await acc;
     const address = db
@@ -368,9 +368,9 @@ export const getAllMockedTokens = async () => {
     }
   }, Promise.resolve({}));
 
-  const tokens2: MockTokenMapERC721 = await Object.keys(
+  const tokens2: ERC721TokenMap = await Object.keys(
     ERC721TokenContractId
-  ).reduce<Promise<MockTokenMapERC721>>(async (acc, tokenSymbol) => {
+  ).reduce<Promise<ERC721TokenMap>>(async (acc, tokenSymbol) => {
     const accumulator = await acc;
     const address = db
       .get(`${tokenSymbol}.${DRE.network.name}`)

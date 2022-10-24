@@ -1,7 +1,7 @@
 import rawBRE from "hardhat";
 import {
   getParaSpaceAdmins,
-  registerContractInJsonDb,
+  registerContractInDb,
 } from "../../../../helpers/contracts-helpers";
 import {
   deployAzuki,
@@ -237,7 +237,7 @@ const runScript = async () => {
           "",
         ]);
 
-        await registerContractInJsonDb(
+        await registerContractInDb(
           tokenSymbol.toUpperCase(),
           tokens[tokenSymbol]
         );

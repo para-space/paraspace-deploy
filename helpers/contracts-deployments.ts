@@ -132,7 +132,7 @@ import * as nonfungibleTokenPositionDescriptor from "@uniswap/v3-periphery/artif
 import {
   withSaveAndVerify,
   insertContractAddressInDb,
-  registerContractInJsonDb,
+  registerContractInDb,
 } from "./contracts-helpers";
 import {MintableDelegationERC20} from "../../types";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
@@ -787,7 +787,7 @@ export const deployDelegationAwarePTokenImpl = async (
     verify
   );
 
-export const deployAllMockERC20Tokens = async (verify?: boolean) => {
+export const deployAllERC20Tokens = async (verify?: boolean) => {
   const tokens: {
     [symbol: string]:
       | MockContract
@@ -854,7 +854,7 @@ export const deployAllMockERC20Tokens = async (verify?: boolean) => {
   return tokens;
 };
 
-export const deployAllMockERC721Tokens = async (verify?: boolean) => {
+export const deployAllERC721Tokens = async (verify?: boolean) => {
   const tokens: {
     [symbol: string]:
       | MockContract

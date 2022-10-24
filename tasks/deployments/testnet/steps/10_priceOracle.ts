@@ -2,10 +2,7 @@ import {
   deployPriceOracle,
   deployNftFloorPriceOracle,
 } from "../../../../helpers/contracts-deployments";
-import {
-  getAllMockedTokens,
-  getPunk,
-} from "../../../../helpers/contracts-getters";
+import {getAllTokens, getPunk} from "../../../../helpers/contracts-getters";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {setInitialAssetPricesInOracle} from "../../../../helpers/oracles-helpers";
 import ParaSpaceConfig from "../../../../market-config";
@@ -16,7 +13,7 @@ export const step_10 = async (verify = false) => {
   try {
     const ALL_ASSETS_INITIAL_PRICES =
       ParaSpaceConfig.Mocks.AllAssetsInitialPrices;
-    const mockTokens = await getAllMockedTokens();
+    const mockTokens = await getAllTokens();
     const punks = await getPunk();
 
     //for testnet we only deploy but still use mock price instead

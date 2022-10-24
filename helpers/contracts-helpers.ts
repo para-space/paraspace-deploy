@@ -24,6 +24,8 @@ import {
 import {orderType as eip712OrderType} from ".//seaport-helpers/eip-712-types/order";
 import {
   ConduitController,
+  ERC20,
+  ERC721,
   MintableERC20,
   PausableZoneController,
   Seaport,
@@ -50,9 +52,10 @@ import {
   HARDHAT_CHAINID,
 } from "./hardhat-constants";
 
-export type MockTokenMap = {[symbol: string]: MintableERC20};
-export type MockTokenMapERC721 = {[symbol: string]: MintableERC721};
-export const registerContractInJsonDb = async (
+export type ERC20TokenMap = {[symbol: string]: ERC20};
+export type ERC721TokenMap = {[symbol: string]: ERC721};
+
+export const registerContractInDb = async (
   id: string,
   instance: Contract,
   constructorArgs: ConstructorArgs = [],
@@ -156,7 +159,7 @@ export const withSaveAndVerify = async <ContractType extends Contract>(
 ): Promise<ContractType> => {
   const normalizedLibraries = normalizeLibraryAddresses(libraries);
   await waitForTx(instance.deployTransaction);
-  await registerContractInJsonDb(
+  await registerContractInDb(
     id,
     instance,
     args,

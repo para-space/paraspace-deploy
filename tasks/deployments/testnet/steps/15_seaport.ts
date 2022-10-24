@@ -5,7 +5,7 @@ import {
   deploySeaportAdapter,
 } from "../../../../helpers/contracts-deployments";
 import {
-  getAllMockedTokens,
+  getAllTokens,
   getConduit,
   getPoolAddressesProvider,
   getProtocolDataProvider,
@@ -27,7 +27,7 @@ import {eContractid} from "../../../../helpers/types";
 export const step_15 = async (verify = false) => {
   try {
     const {paraSpaceAdmin} = await getParaSpaceAdmins();
-    const mockTokens = await getAllMockedTokens();
+    const mockTokens = await getAllTokens();
     const addressesProvider = await getPoolAddressesProvider();
     const protocolDataProvider = await getProtocolDataProvider();
     const conduitController = await deployConduitController(verify);

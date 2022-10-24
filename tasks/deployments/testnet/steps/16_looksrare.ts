@@ -12,7 +12,7 @@ import {
   deployTransferSelectorNFT,
 } from "../../../../helpers/contracts-deployments";
 import {
-  getAllMockedTokens,
+  getAllTokens,
   getPoolAddressesProvider,
 } from "../../../../helpers/contracts-getters";
 import {LOOKSRARE_ID} from "../../../../helpers/constants";
@@ -20,7 +20,7 @@ import {waitForTx} from "../../../../helpers/misc-utils";
 
 export const step_16 = async (verify = false) => {
   try {
-    const mockTokens = await getAllMockedTokens();
+    const mockTokens = await getAllTokens();
     const currencyManager = await deployCurrencyManager(verify);
     const addressesProvider = await getPoolAddressesProvider();
 
