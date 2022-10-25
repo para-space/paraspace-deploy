@@ -74,6 +74,7 @@ export const MOCK_TOKEN_MINT_VALUE = {
 export const ParaSpaceConfig: IParaSpaceConfiguration = {
   // BASIC INFO
   MarketId: "ParaSpaceMM",
+  ParaSpaceTeam: "0x69C33aB569816F1D564a420490AbB894a44071Fb",
   PTokenNamePrefix: "ParaSpace Derivative Token",
   VariableDebtTokenNamePrefix: "ParaSpace Variable Debt Token",
   SymbolPrefix: "",

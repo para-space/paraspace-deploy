@@ -506,6 +506,7 @@ export interface IRate {
 
 export interface ICommonConfiguration {
   MarketId: string;
+  ParaSpaceTeam: tEthereumAddress;
   PTokenNamePrefix: string;
   VariableDebtTokenNamePrefix: string;
   SymbolPrefix: string;
