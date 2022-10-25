@@ -1,8 +1,24 @@
-import {tEthereumAddress, iAssetBase, iAssetAggregatorBase} from "./types";
-import {PriceOracle} from "../../types";
+import {
+  tEthereumAddress,
+  iAssetBase,
+  iAssetAggregatorBase,
+  ERC20TokenContractId,
+  ERC721TokenContractId,
+} from "./types";
+import {PriceOracle, UniswapV3OracleWrapper} from "../../types";
 import {MockAggregator} from "../../types";
-import {deployMockAggregator} from "./contracts-deployments";
+import {
+  deployMockAggregator,
+  deployUniswapV3OracleWrapper,
+} from "./contracts-deployments";
 import {waitForTx} from "./misc-utils";
+import {
+  getAllTokens,
+  getNonfungiblePositionManager,
+  getPairsTokenAggregator,
+  getPoolAddressesProvider,
+  getUniswapV3Factory,
+} from "./contracts-getters";
 
 export const setInitialAssetPricesInOracle = async (
   prices: iAssetBase<tEthereumAddress>,
@@ -29,21 +45,60 @@ export const deployAllMockAggregators = async (
   initialPrices: iAssetAggregatorBase<string>,
   verify?: boolean
 ) => {
-  const aggregators: {[tokenSymbol: string]: MockAggregator} = {};
-  for (const tokenContractName of Object.keys(initialPrices)) {
-    if (tokenContractName !== "ETH") {
-      const priceIndex = Object.keys(initialPrices).findIndex(
-        (value) => value === tokenContractName
-      );
-      const [, price] = (Object.entries(initialPrices) as [string, string][])[
-        priceIndex
-      ];
-      aggregators[tokenContractName] = await deployMockAggregator(
-        tokenContractName,
-        price,
+  const tokens = await getAllTokens();
+  const aggregators: {
+    [tokenSymbol: string]: MockAggregator | UniswapV3OracleWrapper;
+  } = {};
+  for (const tokenSymbol of Object.keys(tokens)) {
+    if (tokenSymbol === "ETH") {
+      continue;
+    }
+    if (tokenSymbol === ERC721TokenContractId.UniswapV3) {
+      const addressesProvider = await getPoolAddressesProvider();
+      const univ3Factory = await getUniswapV3Factory();
+      const univ3Token = await tokens[ERC721TokenContractId.UniswapV3];
+      aggregators[tokenSymbol] = await deployUniswapV3OracleWrapper(
+        univ3Factory.address,
+        univ3Token.address,
+        addressesProvider.address,
         verify
       );
+      continue;
     }
+    const priceIndex = Object.keys(initialPrices).findIndex(
+      (value) => value === tokenSymbol
+    );
+    const [, price] = (Object.entries(initialPrices) as [string, string][])[
+      priceIndex
+    ];
+    aggregators[tokenSymbol] = await deployMockAggregator(
+      tokenSymbol,
+      price,
+      verify
+    );
   }
-  return aggregators;
+
+  const allTokenAddresses = Object.entries(tokens).reduce(
+    (
+      accum: {[tokenSymbol: string]: tEthereumAddress},
+      [tokenSymbol, token]
+    ) => ({
+      ...accum,
+      [tokenSymbol]: token.address,
+    }),
+    {}
+  );
+
+  const allAggregatorsAddresses = Object.entries(aggregators).reduce(
+    (
+      accum: {[tokenSymbol: string]: tEthereumAddress},
+      [tokenSymbol, aggregator]
+    ) => ({
+      ...accum,
+      [tokenSymbol]: aggregator.address,
+    }),
+    {}
+  );
+
+  return [allTokenAddresses, allAggregatorsAddresses];
 };

@@ -1,5 +1,5 @@
 import {
-  deployPriceOracle,
+  deployFallbackOracle,
   deployNftFloorPriceOracle,
 } from "../../../../helpers/contracts-deployments";
 import {
@@ -20,7 +20,7 @@ export const step_09 = async (verify = false) => {
     //for testnet we only deploy but still use mock price instead
     const nftFloorOracle = await deployNftFloorPriceOracle([], verify);
 
-    const fallbackOracle = await deployPriceOracle(verify);
+    const fallbackOracle = await deployFallbackOracle(verify);
     await waitForTx(
       await fallbackOracle.setEthUsdPrice(ParaSpaceConfig.Mocks.USDPriceInWEI)
     );

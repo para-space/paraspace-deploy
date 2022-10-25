@@ -478,7 +478,7 @@ export const deployPoolComponents = async (
   };
 };
 
-export const deployPriceOracle = async (verify?: boolean) =>
+export const deployFallbackOracle = async (verify?: boolean) =>
   withSaveAndVerify(
     await new PriceOracle__factory(await getFirstSigner()).deploy(),
     eContractid.PriceOracle,
@@ -1711,17 +1711,17 @@ export const deployNonfungibleTokenPositionDescriptor = async (
 export const deployUniswapV3OracleWrapper = async (
   factory: string,
   manager: string,
-  oracle: string,
+  addressProvider: string,
   verify?: boolean
 ) =>
   withSaveAndVerify(
     await new UniswapV3OracleWrapper__factory(await getFirstSigner()).deploy(
       factory,
       manager,
-      oracle
+      addressProvider
     ),
     eContractid.UniswapV3OracleWrapper,
-    [factory, manager, oracle],
+    [factory, manager, addressProvider],
     verify
   );
 
