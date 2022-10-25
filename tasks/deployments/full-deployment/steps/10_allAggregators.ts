@@ -36,7 +36,7 @@ import {auctionStrategyLinear} from "../../../../market-config/auctionStrategies
 
 declare let hre: HardhatRuntimeEnvironment;
 
-export const step_11 = async (verify = false) => {
+export const step_10 = async (verify = false) => {
   // hardhat local node
   if (isLocalTestnet(DRE)) {
     try {
