@@ -6,6 +6,10 @@ import {getPoolAddressesProvider} from "../../../helpers/contracts-getters";
 
 import dotenv from "dotenv";
 import {ZERO_ADDRESS} from "../../../helpers/constants";
+import {upgradePToken} from "./upgrade_ptoken";
+import {upgradeNToken} from "./upgrade_ntoken";
+import {upgradeNTokenUniswapV3} from "./upgrade_ntoken_uniswapv3";
+import {upgradeNTokenMoonBirds} from "./upgrade_ntoken_moonbirds";
 
 dotenv.config();
 
@@ -13,6 +17,10 @@ const verify = process.env.ETHERSCAN_VERIFICATION === "true" ? true : false;
 
 export const upgradeAll = async () => {
   await upgradePool();
+  await upgradePToken();
+  await upgradeNToken();
+  await upgradeNTokenUniswapV3();
+  await upgradeNTokenMoonBirds()
   console.log("upgrade all finished!");
 };
 
