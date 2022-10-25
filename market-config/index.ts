@@ -112,6 +112,9 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   Marketplace: {
     Seaport: "0x00000000006c3852cbEf3e08E8dF289169EdE581",
   },
+  Oracle: {
+    ETH_USD_ORACLE: "0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e",
+  },
   // RESERVE ASSETS - CONFIG, ASSETS, BORROW RATES,
   ReservesConfig: {
     DAI: strategyDAI,

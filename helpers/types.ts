@@ -466,6 +466,20 @@ export interface IMarketplaceConfig {
   Seaport: tEthereumAddress;
 }
 
+export interface IChainlinkConfig {
+  ETH_USD_ORACLE: tEthereumAddress;
+  DAI_ETH_ORACLE?: tEthereumAddress;
+  USDC_ETH_ORACLE?: tEthereumAddress;
+  USDT_ETH_ORACLE?: tEthereumAddress;
+  WBTC_ETH_ORACLE?: tEthereumAddress;
+  STETH_ETH_ORACLE?: tEthereumAddress;
+  APE_ETH_ORACLE?: tEthereumAddress;
+}
+
+export interface IOracleConfig extends IChainlinkConfig {
+  BEND_DAO_ORACLE?: tEthereumAddress;
+}
+
 export interface IUniswapConfig {
   V2Factory: tEthereumAddress;
   V2Router: tEthereumAddress;
@@ -505,6 +519,7 @@ export interface ICommonConfiguration {
   WETH: tEthereumAddress;
   Uniswap: IUniswapConfig;
   Marketplace: IMarketplaceConfig;
+  Oracle: IOracleConfig;
   ReservesConfig: iMultiPoolsAssets<IReserveParams>;
   ReserveFactorTreasuryAddress: tEthereumAddress;
 }

@@ -33,7 +33,6 @@ import {deployAllMockAggregators} from "../../../../helpers/oracles-helpers";
 import {eContractid, tEthereumAddress} from "../../../../helpers/types";
 import ParaSpaceConfig from "../../../../market-config";
 import {auctionStrategyLinear} from "../../../../market-config/auctionStrategies";
-import {ETH_USD_ORACLE} from "../helpers/constants";
 
 declare let hre: HardhatRuntimeEnvironment;
 
@@ -354,7 +353,11 @@ export const step_11 = async (verify = false) => {
         uniswapToken.address,
         true
       );
-      await deployUiPoolDataProvider(ETH_USD_ORACLE, ETH_USD_ORACLE, verify);
+      await deployUiPoolDataProvider(
+        ParaSpaceConfig.Oracle.ETH_USD_ORACLE,
+        ParaSpaceConfig.Oracle.ETH_USD_ORACLE,
+        verify
+      );
 
       await deployWalletBalanceProvider(verify);
     } catch (error) {

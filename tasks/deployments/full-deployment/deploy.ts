@@ -251,7 +251,11 @@ const deployAll = async (main: Signer, treasury: Signer) => {
   //   true
   // );
 
-  await deployUiPoolDataProvider(ETH_USD_ORACLE, ETH_USD_ORACLE, verify);
+  await deployUiPoolDataProvider(
+    ParaSpaceConfig.Oracle.ETH_USD_ORACLE,
+    ParaSpaceConfig.Oracle.ETH_USD_ORACLE,
+    verify
+  );
 
   await deployWalletBalanceProvider(verify);
 

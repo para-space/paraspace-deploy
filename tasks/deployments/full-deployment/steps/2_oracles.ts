@@ -12,7 +12,7 @@ import {NFT_PROJECTS_WITH_FLOOR_PRICE} from "../helpers/constants";
 import {
   APE_ETH_ORACLE,
   WBTC_ETH_ORACLE,
-  stETH_ETH_ORACLE,
+  STETH_ETH_ORACLE,
   DAI_ETH_ORACLE,
   ETH_USD_ORACLE,
   USDC_ETH_ORACLE,
@@ -96,7 +96,7 @@ export const deployOracles = async (
     USDT: USDT_ETH_ORACLE,
     APE: APE_ETH_ORACLE,
     WBTC: WBTC_ETH_ORACLE,
-    stETH: stETH_ETH_ORACLE,
+    stETH: STETH_ETH_ORACLE,
     BAYC: bayc_oracle.address,
     MAYC: mayc_oracle.address,
     WPUNKS: punk_oracle.address,
