@@ -1,5 +1,7 @@
 import {
   eContractid,
+  ERC20TokenContractId,
+  ERC721TokenContractId,
   iMultiPoolsAssets,
   IReserveParams,
   tEthereumAddress,
@@ -287,7 +289,7 @@ export const initReservesByHelper = async (
   for (let i = 0; i < reserveSymbols.length; i++) {
     let xTokenToUse: string;
     if (xTokenType[reserveSymbols[i]] === "generic") {
-      if (reserveSymbols[i] === "stETH") {
+      if (reserveSymbols[i] === ERC20TokenContractId.stETH) {
         xTokenToUse = (await deployPTokenStETH(pool.address, verify)).address;
       } else if (reserveSymbols[i] === "aWETH") {
         xTokenToUse = (await deployPTokenAToken(pool.address, verify)).address;
@@ -295,10 +297,10 @@ export const initReservesByHelper = async (
         xTokenToUse = pTokenImplementationAddress;
       }
     } else if (xTokenType[reserveSymbols[i]] === "nft") {
-      if (reserveSymbols[i] === "MOONBIRD") {
+      if (reserveSymbols[i] === ERC721TokenContractId.MOONBIRD) {
         console.log("IS MOONBIRDS");
         xTokenToUse = nTokenMoonBirdImplementationAddress;
-      } else if (reserveSymbols[i] === "UniswapV3") {
+      } else if (reserveSymbols[i] === ERC721TokenContractId.UniswapV3) {
         console.log("IS UniSwapV3");
         xTokenToUse = nTokenUniSwapV3ImplementationAddress;
       } else {
@@ -373,7 +375,7 @@ export const getPairsTokenAggregator = (
 
   const pairs = Object.entries(assetsAddressesWithoutEth).map(
     ([tokenSymbol, tokenAddress]) => {
-      if (tokenSymbol !== "WETH" && tokenSymbol !== "ETH") {
+      if (tokenSymbol !== ERC20TokenContractId.WETH && tokenSymbol !== "ETH") {
         const aggregatorAddressIndex = Object.keys(
           aggregatorsAddresses
         ).findIndex((value) => value === tokenSymbol);

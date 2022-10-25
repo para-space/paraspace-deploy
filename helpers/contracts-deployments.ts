@@ -3,7 +3,7 @@ import {
   tEthereumAddress,
   eContractid,
   tStringTokenSmallUnits,
-  TokenContractId,
+  ERC20TokenContractId,
   ERC721TokenContractId,
 } from "./types";
 import {
@@ -21,7 +21,7 @@ import {MockContract} from "ethereum-waffle";
 import {
   getFirstSigner,
   getMintableERC721,
-  getPunk,
+  getCryptoPunksMarket,
   getWETHMocked,
 } from "./contracts-getters";
 import {
@@ -794,7 +794,7 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
 
   const protoConfigData = ParaSpaceConfig.ReservesConfig;
 
-  for (const tokenSymbol of Object.keys(TokenContractId)) {
+  for (const tokenSymbol of Object.keys(ERC20TokenContractId)) {
     const db = getDb();
     const contractAddress = db
       .get(`${tokenSymbol}.${DRE.network.name}`)
@@ -807,7 +807,7 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
     } else {
       console.log("deploying now ", tokenSymbol);
 
-      if (tokenSymbol === "WETH") {
+      if (tokenSymbol === ERC20TokenContractId.WETH) {
         if (isLocalTestnet(DRE)) {
           tokens[tokenSymbol] = await deployWETHMocked(verify);
         } else {
@@ -821,7 +821,7 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
         continue;
       }
 
-      if (tokenSymbol === "stETH") {
+      if (tokenSymbol === ERC20TokenContractId.stETH) {
         tokens[tokenSymbol] = await deployStETH(
           [tokenSymbol, tokenSymbol, "18"],
           verify
@@ -829,7 +829,7 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
         continue;
       }
 
-      if (tokenSymbol === "aWETH") {
+      if (tokenSymbol === ERC20TokenContractId.aWETH) {
         tokens[tokenSymbol] = await deployMockAToken(
           [tokenSymbol, tokenSymbol, "18"],
           verify
@@ -883,9 +883,9 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
 
       // we are using hardhat, we want to use mock ERC721 contracts
       if (isLocalTestnet(DRE)) {
-        if (tokenSymbol === "WPUNKS") {
+        if (tokenSymbol === ERC721TokenContractId.WPUNKS) {
           const cryptoPunksMarket = await deployCryptoPunksMarket([], verify);
-          tokens["PUNKS"] = cryptoPunksMarket;
+          tokens[eContractid.CryptoPunksMarket] = cryptoPunksMarket;
 
           const wrappedPunk = await deployWrappedPunk(
             [cryptoPunksMarket.address],
@@ -896,7 +896,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
           continue;
         }
 
-        if (tokenSymbol === "MOONBIRD") {
+        if (tokenSymbol === ERC721TokenContractId.MOONBIRD) {
           const moonbirdContract = await deployMoonbirds(
             [
               "MOON",
@@ -908,12 +908,12 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
             verify
           );
 
-          tokens["MOONBIRD"] = moonbirdContract;
+          tokens[eContractid.MOONBIRD] = moonbirdContract;
 
           continue;
         }
 
-        if (tokenSymbol === "UniswapV3") {
+        if (tokenSymbol === ERC721TokenContractId.UniswapV3) {
           const weth = await getWETHMocked();
 
           const positionDescriptor =
@@ -935,7 +935,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
               [factory.address, weth.address, positionDescriptor.address],
               verify
             );
-          tokens["UniswapV3"] = nonfungiblePositionManager;
+          tokens[eContractid.UniswapV3] = nonfungiblePositionManager;
           continue;
         }
 
@@ -947,16 +947,17 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
       // else use actual token addresses
       else {
         switch (tokenSymbol) {
-          case "WPUNKS":
-            tokens["PUNKS"] = await deployCryptoPunksMarket([], verify);
+          case ERC721TokenContractId.WPUNKS:
+            tokens[eContractid.CryptoPunksMarket] =
+              await deployCryptoPunksMarket([], verify);
 
             tokens[tokenSymbol] = await deployWrappedPunk(
-              [tokens["PUNKS"].address],
+              [tokens[eContractid.CryptoPunksMarket].address],
               verify
             );
 
             break;
-          case "BAYC":
+          case ERC721TokenContractId.BAYC:
             tokens[tokenSymbol] = await deployBAYC(
               [tokenSymbol, tokenSymbol, "8000", "0"],
               verify
@@ -964,7 +965,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
             // code block
             break;
 
-          case "MAYC":
+          case ERC721TokenContractId.MAYC:
             tokens[tokenSymbol] = await deployMAYC(
               [
                 tokenSymbol,
@@ -976,22 +977,22 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
             );
             // code block
             break;
-          case "DOODLE":
+          case ERC721TokenContractId.DOODLE:
             tokens[tokenSymbol] = await deployDoodle([], verify);
             // code block
             break;
-          case "AZUKI":
+          case ERC721TokenContractId.AZUKI:
             tokens[tokenSymbol] = await deployAzuki(
               [5, 10000, 8900, 200],
               verify
             );
             // code block
             break;
-          case "CLONEX":
+          case ERC721TokenContractId.CLONEX:
             tokens[tokenSymbol] = await deployCloneX([], verify);
             // code block
             break;
-          case "MOONBIRD":
+          case ERC721TokenContractId.MOONBIRD:
             const moonbirdContract = await deployMoonbirds(
               [
                 "MOON",
@@ -1008,12 +1009,12 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
 
             // code block
             break;
-          case "MEEBITS":
+          case ERC721TokenContractId.MEEBITS:
             // eslint-disable-next-line no-case-declarations
-            const punk = await getPunk();
+            const punks = await getCryptoPunksMarket();
             tokens[tokenSymbol] = await deployMeebits(
               [
-                punk.address,
+                punks.address,
                 "0x0000000000000000000000000000000000000000",
                 "0x69C33aB569816F1D564a420490AbB894a44071Fb", // shared wallet account 1
               ],
@@ -1021,7 +1022,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
             );
             // code block
             break;
-          case "OTHR":
+          case ERC721TokenContractId.OTHR:
             tokens[tokenSymbol] = await deployOTHR(
               [
                 "OTHR",
@@ -1043,7 +1044,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
             );
             // code block
             break;
-          case "UniswapV3":
+          case ERC721TokenContractId.UniswapV3:
             insertContractAddressInDb(
               eContractid.UniswapV3,
               ParaSpaceConfig.Uniswap.V3NFTPositionManager,

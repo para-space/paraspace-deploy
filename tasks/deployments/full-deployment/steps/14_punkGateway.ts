@@ -6,7 +6,7 @@ import {
   getAllTokens,
   getPoolProxy,
   getPoolAddressesProvider,
-  getPunk,
+  getCryptoPunksMarket,
 } from "../../../../helpers/contracts-getters";
 import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 
@@ -15,7 +15,7 @@ export const step_14 = async (verify = false) => {
 
   try {
     const mockTokens = await getAllTokens();
-    const punks = await getPunk();
+    const punks = await getCryptoPunksMarket();
     const addressesProvider = await getPoolAddressesProvider();
     const poolAddress = await addressesProvider.getPool();
     const poolProxy = await getPoolProxy(poolAddress);

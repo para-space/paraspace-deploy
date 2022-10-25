@@ -80,7 +80,7 @@ import {
   eContractid,
   ERC721TokenContractId,
   tEthereumAddress,
-  TokenContractId,
+  ERC20TokenContractId,
 } from "./types";
 
 import {
@@ -353,7 +353,7 @@ export const getParaSpaceOracle = async (address?: tEthereumAddress) =>
 
 export const getAllTokens = async () => {
   const db = getDb();
-  const tokens1: ERC20TokenMap = await Object.keys(TokenContractId).reduce<
+  const tokens1: ERC20TokenMap = await Object.keys(ERC20TokenContractId).reduce<
     Promise<ERC20TokenMap>
   >(async (acc, tokenSymbol) => {
     const accumulator = await acc;
@@ -450,7 +450,7 @@ export const getWETHMocked = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-export const getPunk = async (address?: tEthereumAddress) =>
+export const getCryptoPunksMarket = async (address?: tEthereumAddress) =>
   await CryptoPunksMarket__factory.connect(
     address ||
       (

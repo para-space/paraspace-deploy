@@ -6,6 +6,7 @@ import {
   getPoolAddressesProvider,
   getProtocolDataProvider,
 } from "../../../../helpers/contracts-getters";
+import {ERC721TokenContractId} from "../../../../helpers/types";
 
 export const step_18 = async (verify = false) => {
   try {
@@ -16,7 +17,7 @@ export const step_18 = async (verify = false) => {
     const dataProvider = await getProtocolDataProvider();
     const reservesTokens = await dataProvider.getAllReservesTokens();
     const baycAddress = reservesTokens.find(
-      (token) => token.symbol === "BAYC"
+      (token) => token.symbol === ERC721TokenContractId.BAYC
     )?.tokenAddress;
     if (!baycAddress) {
       return;

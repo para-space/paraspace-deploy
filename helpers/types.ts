@@ -100,7 +100,7 @@ export enum eContractid {
   WETHGatewayImpl = "WETHGatewayImpl",
   WETHGatewayProxy = "WETHGatewayProxy",
   ERC721OracleWrapper = "ERC721OracleWrapper",
-  CryptoPunksMarket = "PUNKS",
+  CryptoPunksMarket = "CryptoPunksMarket",
   WPunk = "WPUNKS",
   WPunkGatewayImpl = "WPunkGatewayImpl",
   WPunkGatewayProxy = "WPunkGatewayProxy",
@@ -349,7 +349,7 @@ export type iMultiPoolsAssets<T> = iAssetCommon<T> | iParaSpacePoolAssets<T>;
 
 export type iAssetAggregatorBase<T> = iAssetsWithoutETH<T>;
 
-export enum TokenContractId {
+export enum ERC20TokenContractId {
   DAI = "DAI",
   WETH = "WETH",
   USDC = "USDC",
@@ -373,6 +373,23 @@ export enum ERC721TokenContractId {
   MEEBITS = "MEEBITS",
   OTHR = "OTHR",
   UniswapV3 = "UniswapV3",
+}
+
+export enum NTokenContractId {
+  nBAYC = "nBAYC",
+  nMAYC = "nMAYC",
+  nDOODLES = "nDOODLES",
+  nWPUNKS = "nWPUNKS",
+  nMOONBIRD = "nMOONBIRD",
+  nUniswapV3 = "nUniswapV3",
+}
+
+export enum PTokenContractId {
+  pDAI = "pDAI",
+  pUSDC = "pUSDC",
+  pWETH = "pWETH",
+  paWETH = "paWETH",
+  pstETH = "pstETH",
 }
 
 export interface IReserveParams

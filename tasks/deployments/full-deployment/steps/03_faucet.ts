@@ -1,10 +1,13 @@
-import {getAllTokens, getPunk} from "../../../../helpers/contracts-getters";
+import {
+  getAllTokens,
+  getCryptoPunksMarket,
+} from "../../../../helpers/contracts-getters";
 import {deployFaucet} from "../token_faucet";
 
 export const step_03 = async (verify = false) => {
   try {
     const mockTokens = await getAllTokens();
-    const punks = await getPunk();
+    const punks = await getCryptoPunksMarket();
 
     await deployFaucet(
       {
