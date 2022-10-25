@@ -358,7 +358,7 @@ export const getAllTokens = async () => {
   >(async (acc, tokenSymbol) => {
     const accumulator = await acc;
     const address = db
-      .get(`${tokenSymbol.toUpperCase()}.${DRE.network.name}`)
+      .get(`${tokenSymbol}.${DRE.network.name}`)
       .value()?.address;
     if (address) {
       accumulator[tokenSymbol] = await getMintableERC20(address);

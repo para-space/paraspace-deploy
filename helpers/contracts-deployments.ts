@@ -554,7 +554,7 @@ export const deployMintableERC20 = async (
 ): Promise<MintableERC20> =>
   withSaveAndVerify(
     await new MintableERC20__factory(await getFirstSigner()).deploy(...args),
-    args[1].toUpperCase(),
+    args[1],
     [...args],
     verify
   );
@@ -565,7 +565,7 @@ export const deployMintableERC721 = async (
 ): Promise<MintableERC721> =>
   withSaveAndVerify(
     await new MintableERC721__factory(await getFirstSigner()).deploy(...args),
-    args[1].toUpperCase(),
+    args[1],
     [...args],
     verify
   );
@@ -797,7 +797,7 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
   for (const tokenSymbol of Object.keys(TokenContractId)) {
     const db = getDb();
     const contractAddress = db
-      .get(`${tokenSymbol.toUpperCase()}.${DRE.network.name}`)
+      .get(`${tokenSymbol}.${DRE.network.name}`)
       .value()?.address;
 
     // if contract address is already in db, then skip to next tokenSymbol
@@ -1909,7 +1909,7 @@ export const deployStETH = async (
 ): Promise<StETH> =>
   withSaveAndVerify(
     await new StETH__factory(await getFirstSigner()).deploy(...args),
-    args[1].toUpperCase(),
+    args[1],
     [...args],
     verify
   );
@@ -1920,7 +1920,7 @@ export const deployMockAToken = async (
 ): Promise<MockAToken> =>
   withSaveAndVerify(
     await new MockAToken__factory(await getFirstSigner()).deploy(...args),
-    args[1].toUpperCase(),
+    args[1],
     [...args],
     verify
   );
