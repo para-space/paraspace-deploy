@@ -377,7 +377,7 @@ export enum ERC721TokenContractId {
 
 export interface IReserveParams
   extends IReserveBorrowParams,
-  IReserveCollateralParams {
+    IReserveCollateralParams {
   address?: tEthereumAddress;
   xTokenImpl: eContractid;
   reserveFactor: string;
@@ -467,8 +467,10 @@ export interface IMarketplaceConfig {
 }
 
 export interface IUniswapConfig {
-  V2: IUniswapV2Config;
-  V3: IUniswapV3Config;
+  V2Factory: tEthereumAddress;
+  V2Router: tEthereumAddress;
+  V3Factory: tEthereumAddress;
+  V3NFTPositionManager: tEthereumAddress;
 }
 
 export interface IMocksConfig {

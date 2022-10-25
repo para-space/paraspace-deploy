@@ -104,14 +104,10 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   ReserveFactorTreasuryAddress: TREASURY_MULTISIG,
   WETH: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
   Uniswap: {
-    V2: {
-      Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
-      Router: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
-    },
-    V3: {
-      Factory: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
-      NFTPositionManager: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
-    },
+    V2Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+    V2Router: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+    V3Factory: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+    V3NFTPositionManager: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
   },
   Marketplace: {
     Seaport: "0x00000000006c3852cbEf3e08E8dF289169EdE581",

@@ -1047,11 +1047,11 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
           case "UniswapV3":
             insertContractAddressInDb(
               eContractid.UniswapV3,
-              ParaSpaceConfig.Uniswap.V3.NFTPositionManager,
+              ParaSpaceConfig.Uniswap.V3NFTPositionManager,
               false
             );
             tokens[tokenSymbol] = await getMintableERC721(
-              ParaSpaceConfig.Uniswap.V3.NFTPositionManager
+              ParaSpaceConfig.Uniswap.V3NFTPositionManager
             );
             break;
           default:

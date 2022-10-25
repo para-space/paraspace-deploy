@@ -272,15 +272,15 @@ export const step_11 = async (verify = false) => {
       );
 
       const uniswapWrapper = await deployUniswapV3OracleWrapper(
-        ParaSpaceConfig.Uniswap.V3.Factory,
-        ParaSpaceConfig.Uniswap.V3.NFTPositionManager,
+        ParaSpaceConfig.Uniswap.V3Factory,
+        ParaSpaceConfig.Uniswap.V3NFTPositionManager,
         addressesProvider.address,
         verify
       );
 
       await waitForTx(
         await paraspaceOracle.setAssetSources(
-          [UNISWAP_V3_POSITION_MANAGER_ADDRESS],
+          [ParaSpaceConfig.Uniswap.V3NFTPositionManager],
           [uniswapWrapper.address]
         )
       );
