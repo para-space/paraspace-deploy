@@ -3,7 +3,7 @@ import {
   deployWETHGatewayProxy,
 } from "../../../../helpers/contracts-deployments";
 import {
-  getAllMockedTokens,
+  getAllTokens,
   getPoolProxy,
   getPoolAddressesProvider,
 } from "../../../../helpers/contracts-getters";
@@ -13,7 +13,7 @@ export const step_13 = async (verify = false) => {
   const {gatewayAdmin} = await getParaSpaceAdmins();
 
   try {
-    const mockTokens = await getAllMockedTokens();
+    const mockTokens = await getAllTokens();
     const addressesProvider = await getPoolAddressesProvider();
     const poolAddress = await addressesProvider.getPool();
     const poolProxy = await getPoolProxy(poolAddress);

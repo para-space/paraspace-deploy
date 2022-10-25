@@ -72,15 +72,15 @@ import {
 // import {PoolLibraryAddresses} from "../types/Pool__factory";
 import {
   getEthersSigners,
-  MockTokenMap,
-  MockTokenMapERC721,
+  ERC20TokenMap,
+  ERC721TokenMap,
 } from "./contracts-helpers";
 import {DRE, getDb, notFalsyOrZeroAddress} from "./misc-utils";
 import {
   eContractid,
   ERC721TokenContractId,
   tEthereumAddress,
-  TokenContractId,
+  ERC20TokenContractId,
 } from "./types";
 
 import {
@@ -351,14 +351,14 @@ export const getParaSpaceOracle = async (address?: tEthereumAddress) =>
 //     await getFirstSigner()
 //   );
 
-export const getAllMockedTokens = async () => {
+export const getAllERC20Tokens = async () => {
   const db = getDb();
-  const tokens1: MockTokenMap = await Object.keys(TokenContractId).reduce<
-    Promise<MockTokenMap>
+  const tokens: ERC20TokenMap = await Object.keys(ERC20TokenContractId).reduce<
+    Promise<ERC20TokenMap>
   >(async (acc, tokenSymbol) => {
     const accumulator = await acc;
     const address = db
-      .get(`${tokenSymbol.toUpperCase()}.${DRE.network.name}`)
+      .get(`${tokenSymbol}.${DRE.network.name}`)
       .value()?.address;
     if (address) {
       accumulator[tokenSymbol] = await getMintableERC20(address);
@@ -367,10 +367,14 @@ export const getAllMockedTokens = async () => {
       return Promise.reject(`${tokenSymbol} is not in db`);
     }
   }, Promise.resolve({}));
+  return tokens;
+};
 
-  const tokens2: MockTokenMapERC721 = await Object.keys(
+export const getAllERC721Tokens = async () => {
+  const db = getDb();
+  const tokens: ERC721TokenMap = await Object.keys(
     ERC721TokenContractId
-  ).reduce<Promise<MockTokenMapERC721>>(async (acc, tokenSymbol) => {
+  ).reduce<Promise<ERC721TokenMap>>(async (acc, tokenSymbol) => {
     const accumulator = await acc;
     const address = db
       .get(`${tokenSymbol}.${DRE.network.name}`)
@@ -382,8 +386,10 @@ export const getAllMockedTokens = async () => {
       return Promise.reject(`${tokenSymbol} is not in db`);
     }
   }, Promise.resolve({}));
-
-  return Object.assign(tokens1, tokens2);
+  return tokens;
+};
+export const getAllTokens = async () => {
+  return Object.assign(await getAllERC20Tokens(), await getAllERC721Tokens());
 };
 
 export const getPairsTokenAggregator = (
@@ -392,9 +398,7 @@ export const getPairsTokenAggregator = (
   },
   aggregatorsAddresses: {[tokenSymbol: string]: tEthereumAddress}
 ): [string[], string[]] => {
-  const {...assetsAddressesWithoutEth} = allAssetsAddresses;
-
-  const pairs = Object.entries(assetsAddressesWithoutEth).map(
+  const pairs = Object.entries(allAssetsAddresses).map(
     ([tokenSymbol, tokenAddress]) => {
       const aggregatorAddressIndex = Object.keys(
         aggregatorsAddresses
@@ -450,7 +454,7 @@ export const getWETHMocked = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-export const getPunk = async (address?: tEthereumAddress) =>
+export const getCryptoPunksMarket = async (address?: tEthereumAddress) =>
   await CryptoPunksMarket__factory.connect(
     address ||
       (

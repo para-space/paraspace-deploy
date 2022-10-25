@@ -24,6 +24,8 @@ import {
 import {orderType as eip712OrderType} from ".//seaport-helpers/eip-712-types/order";
 import {
   ConduitController,
+  ERC20,
+  ERC721,
   MintableERC20,
   PausableZoneController,
   Seaport,
@@ -47,12 +49,33 @@ import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/p
 import {
   COVERAGE_CHAINID,
   FORK_MAINNET_CHAINID,
+  GOERLI_CHAINID,
   HARDHAT_CHAINID,
+  MAINNET_CHAINID,
 } from "./hardhat-constants";
 
-export type MockTokenMap = {[symbol: string]: MintableERC20};
-export type MockTokenMapERC721 = {[symbol: string]: MintableERC721};
-export const registerContractInJsonDb = async (
+export type ERC20TokenMap = {[symbol: string]: ERC20};
+export type ERC721TokenMap = {[symbol: string]: ERC721};
+
+export const isLocalTestnet = (hre: HardhatRuntimeEnvironment): boolean => {
+  return [HARDHAT_CHAINID, COVERAGE_CHAINID].includes(
+    hre.network.config.chainId!
+  );
+};
+
+export const isPublicTestnet = (hre: HardhatRuntimeEnvironment): boolean => {
+  return [GOERLI_CHAINID].includes(hre.network.config.chainId!);
+};
+
+export const isForkMainnet = (hre: HardhatRuntimeEnvironment): boolean => {
+  return [FORK_MAINNET_CHAINID].includes(hre.network.config.chainId!);
+};
+
+export const isMainnet = (hre: HardhatRuntimeEnvironment): boolean => {
+  return [MAINNET_CHAINID].includes(hre.network.config.chainId!);
+};
+
+export const registerContractInDb = async (
   id: string,
   instance: Contract,
   constructorArgs: ConstructorArgs = [],
@@ -62,7 +85,7 @@ export const registerContractInJsonDb = async (
   const currentNetwork = DRE.network.name;
   const FORK = process.env.FORK;
   const key = `${id}.${DRE.network.name}`;
-  if (FORK || (currentNetwork !== "hardhat" && currentNetwork !== "coverage")) {
+  if (FORK || !isLocalTestnet(DRE)) {
     console.log(`*** ${id} ***\n`);
     console.log(`Network: ${currentNetwork}`);
     console.log(`tx: ${instance.deployTransaction.hash}`);
@@ -156,7 +179,7 @@ export const withSaveAndVerify = async <ContractType extends Contract>(
 ): Promise<ContractType> => {
   const normalizedLibraries = normalizeLibraryAddresses(libraries);
   await waitForTx(instance.deployTransaction);
-  await registerContractInJsonDb(
+  await registerContractInDb(
     id,
     instance,
     args,
