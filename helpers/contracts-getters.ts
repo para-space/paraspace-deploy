@@ -351,9 +351,9 @@ export const getParaSpaceOracle = async (address?: tEthereumAddress) =>
 //     await getFirstSigner()
 //   );
 
-export const getAllTokens = async () => {
+export const getAllERC20Tokens = async () => {
   const db = getDb();
-  const tokens1: ERC20TokenMap = await Object.keys(ERC20TokenContractId).reduce<
+  const tokens: ERC20TokenMap = await Object.keys(ERC20TokenContractId).reduce<
     Promise<ERC20TokenMap>
   >(async (acc, tokenSymbol) => {
     const accumulator = await acc;
@@ -367,8 +367,12 @@ export const getAllTokens = async () => {
       return Promise.reject(`${tokenSymbol} is not in db`);
     }
   }, Promise.resolve({}));
+  return tokens;
+};
 
-  const tokens2: ERC721TokenMap = await Object.keys(
+export const getAllERC721Tokens = async () => {
+  const db = getDb();
+  const tokens: ERC721TokenMap = await Object.keys(
     ERC721TokenContractId
   ).reduce<Promise<ERC721TokenMap>>(async (acc, tokenSymbol) => {
     const accumulator = await acc;
@@ -382,8 +386,10 @@ export const getAllTokens = async () => {
       return Promise.reject(`${tokenSymbol} is not in db`);
     }
   }, Promise.resolve({}));
-
-  return Object.assign(tokens1, tokens2);
+  return tokens;
+};
+export const getAllTokens = async () => {
+  return Object.assign(await getAllERC20Tokens(), await getAllERC721Tokens());
 };
 
 export const getPairsTokenAggregator = (

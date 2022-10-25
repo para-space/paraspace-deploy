@@ -16,10 +16,18 @@ import {
   getPoolAddressesProvider,
 } from "../../../../helpers/contracts-getters";
 import {LOOKSRARE_ID} from "../../../../helpers/constants";
-import {waitForTx} from "../../../../helpers/misc-utils";
+import {DRE, waitForTx} from "../../../../helpers/misc-utils";
+import {
+  isLocalTestnet,
+  isPublicTestnet,
+} from "../../../../helpers/contracts-helpers";
 
 export const step_16 = async (verify = false) => {
   try {
+    if (!isLocalTestnet(DRE) && !isPublicTestnet(DRE)) {
+      return;
+    }
+
     const mockTokens = await getAllTokens();
     const currencyManager = await deployCurrencyManager(verify);
     const addressesProvider = await getPoolAddressesProvider();

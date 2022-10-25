@@ -475,17 +475,17 @@ export interface IMarketplaceConfig {
 }
 
 export interface IChainlinkConfig {
-  ETH_USD_ORACLE: tEthereumAddress;
-  DAI_ETH_ORACLE?: tEthereumAddress;
-  USDC_ETH_ORACLE?: tEthereumAddress;
-  USDT_ETH_ORACLE?: tEthereumAddress;
-  WBTC_ETH_ORACLE?: tEthereumAddress;
-  STETH_ETH_ORACLE?: tEthereumAddress;
-  APE_ETH_ORACLE?: tEthereumAddress;
+  ETH: tEthereumAddress;
+  DAI?: tEthereumAddress;
+  USDC?: tEthereumAddress;
+  USDT?: tEthereumAddress;
+  WBTC?: tEthereumAddress;
+  STETH?: tEthereumAddress;
+  APE?: tEthereumAddress;
 }
 
 export interface IOracleConfig extends IChainlinkConfig {
-  BEND_DAO_ORACLE?: tEthereumAddress;
+  BEND_DAO?: tEthereumAddress;
 }
 
 export interface IUniswapConfig {
@@ -525,6 +525,7 @@ export interface ICommonConfiguration {
   GatewayAdmin: tEthereumAddress | undefined;
   GatewayAdminIndex: number;
   WETH: tEthereumAddress;
+  USDC: tEthereumAddress;
   Uniswap: IUniswapConfig;
   Marketplace: IMarketplaceConfig;
   Oracle: IOracleConfig;

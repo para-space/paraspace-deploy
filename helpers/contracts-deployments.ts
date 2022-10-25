@@ -516,7 +516,7 @@ export const deployParaSpaceOracle = async (
     verify
   );
 
-export const deployNftFloorPriceOracle = async (
+export const deployNFTFloorPriceOracle = async (
   projects: tEthereumAddress[],
   verify?: boolean
 ) => {
