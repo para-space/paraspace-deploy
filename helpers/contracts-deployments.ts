@@ -21,6 +21,7 @@ import {MockContract} from "ethereum-waffle";
 import {
   getFirstSigner,
   getMintableERC721,
+  getPunk,
   getWETHMocked,
 } from "./contracts-getters";
 import {
@@ -1009,12 +1010,10 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
             break;
           case "MEEBITS":
             // eslint-disable-next-line no-case-declarations
-            const punkAddress = await getDb()
-              .get(`${eContractid.CryptoPunksMarket}.${DRE.network.name}`)
-              .value().address;
+            const punk = await getPunk();
             tokens[tokenSymbol] = await deployMeebits(
               [
-                punkAddress,
+                punk.address,
                 "0x0000000000000000000000000000000000000000",
                 "0x69C33aB569816F1D564a420490AbB894a44071Fb", // shared wallet account 1
               ],

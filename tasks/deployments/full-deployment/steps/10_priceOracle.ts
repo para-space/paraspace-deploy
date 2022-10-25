@@ -6,7 +6,6 @@ import {getAllTokens, getPunk} from "../../../../helpers/contracts-getters";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {setInitialAssetPricesInOracle} from "../../../../helpers/oracles-helpers";
 import ParaSpaceConfig from "../../../../market-config";
-import {NFT_PROJECTS_WITH_FLOOR_PRICE} from "../../full-deployment/helpers/constants";
 
 export const step_10 = async (verify = false) => {
   try {
@@ -16,10 +15,7 @@ export const step_10 = async (verify = false) => {
     const punks = await getPunk();
 
     //for testnet we only deploy but still use mock price instead
-    const nftFloorOracle = await deployNftFloorPriceOracle(
-      NFT_PROJECTS_WITH_FLOOR_PRICE,
-      verify
-    );
+    const nftFloorOracle = await deployNftFloorPriceOracle([], verify);
 
     const fallbackOracle = await deployPriceOracle(verify);
     await waitForTx(

@@ -443,15 +443,6 @@ export enum RateMode {
   Variable = "2",
 }
 
-export interface IProtocolGlobalConfig {
-  TokenDistributorPercentageBase: string;
-  MockUsdPriceInWei: string;
-  UsdAddress: tEthereumAddress;
-  NilAddress: tEthereumAddress;
-  OneAddress: tEthereumAddress;
-  ParaSpaceReferral: string;
-}
-
 export interface IUniswapV2Config {
   Factory: tEthereumAddress;
   Router: tEthereumAddress;
@@ -504,7 +495,6 @@ export interface ICommonConfiguration {
   ProviderId: number;
   MaxUserAtomicTokensAllowed: number;
   AuctionRecoveryHealthFactor: string | number;
-  ProtocolGlobalParams: IProtocolGlobalConfig;
   Mocks: IMocksConfig;
   ParaSpaceAdmin: tEthereumAddress | undefined;
   ParaSpaceAdminIndex: number;

@@ -13,8 +13,6 @@ export const setInitialAssetPricesInOracle = async (
     string,
     string
   ][]) {
-    console.log(price);
-    console.log(assetSymbol);
     const assetAddressIndex = Object.keys(assetsAddresses).findIndex(
       (value) => value === assetSymbol
     );

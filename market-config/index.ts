@@ -1,6 +1,5 @@
 import {parseEther} from "ethers/lib/utils";
 import {IParaSpaceConfiguration, eEthereumNetwork} from "../helpers/types";
-import {TREASURY_MULTISIG} from "../tasks/deployments/full-deployment/helpers/constants";
 import {
   strategyDAI,
   strategyUSDC,
@@ -81,14 +80,6 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   ProviderId: 1, // Overridden in index.ts
   MaxUserAtomicTokensAllowed: 256,
   AuctionRecoveryHealthFactor: "1500000000000000000",
-  ProtocolGlobalParams: {
-    TokenDistributorPercentageBase: "10000",
-    MockUsdPriceInWei: "5848466240000000",
-    UsdAddress: "0x10F7Fc1F91Ba351f9C629c5947AD69bD03C05b96",
-    NilAddress: "0x0000000000000000000000000000000000000000",
-    OneAddress: "0x0000000000000000000000000000000000000001",
-    ParaSpaceReferral: "0",
-  },
   // MARKET CONFIGURATION
   ParaSpaceAdmin: undefined,
   // DONT CHANGE THIS!!!
@@ -101,19 +92,31 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   // Gateway Admin, for polkadot evm only 5 accounts initialized
   // so change index no more than it here
   GatewayAdminIndex: 4,
-  ReserveFactorTreasuryAddress: TREASURY_MULTISIG,
+  ReserveFactorTreasuryAddress: "0x03D10cda221C2faA9F5CA22087654011ceE1802D",
   WETH: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
   Uniswap: {
     V2Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
     V2Router: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
     V3Factory: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
     V3NFTPositionManager: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+    // MAINNET
+    // V2Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+    // V2Router: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D"
   },
   Marketplace: {
     Seaport: "0x00000000006c3852cbEf3e08E8dF289169EdE581",
   },
   Oracle: {
     ETH_USD_ORACLE: "0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e",
+    // MAINNET
+    // BEND_DAO_ORACLE: "0x7c2a19e54e48718f6c60908a9cff3396e4ea1eba",
+    // ETH_USD_ORACLE: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
+    // DAI_ETH_ORACLE: "0x773616E4d11A78F511299002da57A0a94577F1f4",
+    // USDC_ETH_ORACLE: "0x986b5E1e1755e3C2440e960477f25201B0a8bbD4",
+    // USDT_ETH_ORACLE: "0xEe9F2375b4bdF6387aa8265dD4FB8F16512A1d46",
+    // WBTC_ETH_ORACLE: "0xdeb288F737066589598e9214E782fa5A8eD689e8",
+    // STETH_ETH_ORACLE: "0x86392dC19c0b719886221c78AB11eb8Cf5c52812",
+    // APE_ETH_ORACLE: "0xc7de7f4d4C9c991fF62a07D18b3E31e349833A18"
   },
   // RESERVE ASSETS - CONFIG, ASSETS, BORROW RATES,
   ReservesConfig: {
