@@ -4,14 +4,11 @@ import {
 } from "../../../../helpers/contracts-getters";
 import {deployFaucet} from "../token_faucet";
 import {DRE} from "../../../../helpers/misc-utils";
-import {
-  isLocalTestnet,
-  isPublicTestnet,
-} from "../../../../helpers/contracts-helpers";
+import {isLocalTestnet, isPublicTestnet} from "../../../../helpers/misc-utils";
 
 export const step_03 = async (verify = false) => {
   try {
-    if (!isLocalTestnet(DRE) && !isPublicTestnet(DRE)) {
+    if (!isLocalTestnet() && !isPublicTestnet()) {
       return;
     }
 

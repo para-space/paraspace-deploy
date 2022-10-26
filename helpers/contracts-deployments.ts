@@ -26,7 +26,6 @@ import {
 } from "./contracts-getters";
 import {
   getEthersSignersAddresses,
-  isLocalTestnet,
   normalizeLibraryAddresses,
 } from "./contracts-helpers";
 import {

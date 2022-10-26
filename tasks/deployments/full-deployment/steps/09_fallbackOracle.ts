@@ -13,7 +13,7 @@ import {
   isLocalTestnet,
   isMainnet,
   isPublicTestnet,
-} from "../../../../helpers/contracts-helpers";
+} from "../../../../helpers/misc-utils";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {setInitialAssetPricesInOracle} from "../../../../helpers/oracles-helpers";
 import ParaSpaceConfig from "../../../../market-config";
@@ -31,7 +31,7 @@ export const step_09 = async (verify = false) => {
     // UniswapV3 should use price from `UniswapV3OracleWrapper` instead of NFTFloorOracle
     delete erc721Tokens[ERC721TokenContractId.UniswapV3];
 
-    if (isMainnet(DRE)) {
+    if (isMainnet()) {
       const nftFloorOracle = await deployNFTFloorPriceOracle(
         Object.values(erc721Tokens).map((x) => x.address),
         verify
@@ -48,7 +48,7 @@ export const step_09 = async (verify = false) => {
       );
     }
 
-    if (isLocalTestnet(DRE) || isPublicTestnet(DRE)) {
+    if (isLocalTestnet() || isPublicTestnet()) {
       //for testnet we only deploy but still use mock price instead
       const nftFloorOracle = await deployNFTFloorPriceOracle([], verify);
       const fallbackOracle = await deployFallbackOracle(verify);

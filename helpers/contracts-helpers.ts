@@ -1,7 +1,13 @@
 import {constants, Contract, Signer} from "ethers";
 import {signTypedData_v4} from "eth-sig-util";
 import {fromRpcSig, ECDSASignature} from "ethereumjs-util";
-import {DRE, getDb, waitForTx, impersonateAccountsHardhat} from "./misc-utils";
+import {
+  DRE,
+  getDb,
+  waitForTx,
+  impersonateAccountsHardhat,
+  isLocalTestnet,
+} from "./misc-utils";
 import {
   iFunctionSignature,
   tEthereumAddress,
@@ -21,7 +27,7 @@ import {
   randomHex,
   toBN,
 } from "./seaport-helpers/encoding";
-import {orderType as eip712OrderType} from ".//seaport-helpers/eip-712-types/order";
+import {orderType as eip712OrderType} from "./seaport-helpers/eip-712-types/order";
 import {
   ConduitController,
   ERC20,
@@ -57,24 +63,6 @@ import {
 export type ERC20TokenMap = {[symbol: string]: ERC20};
 export type ERC721TokenMap = {[symbol: string]: ERC721};
 
-export const isLocalTestnet = (hre: HardhatRuntimeEnvironment): boolean => {
-  return [HARDHAT_CHAINID, COVERAGE_CHAINID].includes(
-    hre.network.config.chainId!
-  );
-};
-
-export const isPublicTestnet = (hre: HardhatRuntimeEnvironment): boolean => {
-  return [GOERLI_CHAINID].includes(hre.network.config.chainId!);
-};
-
-export const isForkMainnet = (hre: HardhatRuntimeEnvironment): boolean => {
-  return [FORK_MAINNET_CHAINID].includes(hre.network.config.chainId!);
-};
-
-export const isMainnet = (hre: HardhatRuntimeEnvironment): boolean => {
-  return [MAINNET_CHAINID].includes(hre.network.config.chainId!);
-};
-
 export const registerContractInDb = async (
   id: string,
   instance: Contract,
@@ -85,7 +73,7 @@ export const registerContractInDb = async (
   const currentNetwork = DRE.network.name;
   const FORK = process.env.FORK;
   const key = `${id}.${DRE.network.name}`;
-  if (FORK || !isLocalTestnet(DRE)) {
+  if (FORK || !isLocalTestnet()) {
     console.log(`*** ${id} ***\n`);
     console.log(`Network: ${currentNetwork}`);
     console.log(`tx: ${instance.deployTransaction.hash}`);

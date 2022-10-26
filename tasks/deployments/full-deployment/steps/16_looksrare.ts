@@ -16,15 +16,16 @@ import {
   getPoolAddressesProvider,
 } from "../../../../helpers/contracts-getters";
 import {LOOKSRARE_ID} from "../../../../helpers/constants";
-import {DRE, waitForTx} from "../../../../helpers/misc-utils";
 import {
+  DRE,
+  waitForTx,
   isLocalTestnet,
   isPublicTestnet,
-} from "../../../../helpers/contracts-helpers";
+} from "../../../../helpers/misc-utils";
 
 export const step_16 = async (verify = false) => {
   try {
-    if (!isLocalTestnet(DRE) && !isPublicTestnet(DRE)) {
+    if (!isLocalTestnet() && !isPublicTestnet()) {
       return;
     }
 

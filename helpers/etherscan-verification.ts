@@ -3,7 +3,7 @@ import {DRE, getDb} from "./misc-utils";
 import {ConstructorArgs, LibraryAddresses, tEthereumAddress} from "./types";
 import axios from "axios";
 import minimatch from "minimatch";
-import {isForkMainnet, isLocalTestnet} from "./contracts-helpers";
+import {isForkMainnet, isLocalTestnet} from "./misc-utils";
 
 const ALREADY_VERIFIED = "Already Verified";
 
@@ -105,7 +105,7 @@ export const verifyEtherscanContract = async (
     return;
   }
 
-  if (isLocalTestnet(DRE) || isForkMainnet(DRE)) {
+  if (isLocalTestnet() || isForkMainnet()) {
     return;
   }
 

@@ -5,16 +5,17 @@ import {
 } from "../../../../helpers/contracts-deployments";
 import {getPoolAddressesProvider} from "../../../../helpers/contracts-getters";
 import {X2Y2_ID} from "../../../../helpers/constants";
-import {DRE, waitForTx} from "../../../../helpers/misc-utils";
 import {
-  getParaSpaceAdmins,
+  DRE,
   isLocalTestnet,
   isPublicTestnet,
-} from "../../../../helpers/contracts-helpers";
+  waitForTx,
+} from "../../../../helpers/misc-utils";
+import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 
 export const step_17 = async (verify = false) => {
   try {
-    if (!isLocalTestnet(DRE) && !isPublicTestnet(DRE)) {
+    if (!isLocalTestnet() && !isPublicTestnet()) {
       return;
     }
 

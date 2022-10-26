@@ -19,11 +19,7 @@ import {
   getPriceOracle,
   getUniswapV3Factory,
 } from "../../../../helpers/contracts-getters";
-import {
-  getParaSpaceAdmins,
-  isLocalTestnet,
-  isPublicTestnet,
-} from "../../../../helpers/contracts-helpers";
+import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 import {
   configureReservesByHelper,
   initReservesByHelper,

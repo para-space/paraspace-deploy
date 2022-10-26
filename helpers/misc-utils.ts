@@ -13,6 +13,13 @@ import mapLimit from "async/mapLimit";
 import {verifyEtherscanContract} from "./etherscan-verification";
 import {ABI} from "hardhat-deploy/dist/types";
 import {getAdapter} from "./db-adapter";
+import {
+  COVERAGE_CHAINID,
+  FORK_MAINNET_CHAINID,
+  GOERLI_CHAINID,
+  HARDHAT_CHAINID,
+  MAINNET_CHAINID,
+} from "./hardhat-constants";
 
 export const getDb = () => low(getAdapter(process.env.DB_PATH ?? ":memory:"));
 
@@ -20,6 +27,24 @@ export let DRE: HardhatRuntimeEnvironment;
 
 export const setDRE = (_DRE: HardhatRuntimeEnvironment) => {
   DRE = _DRE;
+};
+
+export const isLocalTestnet = (): boolean => {
+  return [HARDHAT_CHAINID, COVERAGE_CHAINID].includes(
+    DRE.network.config.chainId!
+  );
+};
+
+export const isPublicTestnet = (): boolean => {
+  return [GOERLI_CHAINID].includes(DRE.network.config.chainId!);
+};
+
+export const isForkMainnet = (): boolean => {
+  return [FORK_MAINNET_CHAINID].includes(DRE.network.config.chainId!);
+};
+
+export const isMainnet = (): boolean => {
+  return [MAINNET_CHAINID].includes(DRE.network.config.chainId!);
 };
 
 export const sleep = (milliseconds: number) => {
