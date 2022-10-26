@@ -1,12 +1,11 @@
 import {
-  deployFallbackOracle,
+  deployPriceOracle,
   deployNFTFloorPriceOracle,
   deployParaSpaceFallbackOracle,
 } from "../../../../helpers/contracts-deployments";
 import {
   getAllERC20Tokens,
   getAllERC721Tokens,
-  getAllTokens,
   getCryptoPunksMarket,
 } from "../../../../helpers/contracts-getters";
 import {
@@ -17,13 +16,10 @@ import {
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {setInitialAssetPricesInOracle} from "../../../../helpers/oracles-helpers";
 import ParaSpaceConfig from "../../../../market-config";
-import {DRE} from "../../../../helpers/misc-utils";
 import {ERC721TokenContractId} from "../../../../helpers/types";
 
 export const step_09 = async (verify = false) => {
   try {
-    const ALL_ASSETS_INITIAL_PRICES =
-      ParaSpaceConfig.Mocks.AllAssetsInitialPrices;
     const erc20Tokens = await getAllERC20Tokens();
     const erc721Tokens = await getAllERC721Tokens();
     const punks = await getCryptoPunksMarket();
@@ -32,13 +28,13 @@ export const step_09 = async (verify = false) => {
     delete erc721Tokens[ERC721TokenContractId.UniswapV3];
 
     if (isMainnet()) {
-      const nftFloorOracle = await deployNFTFloorPriceOracle(
+      await deployNFTFloorPriceOracle(
         Object.values(erc721Tokens).map((x) => x.address),
         verify
       );
-      const fallbackOracle = await deployParaSpaceFallbackOracle(
+      await deployParaSpaceFallbackOracle(
         [
-          ParaSpaceConfig.Oracle.BEND_DAO!,
+          ParaSpaceConfig.BendDAO.Oracle,
           ParaSpaceConfig.Uniswap.V2Factory,
           ParaSpaceConfig.Uniswap.V2Router,
           ParaSpaceConfig.WETH,
@@ -50,13 +46,13 @@ export const step_09 = async (verify = false) => {
 
     if (isLocalTestnet() || isPublicTestnet()) {
       //for testnet we only deploy but still use mock price instead
-      const nftFloorOracle = await deployNFTFloorPriceOracle([], verify);
-      const fallbackOracle = await deployFallbackOracle(verify);
+      await deployNFTFloorPriceOracle([], verify);
+      const fallbackOracle = await deployPriceOracle(verify);
       await waitForTx(
         await fallbackOracle.setEthUsdPrice(ParaSpaceConfig.Mocks.USDPriceInWEI)
       );
       await setInitialAssetPricesInOracle(
-        ALL_ASSETS_INITIAL_PRICES,
+        ParaSpaceConfig.Mocks.AllAssetsInitialPrices,
         {
           // ERC20
           WETH: erc20Tokens.WETH.address,

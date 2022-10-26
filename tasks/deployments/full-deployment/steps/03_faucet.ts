@@ -3,7 +3,6 @@ import {
   getCryptoPunksMarket,
 } from "../../../../helpers/contracts-getters";
 import {deployFaucet} from "../token_faucet";
-import {DRE} from "../../../../helpers/misc-utils";
 import {isLocalTestnet, isPublicTestnet} from "../../../../helpers/misc-utils";
 
 export const step_03 = async (verify = false) => {

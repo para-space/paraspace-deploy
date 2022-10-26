@@ -87,7 +87,6 @@ import {
   INonfungiblePositionManager__factory,
   ISwapRouter__factory,
 } from "../../types";
-import {ZERO_ADDRESS} from "./constants";
 
 declare let hre: HardhatRuntimeEnvironment;
 
@@ -340,17 +339,6 @@ export const getParaSpaceOracle = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-// export const getMockFlashLoanReceiver = async (address?: tEthereumAddress) =>
-//   await MockFlashLoanReceiver__factory.connect(
-//     address ||
-//       (
-//         await getDb()
-//           .get(`${eContractid.MockFlashLoanReceiver}.${DRE.network.name}`)
-//           .value()
-//       ).address,
-//     await getFirstSigner()
-//   );
-
 export const getAllERC20Tokens = async () => {
   const db = getDb();
   const tokens: ERC20TokenMap = await Object.keys(ERC20TokenContractId).reduce<
@@ -400,13 +388,7 @@ export const getPairsTokenAggregator = (
 ): [string[], string[]] => {
   const pairs = Object.entries(allAssetsAddresses).map(
     ([tokenSymbol, tokenAddress]) => {
-      const aggregatorAddressIndex = Object.keys(
-        aggregatorsAddresses
-      ).findIndex((value) => value === tokenSymbol);
-      const [, aggregatorAddress] = (
-        Object.entries(aggregatorsAddresses) as [string, tEthereumAddress][]
-      )[aggregatorAddressIndex];
-      return [tokenAddress, aggregatorAddress];
+      return [tokenAddress, aggregatorsAddresses[tokenSymbol]];
     }
   ) as [string, string][];
 

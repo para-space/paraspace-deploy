@@ -17,7 +17,6 @@ import {
 } from "../../../../helpers/contracts-getters";
 import {LOOKSRARE_ID} from "../../../../helpers/constants";
 import {
-  DRE,
   waitForTx,
   isLocalTestnet,
   isPublicTestnet,
