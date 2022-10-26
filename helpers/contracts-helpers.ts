@@ -32,11 +32,9 @@ import {
   ConduitController,
   ERC20,
   ERC721,
-  MintableERC20,
   PausableZoneController,
   Seaport,
 } from "../../types";
-import {MintableERC721} from "../../types";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import {getIErc20Detailed} from "./contracts-getters";
 import {getDefenderRelaySigner, usingDefender} from "./defender-utils";
@@ -47,18 +45,6 @@ import {InitializableImmutableAdminUpgradeabilityProxy} from "../../types";
 import {decodeEvents} from "./seaport-helpers/events";
 import {expect} from "chai";
 import ParaSpaceConfig from "../market-config";
-import {LiquidationLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/LiquidationLogic__factory";
-import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/PoolCore__factory";
-import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
-import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
-import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/pool/PoolConfigurator__factory";
-import {
-  COVERAGE_CHAINID,
-  FORK_MAINNET_CHAINID,
-  GOERLI_CHAINID,
-  HARDHAT_CHAINID,
-  MAINNET_CHAINID,
-} from "./hardhat-constants";
 
 export type ERC20TokenMap = {[symbol: string]: ERC20};
 export type ERC721TokenMap = {[symbol: string]: ERC721};

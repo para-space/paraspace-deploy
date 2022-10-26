@@ -31,19 +31,23 @@ export const setDRE = (_DRE: HardhatRuntimeEnvironment) => {
 
 export const isLocalTestnet = (): boolean => {
   return [HARDHAT_CHAINID, COVERAGE_CHAINID].includes(
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     DRE.network.config.chainId!
   );
 };
 
 export const isPublicTestnet = (): boolean => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return [GOERLI_CHAINID].includes(DRE.network.config.chainId!);
 };
 
 export const isForkMainnet = (): boolean => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return [FORK_MAINNET_CHAINID].includes(DRE.network.config.chainId!);
 };
 
 export const isMainnet = (): boolean => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return [MAINNET_CHAINID].includes(DRE.network.config.chainId!);
 };
 
@@ -166,12 +170,10 @@ export const printContracts = () => {
 export const verifyContracts = async (limit = 1) => {
   const db = getDb();
   const network = DRE.network.name;
-  const entries = Object.entries<DbEntry>(db.getState()).filter(
-    ([key, value]) => {
-      // constructorArgs must be Array to make the contract verifiable
-      return !!value[network] && Array.isArray(value[network].constructorArgs);
-    }
-  );
+  const entries = Object.entries<DbEntry>(db.getState()).filter(([, value]) => {
+    // constructorArgs must be Array to make the contract verifiable
+    return !!value[network] && Array.isArray(value[network].constructorArgs);
+  });
 
   await mapLimit(entries, limit, async ([key, value]) => {
     const {address, constructorArgs = [], libraries} = value[network];

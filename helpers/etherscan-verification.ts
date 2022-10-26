@@ -1,4 +1,3 @@
-import fs from "fs";
 import {DRE, getDb} from "./misc-utils";
 import {ConstructorArgs, LibraryAddresses, tEthereumAddress} from "./types";
 import axios from "axios";
@@ -92,7 +91,6 @@ export const verifyEtherscanContract = async (
   libraries?: LibraryAddresses
 ) => {
   const currentNetwork = DRE.network.name;
-  const currentNetworkChainId = DRE.network.config.chainId;
   const verifyContract =
     process.env.ETHERSCAN_VERIFICATION_CONTRACT?.trim().split(/\s?,\s?/);
 

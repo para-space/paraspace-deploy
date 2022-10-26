@@ -2,7 +2,6 @@ import {
   tEthereumAddress,
   iAssetBase,
   iAssetAggregatorBase,
-  ERC20TokenContractId,
   ERC721TokenContractId,
 } from "./types";
 import {PriceOracle, UniswapV3OracleWrapper} from "../../types";
@@ -14,8 +13,6 @@ import {
 import {waitForTx} from "./misc-utils";
 import {
   getAllTokens,
-  getNonfungiblePositionManager,
-  getPairsTokenAggregator,
   getPoolAddressesProvider,
   getUniswapV3Factory,
 } from "./contracts-getters";
@@ -29,19 +26,16 @@ export const setInitialAssetPricesInOracle = async (
     string,
     string
   ][]) {
-    const assetAddressIndex = Object.keys(assetsAddresses).findIndex(
-      (value) => value === assetSymbol
-    );
-    const [, assetAddress] = (
-      Object.entries(assetsAddresses) as [string, string][]
-    )[assetAddressIndex];
     await waitForTx(
-      await priceOracleInstance.setAssetPrice(assetAddress, price)
+      await priceOracleInstance.setAssetPrice(
+        assetsAddresses[assetSymbol],
+        price
+      )
     );
   }
 };
 
-export const deployAllMockAggregators = async (
+export const deployAllAggregators = async (
   initialPrices: iAssetAggregatorBase<string>,
   verify?: boolean
 ) => {
@@ -65,15 +59,9 @@ export const deployAllMockAggregators = async (
       );
       continue;
     }
-    const priceIndex = Object.keys(initialPrices).findIndex(
-      (value) => value === tokenSymbol
-    );
-    const [, price] = (Object.entries(initialPrices) as [string, string][])[
-      priceIndex
-    ];
     aggregators[tokenSymbol] = await deployMockAggregator(
       tokenSymbol,
-      price,
+      initialPrices[tokenSymbol],
       verify
     );
   }

@@ -8,7 +8,6 @@ import {
 } from "./types";
 import {
   AuctionLogic__factory,
-  // IPool__factory,
   MintableERC20,
   MintableERC721,
   MockReserveAuctionStrategy__factory,
@@ -18,16 +17,8 @@ import {
 } from "../../types";
 import {StETH, MockAToken} from "../../types";
 import {MockContract} from "ethereum-waffle";
-import {
-  getFirstSigner,
-  getMintableERC721,
-  getCryptoPunksMarket,
-  getWETHMocked,
-} from "./contracts-getters";
-import {
-  getEthersSignersAddresses,
-  normalizeLibraryAddresses,
-} from "./contracts-helpers";
+import {getFirstSigner, getWETHMocked} from "./contracts-getters";
+import {getEthersSignersAddresses} from "./contracts-helpers";
 import {
   ProtocolDataProvider__factory,
   PToken__factory,
@@ -73,10 +64,6 @@ import {
   BoredApeYachtClub__factory,
   MutantApeYachtClub__factory,
   Doodles__factory,
-  // ParaSpaceToken__factory,
-  // StakedParaSpaceV3__factory,
-  // RewardsController__factory,
-  // PCV__factory,
   ParaSpaceFallbackOracle__factory,
   Doodles,
   BoredApeYachtClub,
@@ -133,7 +120,6 @@ import * as nonfungibleTokenPositionDescriptor from "@uniswap/v3-periphery/artif
 import {
   withSaveAndVerify,
   insertContractAddressInDb,
-  registerContractInDb,
 } from "./contracts-helpers";
 import {MintableDelegationERC20} from "../../types";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
@@ -145,11 +131,7 @@ import {MarketplaceLogicLibraryAddresses} from "../../types/factories/protocol/l
 import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/PoolCore__factory";
 import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
 import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
-import {FormatTypes} from "ethers/lib/utils";
-import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/pool/PoolConfigurator__factory";
 import {pick} from "lodash";
-
-declare let hre: HardhatRuntimeEnvironment;
 
 const readArtifact = async (id: string) => {
   return (DRE as HardhatRuntimeEnvironment).artifacts.readArtifact(id);
@@ -297,19 +279,6 @@ export const deployAuctionLogic = async (verify?: boolean) => {
     [],
     verify
   );
-};
-
-export const deployBridgeLogic = async (verify?: boolean) => {
-  const bridgeLogicArtifact = await readArtifact(eContractid.BridgeLogic);
-  const bridgeLogicFactory = await DRE.ethers.getContractFactory(
-    bridgeLogicArtifact.abi,
-    bridgeLogicArtifact.bytecode
-  );
-  const bridgeLogic = await (
-    await bridgeLogicFactory.connect(await getFirstSigner()).deploy()
-  ).deployed();
-
-  return withSaveAndVerify(bridgeLogic, eContractid.BridgeLogic, [], verify);
 };
 
 export const deployPoolLogic = async (verify?: boolean) => {
@@ -477,7 +446,7 @@ export const deployPoolComponents = async (
   };
 };
 
-export const deployFallbackOracle = async (verify?: boolean) =>
+export const deployPriceOracle = async (verify?: boolean) =>
   withSaveAndVerify(
     await new PriceOracle__factory(await getFirstSigner()).deploy(),
     eContractid.PriceOracle,

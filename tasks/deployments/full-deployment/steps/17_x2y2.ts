@@ -6,7 +6,6 @@ import {
 import {getPoolAddressesProvider} from "../../../../helpers/contracts-getters";
 import {X2Y2_ID} from "../../../../helpers/constants";
 import {
-  DRE,
   isLocalTestnet,
   isPublicTestnet,
   waitForTx,

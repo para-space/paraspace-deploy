@@ -1,9 +1,5 @@
 import {deployUiIncentiveDataProvider} from "../../../../helpers/contracts-deployments";
-import {
-  DRE,
-  isLocalTestnet,
-  isPublicTestnet,
-} from "../../../../helpers/misc-utils";
+import {isLocalTestnet, isPublicTestnet} from "../../../../helpers/misc-utils";
 
 export const step_12 = async (verify = false) => {
   try {

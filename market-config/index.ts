@@ -1,5 +1,5 @@
 import {parseEther} from "ethers/lib/utils";
-import {IParaSpaceConfiguration, eEthereumNetwork} from "../helpers/types";
+import {IParaSpaceConfiguration} from "../helpers/types";
 import {
   strategyDAI,
   strategyUSDC,
@@ -96,6 +96,9 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   ReserveFactorTreasuryAddress: "0x03D10cda221C2faA9F5CA22087654011ceE1802D",
   WETH: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
   USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  BendDAO: {
+    Oracle: "0x7c2a19e54e48718f6c60908a9cff3396e4ea1eba",
+  },
   Uniswap: {
     V2Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
     V2Router: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
@@ -111,7 +114,6 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   Oracle: {
     ETH: "0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e",
     // MAINNET
-    // BEND_DAO: "0x7c2a19e54e48718f6c60908a9cff3396e4ea1eba",
     // ETH: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
     // DAI: "0x773616E4d11A78F511299002da57A0a94577F1f4",
     // USDC: "0x986b5E1e1755e3C2440e960477f25201B0a8bbD4",

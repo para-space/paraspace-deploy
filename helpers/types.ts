@@ -486,8 +486,8 @@ export interface IChainlinkConfig {
   APE?: tEthereumAddress;
 }
 
-export interface IOracleConfig extends IChainlinkConfig {
-  BEND_DAO?: tEthereumAddress;
+export interface IBendDAOConfig {
+  Oracle: tEthereumAddress;
 }
 
 export interface IUniswapConfig {
@@ -528,9 +528,10 @@ export interface ICommonConfiguration {
   GatewayAdminIndex: number;
   WETH: tEthereumAddress;
   USDC: tEthereumAddress;
+  BendDAO: IBendDAOConfig;
   Uniswap: IUniswapConfig;
   Marketplace: IMarketplaceConfig;
-  Oracle: IOracleConfig;
+  Oracle: IChainlinkConfig;
   ReservesConfig: iMultiPoolsAssets<IReserveParams>;
   ReserveFactorTreasuryAddress: tEthereumAddress;
 }

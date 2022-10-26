@@ -10,7 +10,6 @@ import {
   rateStrategyParaSpace,
 } from "./rateStrategies";
 import {auctionStrategyExp, auctionStrategyZero} from "./auctionStrategies";
-import {ZERO_ADDRESS} from "../helpers/constants";
 
 export const strategyDAI: IReserveParams = {
   // address: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
