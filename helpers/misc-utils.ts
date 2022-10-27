@@ -1,18 +1,11 @@
-import low from "lowdb";
-import {Wallet, ContractTransaction, BigNumber, utils} from "ethers";
-import {HardhatRuntimeEnvironment} from "hardhat/types";
-import {
-  ConstructorArgs,
-  eContractid,
-  iFunctionSignature,
-  tEthereumAddress,
-} from "./types";
-import {Fragment, isAddress} from "ethers/lib/utils";
-import {isZeroAddress} from "ethereumjs-util";
 import mapLimit from "async/mapLimit";
-import {verifyEtherscanContract} from "./etherscan-verification";
-import {ABI} from "hardhat-deploy/dist/types";
+import {isZeroAddress} from "ethereumjs-util";
+import {BigNumber, ContractTransaction, Wallet} from "ethers";
+import {isAddress} from "ethers/lib/utils";
+import {HardhatRuntimeEnvironment} from "hardhat/types";
+import low from "lowdb";
 import {getAdapter} from "./db-adapter";
+import {verifyEtherscanContract} from "./etherscan-verification";
 import {
   COVERAGE_CHAINID,
   FORK_MAINNET_CHAINID,
@@ -20,6 +13,7 @@ import {
   HARDHAT_CHAINID,
   MAINNET_CHAINID,
 } from "./hardhat-constants";
+import {ConstructorArgs, eContractid, tEthereumAddress} from "./types";
 
 export const getDb = () => low(getAdapter(process.env.DB_PATH ?? ":memory:"));
 
@@ -115,17 +109,6 @@ export const mine = async () => {
 
 export const waitForTx = async (tx: ContractTransaction) => await tx.wait(1);
 
-// export const filterMapBy = (
-//   raw: {[key: string]: any},
-//   fn: (key: string) => boolean
-// ) =>
-//   Object.keys(raw)
-//     .filter(fn)
-//     .reduce<{[key: string]: any}>((obj, key) => {
-//       obj[key] = raw[key];
-//       return obj;
-//     }, {});
-
 export const chunk = <T>(arr: Array<T>, chunkSize: number): Array<Array<T>> => {
   return arr.reduce(
     // eslint-disable-next-line
@@ -204,23 +187,4 @@ export const impersonateAccountsHardhat = async (accounts: string[]) => {
       params: [account],
     });
   }
-};
-
-export const getFunctionSignatures = (
-  abi: string | ReadonlyArray<Fragment | Fragment | string>
-) => {
-  const i = new utils.Interface(abi);
-  return Object.keys(i.functions).map((f) => i.getSighash(i.functions[f]));
-};
-
-export const getFunctionSignatureObjs = (
-  abi: string | ReadonlyArray<Fragment | Fragment | string> | ABI
-): Array<iFunctionSignature> => {
-  const i = new utils.Interface(abi);
-  return Object.keys(i.functions).map((f) => {
-    return {
-      name: f,
-      signature: i.getSighash(i.functions[f]),
-    };
-  });
 };

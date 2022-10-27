@@ -397,7 +397,6 @@ export enum PTokenContractId {
 export interface IReserveParams
   extends IReserveBorrowParams,
     IReserveCollateralParams {
-  address?: tEthereumAddress;
   xTokenImpl: eContractid;
   reserveFactor: string;
   supplyCap: string;
@@ -477,7 +476,7 @@ export interface IMarketplaceConfig {
 }
 
 export interface IChainlinkConfig {
-  ETH: tEthereumAddress;
+  ETH?: tEthereumAddress;
   DAI?: tEthereumAddress;
   USDC?: tEthereumAddress;
   USDT?: tEthereumAddress;
@@ -500,6 +499,7 @@ export interface IUniswapConfig {
 export interface IMocksConfig {
   USDPriceInWEI: string;
   AllAssetsInitialPrices: iAssetBase<string>;
+  TokenFaucetMintValue: {[key: string]: number};
 }
 
 export interface IRate {
@@ -526,8 +526,7 @@ export interface ICommonConfiguration {
 
   GatewayAdmin: tEthereumAddress | undefined;
   GatewayAdminIndex: number;
-  WETH: tEthereumAddress;
-  USDC: tEthereumAddress;
+  Tokens: iMultiPoolsAssets<tEthereumAddress>;
   BendDAO: IBendDAOConfig;
   Uniswap: IUniswapConfig;
   Marketplace: IMarketplaceConfig;
