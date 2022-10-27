@@ -37,8 +37,8 @@ export const step_09 = async (verify = false) => {
           ParaSpaceConfig.BendDAO.Oracle,
           ParaSpaceConfig.Uniswap.V2Factory,
           ParaSpaceConfig.Uniswap.V2Router,
-          ParaSpaceConfig.WETH,
-          ParaSpaceConfig.USDC,
+          ParaSpaceConfig.Tokens.WETH,
+          ParaSpaceConfig.Tokens.USDC,
         ],
         verify
       );

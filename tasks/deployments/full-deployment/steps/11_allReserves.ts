@@ -1,3 +1,4 @@
+import {ZERO_ADDRESS} from "../../../../helpers/constants";
 import {
   deployMockIncentivesController,
   deployMockReserveAuctionStrategy,
@@ -9,12 +10,15 @@ import {
   getPoolConfiguratorProxy,
   getProtocolDataProvider,
 } from "../../../../helpers/contracts-getters";
-import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
+import {
+  getContractAddresses,
+  getParaSpaceAdmins,
+} from "../../../../helpers/contracts-helpers";
 import {
   configureReservesByHelper,
   initReservesByHelper,
 } from "../../../../helpers/init-helpers";
-import {waitForTx} from "../../../../helpers/misc-utils";
+import {isLocalTestnet, waitForTx} from "../../../../helpers/misc-utils";
 import {
   ERC721TokenContractId,
   tEthereumAddress,
@@ -32,16 +36,7 @@ export const step_11 = async (verify = false) => {
     const protocolDataProvider = await getProtocolDataProvider();
     const poolConfigurator = await getPoolConfiguratorProxy();
 
-    const allTokenAddresses = Object.entries(allTokens).reduce(
-      (
-        accum: {[tokenSymbol: string]: tEthereumAddress},
-        [tokenSymbol, token]
-      ) => ({
-        ...accum,
-        [tokenSymbol]: token.address,
-      }),
-      {}
-    );
+    const allTokenAddresses = getContractAddresses(allTokens);
 
     console.log("Initialize configuration");
 
@@ -52,20 +47,26 @@ export const step_11 = async (verify = false) => {
     const treasuryAddress = config.ReserveFactorTreasuryAddress;
 
     // Add an IncentivesController
-    const mockIncentivesController = await deployMockIncentivesController(
-      verify
-    );
-    const mockReserveAuctionStrategy = await deployMockReserveAuctionStrategy(
-      [
-        auctionStrategyLinear.maxPriceMultiplier,
-        auctionStrategyLinear.minExpPriceMultiplier,
-        auctionStrategyLinear.minPriceMultiplier,
-        auctionStrategyLinear.stepLinear,
-        auctionStrategyLinear.stepExp,
-        auctionStrategyLinear.tickLength,
-      ],
-      verify
-    );
+    let incentivesController = ZERO_ADDRESS;
+    let auctionStrategy: tEthereumAddress | undefined = undefined;
+
+    if (isLocalTestnet()) {
+      incentivesController = (await deployMockIncentivesController(verify))
+        .address;
+      auctionStrategy = (
+        await deployMockReserveAuctionStrategy(
+          [
+            auctionStrategyLinear.maxPriceMultiplier,
+            auctionStrategyLinear.minExpPriceMultiplier,
+            auctionStrategyLinear.minPriceMultiplier,
+            auctionStrategyLinear.stepLinear,
+            auctionStrategyLinear.stepExp,
+            auctionStrategyLinear.tickLength,
+          ],
+          verify
+        )
+      ).address;
+    }
 
     await initReservesByHelper(
       reservesParams,
@@ -75,14 +76,14 @@ export const step_11 = async (verify = false) => {
       SymbolPrefix,
       admin,
       treasuryAddress,
-      mockIncentivesController.address,
+      incentivesController,
       verify,
       undefined,
       undefined,
       undefined,
       undefined,
       undefined,
-      mockReserveAuctionStrategy.address
+      auctionStrategy
     );
 
     await configureReservesByHelper(

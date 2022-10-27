@@ -10,7 +10,6 @@ import {
   PoolConfigurator__factory,
   MintableERC20__factory,
   MintableERC721__factory,
-  // MockFlashLoanReceiver__factory,
   MockVariableDebtToken__factory,
   PriceOracle__factory,
   VariableDebtToken__factory,
@@ -21,24 +20,16 @@ import {
   SupplyLogic__factory,
   BorrowLogic__factory,
   LiquidationLogic__factory,
-  // BridgeLogic__factory,
   ACLManager__factory,
-  // EModeLogic__factory,
   DefaultReserveInterestRateStrategy__factory,
-  // FlashLoanLogic__factory,
   UiPoolDataProvider__factory,
   UiIncentiveDataProvider__factory,
   WETHGateway__factory,
-  // WPunk,
   WPunk__factory,
   CryptoPunksMarket__factory,
   WPunkGateway__factory,
   MockAggregator__factory,
-  // ParaSpaceToken__factory,
-  // StakedParaSpaceV3__factory,
-  // PCV__factory,
   ERC20__factory,
-  // ERC721__factory,
   MockTokenFaucet__factory,
   IERC20Detailed__factory,
   MockIncentivesController__factory,
@@ -69,13 +60,12 @@ import {
   IPool__factory,
   MockReserveAuctionStrategy__factory,
 } from "../../types";
-// import {PoolLibraryAddresses} from "../types/Pool__factory";
 import {
   getEthersSigners,
   ERC20TokenMap,
   ERC721TokenMap,
 } from "./contracts-helpers";
-import {DRE, getDb, notFalsyOrZeroAddress} from "./misc-utils";
+import {DRE, getDb} from "./misc-utils";
 import {
   eContractid,
   ERC721TokenContractId,
@@ -380,37 +370,18 @@ export const getAllTokens = async () => {
   return Object.assign(await getAllERC20Tokens(), await getAllERC721Tokens());
 };
 
-export const getPairsTokenAggregator = (
-  allAssetsAddresses: {
-    [tokenSymbol: string]: tEthereumAddress;
-  },
-  aggregatorsAddresses: {[tokenSymbol: string]: tEthereumAddress}
-): [string[], string[]] => {
-  const pairs = Object.entries(allAssetsAddresses).map(
-    ([tokenSymbol, tokenAddress]) => {
-      return [tokenAddress, aggregatorsAddresses[tokenSymbol]];
-    }
-  ) as [string, string][];
-
-  const mappedPairs = pairs.map(([asset]) => asset);
-  const mappedAggregators = pairs.map(([, source]) => source);
-
-  return [mappedPairs, mappedAggregators];
-};
-
 export const getPoolAddressesProviderRegistry = async (
   address?: tEthereumAddress
 ) =>
   await PoolAddressesProviderRegistry__factory.connect(
-    notFalsyOrZeroAddress(address)
-      ? address
-      : (
-          await getDb()
-            .get(
-              `${eContractid.PoolAddressesProviderRegistry}.${DRE.network.name}`
-            )
-            .value()
-        ).address,
+    address ||
+      (
+        await getDb()
+          .get(
+            `${eContractid.PoolAddressesProviderRegistry}.${DRE.network.name}`
+          )
+          .value()
+      ).address,
     await getFirstSigner()
   );
 

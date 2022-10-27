@@ -1,4 +1,4 @@
-import {DRE, getDb, getFunctionSignatureObjs} from "./misc-utils";
+import {DRE, getDb} from "./misc-utils";
 import {
   tEthereumAddress,
   eContractid,
@@ -18,7 +18,10 @@ import {
 import {StETH, MockAToken} from "../../types";
 import {MockContract} from "ethereum-waffle";
 import {getFirstSigner, getWETHMocked} from "./contracts-getters";
-import {getEthersSignersAddresses} from "./contracts-helpers";
+import {
+  getEthersSignersAddresses,
+  getFunctionSignatures,
+} from "./contracts-helpers";
 import {
   ProtocolDataProvider__factory,
   PToken__factory,
@@ -352,17 +355,17 @@ export const deployPoolParametersLibraries = async (
 };
 
 const checkPoolSignatures = () => {
-  const poolCoreSelectors = getFunctionSignatureObjs(PoolCore__factory.abi);
+  const poolCoreSelectors = getFunctionSignatures(PoolCore__factory.abi);
 
-  const poolParametersSelectors = getFunctionSignatureObjs(
+  const poolParametersSelectors = getFunctionSignatures(
     PoolParameters__factory.abi
   );
 
-  const poolMarketplaceSelectors = getFunctionSignatureObjs(
+  const poolMarketplaceSelectors = getFunctionSignatures(
     PoolMarketplace__factory.abi
   );
 
-  const poolProxySelectors = getFunctionSignatureObjs(ParaProxy__factory.abi);
+  const poolProxySelectors = getFunctionSignatures(ParaProxy__factory.abi);
 
   const allSelectors = {};
   const poolSelectors = [
@@ -773,7 +776,7 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
     if (contractAddress) {
       console.log("contract address is already in db ", tokenSymbol);
       continue;
-    } else if (configData?.address) {
+    } else if (ParaSpaceConfig.Tokens[tokenSymbol]) {
       console.log("contract address is already onchain ", tokenSymbol);
       insertContractAddressInDb(tokenSymbol, configData?.address, false);
       continue;
@@ -840,7 +843,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
     if (contractAddress) {
       console.log("contract address is already in db ", tokenSymbol);
       continue;
-    } else if (configData?.address) {
+    } else if (ParaSpaceConfig.Tokens[tokenSymbol]) {
       console.log("contract address is already onchain ", tokenSymbol);
       insertContractAddressInDb(tokenSymbol, configData?.address, false);
       continue;
