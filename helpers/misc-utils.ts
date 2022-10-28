@@ -160,8 +160,6 @@ export const verifyContracts = async (limit = 1) => {
 
   await mapLimit(entries, limit, async ([key, value]) => {
     const {address, constructorArgs = [], libraries} = value[network];
-    console.log(`- Verifying ${key}`);
-    console.log(`  - address: ${address}`);
     await verifyEtherscanContract(key, address, constructorArgs, libraries);
   });
 };

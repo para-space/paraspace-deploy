@@ -91,13 +91,15 @@ export const verifyEtherscanContract = async (
   libraries?: LibraryAddresses
 ) => {
   const currentNetwork = DRE.network.name;
-  const verifyContract =
+  const verifyContracts =
     process.env.ETHERSCAN_VERIFICATION_CONTRACTS?.trim().split(/\s?,\s?/);
 
-  if (verifyContract?.every((p) => !minimatch(contractId, p))) {
+  if (verifyContracts?.every((p) => !minimatch(contractId, p))) {
     return;
   }
 
+  console.log(`- Verifying ${contractId}`);
+  console.log(`  - address: ${address}`);
   let isVerified = await getIsVerified(contractId, address, currentNetwork);
   if (isVerified) {
     return;
