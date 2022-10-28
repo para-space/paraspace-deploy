@@ -79,7 +79,6 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   VariableDebtTokenNamePrefix: "ParaSpace Variable Debt Token",
   SymbolPrefix: "",
   ProviderId: 1, // Overridden in index.ts
-  MaxUserAtomicTokensAllowed: 256,
   AuctionRecoveryHealthFactor: "1500000000000000000",
   // MARKET CONFIGURATION
   ParaSpaceAdmin: undefined,

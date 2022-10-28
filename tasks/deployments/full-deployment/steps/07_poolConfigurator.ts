@@ -30,11 +30,6 @@ export const step_07 = async (verify = false) => {
       await addressesProvider.getPoolConfigurator()
     );
     await waitForTx(
-      await poolConfiguratorProxy.setMaxAtomicTokensAllowed(
-        ParaSpaceConfig.MaxUserAtomicTokensAllowed
-      )
-    );
-    await waitForTx(
       await poolConfiguratorProxy.setAuctionRecoveryHealthFactor(
         ParaSpaceConfig.AuctionRecoveryHealthFactor
       )
