@@ -2,21 +2,14 @@ import {deployPoolConfigurator} from "../../../../helpers/contracts-deployments"
 import {
   getPoolAddressesProvider,
   getPoolConfiguratorProxy,
-  getACLManager,
 } from "../../../../helpers/contracts-getters";
-import {
-  getParaSpaceAdmins,
-  registerContractInDb,
-} from "../../../../helpers/contracts-helpers";
+import {registerContractInDb} from "../../../../helpers/contracts-helpers";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {eContractid} from "../../../../helpers/types";
 import ParaSpaceConfig from "../../../../market-config";
 
 export const step_07 = async (verify = false) => {
-  const {riskAdmin} = await getParaSpaceAdmins();
-  const riskAdminAddress = await riskAdmin.getAddress();
   const addressesProvider = await getPoolAddressesProvider();
-  const aclManager = await getACLManager();
 
   try {
     const poolConfiguratorImpl = await deployPoolConfigurator(verify);
@@ -25,7 +18,6 @@ export const step_07 = async (verify = false) => {
         poolConfiguratorImpl.address
       )
     );
-    await waitForTx(await aclManager.addRiskAdmin(riskAdminAddress));
     const poolConfiguratorProxy = await getPoolConfiguratorProxy(
       await addressesProvider.getPoolConfigurator()
     );

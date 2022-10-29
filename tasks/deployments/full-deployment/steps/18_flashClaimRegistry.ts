@@ -6,6 +6,7 @@ import {
   getPoolAddressesProvider,
   getProtocolDataProvider,
 } from "../../../../helpers/contracts-getters";
+import {isLocalTestnet, isPublicTestnet} from "../../../../helpers/misc-utils";
 import {ERC721TokenContractId} from "../../../../helpers/types";
 
 export const step_18 = async (verify = false) => {
@@ -14,16 +15,17 @@ export const step_18 = async (verify = false) => {
     const poolAddress = await addressesProvider.getPool();
     await deployFlashClaimRegistry(poolAddress, verify);
 
-    const dataProvider = await getProtocolDataProvider();
-    const reservesTokens = await dataProvider.getAllReservesTokens();
-    const baycAddress = reservesTokens.find(
-      (token) => token.symbol === ERC721TokenContractId.BAYC
-    )?.tokenAddress;
-    if (!baycAddress) {
-      return;
+    if (!isLocalTestnet() && !isPublicTestnet()) {
+      const dataProvider = await getProtocolDataProvider();
+      const reservesTokens = await dataProvider.getAllReservesTokens();
+      const baycAddress = reservesTokens.find(
+        (token) => token.symbol === ERC721TokenContractId.BAYC
+      )?.tokenAddress;
+      if (!baycAddress) {
+        return;
+      }
+      await deployMockAirdropProject(baycAddress, verify);
     }
-
-    await deployMockAirdropProject(baycAddress, verify);
   } catch (error) {
     console.error(error);
     process.exit(1);

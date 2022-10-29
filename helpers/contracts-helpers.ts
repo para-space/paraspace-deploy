@@ -38,7 +38,7 @@ import {
   Seaport,
 } from "../../types";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
-import {getIErc20Detailed} from "./contracts-getters";
+import {getFirstSigner, getIErc20Detailed} from "./contracts-getters";
 import {getDefenderRelaySigner, usingDefender} from "./defender-utils";
 import {usingTenderly, verifyAtTenderly} from "./tenderly-utils";
 import {SignerWithAddress} from "../../test-suites/helpers/make-suite";
@@ -418,23 +418,33 @@ export const createConduit = async (
 };
 
 export const getParaSpaceAdmins = async (): Promise<{
-  paraSpaceAdmin: Signer;
-  emergencyAdmin: Signer;
-  riskAdmin: Signer;
-  gatewayAdmin: Signer;
+  deployer: tEthereumAddress;
+  paraSpaceAdmin: tEthereumAddress;
+  emergencyAdmin: tEthereumAddress;
+  riskAdmin: tEthereumAddress;
+  gatewayAdmin: tEthereumAddress;
 }> => {
+  const deployer = await getFirstSigner();
   const signers = await getEthersSigners();
   const {
+    ParaSpaceAdmin,
     ParaSpaceAdminIndex,
+    EmergencyAdmin,
     EmergencyAdminIndex,
+    RiskAdmin,
     RiskAdminIndex,
+    GatewayAdmin,
     GatewayAdminIndex,
   } = ParaSpaceConfig;
   return {
-    paraSpaceAdmin: signers[ParaSpaceAdminIndex],
-    emergencyAdmin: signers[EmergencyAdminIndex],
-    riskAdmin: signers[RiskAdminIndex],
-    gatewayAdmin: signers[GatewayAdminIndex],
+    deployer: await deployer.getAddress(),
+    paraSpaceAdmin:
+      ParaSpaceAdmin ?? (await signers[ParaSpaceAdminIndex].getAddress()),
+    emergencyAdmin:
+      EmergencyAdmin ?? (await signers[EmergencyAdminIndex].getAddress()),
+    riskAdmin: RiskAdmin ?? (await signers[RiskAdminIndex].getAddress()),
+    gatewayAdmin:
+      GatewayAdmin ?? (await signers[GatewayAdminIndex].getAddress()),
   };
 };
 

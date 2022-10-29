@@ -14,14 +14,14 @@ export const step_14 = async (verify = false) => {
   const {gatewayAdmin} = await getParaSpaceAdmins();
 
   try {
-    const mockTokens = await getAllTokens();
+    const tokens = await getAllTokens();
     const punks = await getCryptoPunksMarket();
     const addressesProvider = await getPoolAddressesProvider();
     const poolAddress = await addressesProvider.getPool();
     const poolProxy = await getPoolProxy(poolAddress);
 
     const punkGateway = await deployPunkGateway(
-      [punks.address, mockTokens.WPUNKS.address, poolProxy.address],
+      [punks.address, tokens.WPUNKS.address, poolProxy.address],
       verify
     );
 
@@ -29,7 +29,7 @@ export const step_14 = async (verify = false) => {
       punkGateway.interface.encodeFunctionData("initialize");
 
     await deployPunkGatewayProxy(
-      await gatewayAdmin.getAddress(),
+      gatewayAdmin,
       punkGateway.address,
       punkGatewayEncodedInitialize,
       verify

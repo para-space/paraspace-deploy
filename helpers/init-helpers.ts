@@ -37,7 +37,6 @@ export const initReservesByHelper = async (
   xTokenNamePrefix: string,
   variableDebtTokenNamePrefix: string,
   symbolPrefix: string,
-  admin: tEthereumAddress,
   treasuryAddress: tEthereumAddress,
   incentivesController: tEthereumAddress,
   verify: boolean,
@@ -341,7 +340,6 @@ export const initReservesByHelper = async (
   const configurator = await getPoolConfiguratorProxy(
     poolConfiguratorProxyAddress
   );
-  //await waitForTx(await addressProvider.setPoolAdmin(admin));
 
   console.log(
     `- Reserves initialization in ${chunkedInitInputParams.length} txs`
@@ -368,7 +366,6 @@ export const configureReservesByHelper = async (
   reservesParams: iMultiPoolsAssets<IReserveParams>,
   tokenAddresses: {[symbol: string]: tEthereumAddress},
   helpers: ProtocolDataProvider,
-  admin: tEthereumAddress,
   poolAddressesProviderProxyAddress?: tEthereumAddress,
   aclManagerAddress?: tEthereumAddress,
   reservesSetupHelperAddress?: tEthereumAddress
@@ -415,12 +412,7 @@ export const configureReservesByHelper = async (
     }
     if (baseLTVAsCollateral === "-1") continue;
 
-    const assetAddressIndex = Object.keys(tokenAddresses).findIndex(
-      (value) => value === assetSymbol
-    );
-    const [, tokenAddress] = (
-      Object.entries(tokenAddresses) as [string, string][]
-    )[assetAddressIndex];
+    const tokenAddress = tokenAddresses[assetSymbol];
     const {usageAsCollateralEnabled: alreadyEnabled} =
       await helpers.getReserveConfigurationData(tokenAddress);
 
@@ -440,14 +432,14 @@ export const configureReservesByHelper = async (
       reserveFactor,
       borrowCap,
       supplyCap,
-      borrowingEnabled: borrowingEnabled,
+      borrowingEnabled,
     });
 
     tokens.push(tokenAddress);
     symbols.push(assetSymbol);
   }
   if (tokens.length) {
-    // Add reservesSetupHelper as temporal admin
+    // Add reservesSetupHelper as temporary admin
     await waitForTx(await aclManager.addPoolAdmin(reservesSetupHelper.address));
 
     // Deploy init per chunks

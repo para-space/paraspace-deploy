@@ -26,7 +26,7 @@ import {
 export const ParaSpaceConfig: IParaSpaceConfiguration = {
   // BASIC INFO
   MarketId: "ParaSpaceMM",
-  ParaSpaceTeam: "0x69C33aB569816F1D564a420490AbB894a44071Fb",
+  ParaSpaceTeam: "0x3Ae92a41Bd8EEd8c6A0f5e9813E1EE1797c48e9a",
   PTokenNamePrefix: "ParaSpace Derivative Token",
   VariableDebtTokenNamePrefix: "ParaSpace Variable Debt Token",
   SymbolPrefix: "",
@@ -45,7 +45,7 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   // Gateway Admin, for polkadot evm only 5 accounts initialized
   // so change index no more than it here
   GatewayAdminIndex: 4,
-  ReserveFactorTreasuryAddress: "0x03D10cda221C2faA9F5CA22087654011ceE1802D",
+  Treasury: "0x3Ae92a41Bd8EEd8c6A0f5e9813E1EE1797c48e9a",
   Tokens: {
     // WETH: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
     // USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",

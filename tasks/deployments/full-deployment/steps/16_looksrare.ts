@@ -28,16 +28,12 @@ export const step_16 = async (verify = false) => {
       return;
     }
 
-    const mockTokens = await getAllTokens();
+    const tokens = await getAllTokens();
     const currencyManager = await deployCurrencyManager(verify);
     const addressesProvider = await getPoolAddressesProvider();
 
-    await waitForTx(
-      await currencyManager.addCurrency(mockTokens["DAI"].address)
-    );
-    await waitForTx(
-      await currencyManager.addCurrency(mockTokens["WETH"].address)
-    );
+    await waitForTx(await currencyManager.addCurrency(tokens.DAI.address));
+    await waitForTx(await currencyManager.addCurrency(tokens.WETH.address));
 
     const executionManager = await deployExecutionManager(verify);
 
@@ -52,7 +48,7 @@ export const step_16 = async (verify = false) => {
       currencyManager.address,
       executionManager.address,
       royaltyFeeManager.address,
-      mockTokens["WETH"].address,
+      tokens.WETH.address,
       protocolFeeRecipient,
       verify
     );

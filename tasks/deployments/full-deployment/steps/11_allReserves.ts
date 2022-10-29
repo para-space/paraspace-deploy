@@ -10,10 +10,7 @@ import {
   getPoolConfiguratorProxy,
   getProtocolDataProvider,
 } from "../../../../helpers/contracts-getters";
-import {
-  getContractAddresses,
-  getParaSpaceAdmins,
-} from "../../../../helpers/contracts-helpers";
+import {getContractAddresses} from "../../../../helpers/contracts-helpers";
 import {
   configureReservesByHelper,
   initReservesByHelper,
@@ -30,9 +27,7 @@ export const step_11 = async (verify = false) => {
   try {
     const allTokens = await getAllTokens();
     const addressesProvider = await getPoolAddressesProvider();
-    const {paraSpaceAdmin} = await getParaSpaceAdmins();
     const reservesParams = ParaSpaceConfig.ReservesConfig;
-    const admin = await paraSpaceAdmin.getAddress();
     const protocolDataProvider = await getProtocolDataProvider();
     const poolConfigurator = await getPoolConfiguratorProxy();
 
@@ -44,7 +39,7 @@ export const step_11 = async (verify = false) => {
 
     const {PTokenNamePrefix, VariableDebtTokenNamePrefix, SymbolPrefix} =
       config;
-    const treasuryAddress = config.ReserveFactorTreasuryAddress;
+    const treasuryAddress = config.Treasury;
 
     // Add an IncentivesController
     let incentivesController = ZERO_ADDRESS;
@@ -74,7 +69,6 @@ export const step_11 = async (verify = false) => {
       PTokenNamePrefix,
       VariableDebtTokenNamePrefix,
       SymbolPrefix,
-      admin,
       treasuryAddress,
       incentivesController,
       verify,
@@ -89,8 +83,7 @@ export const step_11 = async (verify = false) => {
     await configureReservesByHelper(
       reservesParams,
       allTokenAddresses,
-      protocolDataProvider,
-      admin
+      protocolDataProvider
     );
 
     const uniswapV3Token = allTokens[ERC721TokenContractId.UniswapV3];

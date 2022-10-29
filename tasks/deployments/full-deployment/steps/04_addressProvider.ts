@@ -7,17 +7,16 @@ import {waitForTx} from "../../../../helpers/misc-utils";
 import ParaSpaceConfig from "../../../../market-config";
 
 export const step_04 = async (verify = false) => {
-  const {paraSpaceAdmin} = await getParaSpaceAdmins();
-  const paraSpaceAdminAddress = await paraSpaceAdmin.getAddress();
+  const {deployer} = await getParaSpaceAdmins();
 
   try {
     const addressesProviderRegistry = await deployPoolAddressesProviderRegistry(
-      paraSpaceAdminAddress,
+      deployer,
       verify
     );
     const addressesProvider = await deployPoolAddressesProvider(
       ParaSpaceConfig.MarketId,
-      paraSpaceAdminAddress,
+      deployer,
       verify
     );
     await waitForTx(
@@ -26,7 +25,8 @@ export const step_04 = async (verify = false) => {
         ParaSpaceConfig.ProviderId
       )
     );
-    await waitForTx(await addressesProvider.setACLAdmin(paraSpaceAdminAddress));
+    // Temporary setting, renounceRole needs to be done later
+    await waitForTx(await addressesProvider.setACLAdmin(deployer));
   } catch (error) {
     console.error(error);
     process.exit(1);

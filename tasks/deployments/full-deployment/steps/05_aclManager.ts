@@ -4,9 +4,8 @@ import {waitForTx} from "../../../../helpers/misc-utils";
 import {getPoolAddressesProvider} from "../../../../helpers/contracts-getters";
 
 export const step_05 = async (verify = false) => {
-  const {paraSpaceAdmin, emergencyAdmin} = await getParaSpaceAdmins();
-  const paraspaceAdmin = await paraSpaceAdmin.getAddress();
-  const emergencyAdminAddress = await emergencyAdmin.getAddress();
+  const {deployer, emergencyAdmin, riskAdmin} =
+    await getParaSpaceAdmins();
   const addressesProvider = await getPoolAddressesProvider();
 
   try {
@@ -16,9 +15,12 @@ export const step_05 = async (verify = false) => {
     );
     await waitForTx(await addressesProvider.setACLManager(aclManager.address));
 
-    await waitForTx(await aclManager.addPoolAdmin(paraspaceAdmin));
-    await waitForTx(await aclManager.addAssetListingAdmin(paraspaceAdmin));
-    await waitForTx(await aclManager.addEmergencyAdmin(emergencyAdminAddress));
+    // Temporary setting, renounceRole needs to be done later
+    await waitForTx(await aclManager.addPoolAdmin(deployer));
+
+    await waitForTx(await aclManager.addAssetListingAdmin(deployer));
+    await waitForTx(await aclManager.addEmergencyAdmin(emergencyAdmin));
+    await waitForTx(await aclManager.addRiskAdmin(riskAdmin));
   } catch (error) {
     console.error(error);
     process.exit(1);

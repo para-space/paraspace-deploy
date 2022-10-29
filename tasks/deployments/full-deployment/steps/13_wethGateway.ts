@@ -13,13 +13,13 @@ export const step_13 = async (verify = false) => {
   const {gatewayAdmin} = await getParaSpaceAdmins();
 
   try {
-    const mockTokens = await getAllTokens();
+    const tokens = await getAllTokens();
     const addressesProvider = await getPoolAddressesProvider();
     const poolAddress = await addressesProvider.getPool();
     const poolProxy = await getPoolProxy(poolAddress);
 
     const wethGateway = await deployWETHGateway(
-      mockTokens.WETH.address,
+      tokens.WETH.address,
       poolProxy.address,
       verify
     );
@@ -28,7 +28,7 @@ export const step_13 = async (verify = false) => {
       wethGateway.interface.encodeFunctionData("initialize");
 
     await deployWETHGatewayProxy(
-      await gatewayAdmin.getAddress(),
+      gatewayAdmin,
       wethGateway.address,
       wethGatewayEncodedInitialize,
       verify

@@ -3,14 +3,16 @@ import {
   deployX2Y2Adapter,
   deployX2Y2R1,
 } from "../../../../helpers/contracts-deployments";
-import {getPoolAddressesProvider} from "../../../../helpers/contracts-getters";
+import {
+  getFirstSigner,
+  getPoolAddressesProvider,
+} from "../../../../helpers/contracts-getters";
 import {X2Y2_ID} from "../../../../helpers/constants";
 import {
   isLocalTestnet,
   isPublicTestnet,
   waitForTx,
 } from "../../../../helpers/misc-utils";
-import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 
 export const step_17 = async (verify = false) => {
   try {
@@ -18,24 +20,23 @@ export const step_17 = async (verify = false) => {
       return;
     }
 
-    const {paraSpaceAdmin} = await getParaSpaceAdmins();
+    const deployer = await getFirstSigner();
     const addressesProvider = await getPoolAddressesProvider();
-    addressesProvider.getACLAdmin();
     const x2y2R1 = await deployX2Y2R1(verify);
     await waitForTx(
       await x2y2R1
-        .connect(paraSpaceAdmin)
+        .connect(deployer)
         .initialize(0, await addressesProvider.getWETH())
     );
     const erc721Delegate = await deployERC721Delegate(verify);
     await waitForTx(
       await x2y2R1
-        .connect(paraSpaceAdmin)
+        .connect(deployer)
         .updateDelegates([erc721Delegate.address], [])
     );
     await waitForTx(
       await erc721Delegate
-        .connect(paraSpaceAdmin)
+        .connect(deployer)
         .grantRole(
           "0x7630198b183b603be5df16e380207195f2a065102b113930ccb600feaf615331",
           x2y2R1.address
