@@ -1,5 +1,5 @@
-import {parseEther} from "ethers/lib/utils";
 import {IParaSpaceConfiguration} from "../helpers/types";
+import {MocksConfig} from "./mocks";
 import {
   strategyDAI,
   strategyUSDC,
@@ -23,54 +23,6 @@ import {
   strategyMeebits,
 } from "./reservesConfigs";
 
-export const MOCK_CHAINLINK_AGGREGATORS_PRICES = {
-  // ERC20
-  DAI: parseEther("0.000908578801039414").toString(),
-  USDC: parseEther("0.000915952223931999").toString(),
-  USDT: parseEther("0.000915952223931999").toString(),
-  WETH: parseEther("1").toString(),
-  WBTC: parseEther("18.356369399062118").toString(),
-  stETH: parseEther("1").toString(),
-  APE: parseEther("0.0036906841286").toString(),
-  aWETH: parseEther("1").toString(),
-  cETH: parseEther("1").toString(),
-  PUNK: parseEther("140").toString(),
-  // ERC721
-  BAYC: parseEther("101").toString(),
-  WPUNKS: parseEther("140").toString(),
-  PUNKS: parseEther("140").toString(),
-  MAYC: parseEther("51").toString(),
-  DOODLE: parseEther("75").toString(),
-  MOONBIRD: parseEther("0.02").toString(),
-  MEEBITS: parseEther("22").toString(),
-  AZUKI: parseEther("21").toString(),
-  OTHR: parseEther("25").toString(),
-  CLONEX: parseEther("27").toString(),
-};
-
-export const MOCK_TOKEN_MINT_VALUE = {
-  // ERC20
-  DAI: 10000,
-  USDC: 10000,
-  USDT: 10000,
-  WBTC: 10,
-  stETH: 10,
-  APE: 10000,
-  aWETH: 10,
-  cWETH: 10,
-  PUNK: 1000,
-  // ERC721
-  BAYC: 2,
-  CRYPTO_PUNK: 2,
-  MAYC: 2,
-  DOODLE: 2,
-  MOONBIRD: 2,
-  MEEBITS: 2,
-  AZUKI: 2,
-  OTHR: 2,
-  CLONEX: 2,
-};
-
 export const ParaSpaceConfig: IParaSpaceConfiguration = {
   // BASIC INFO
   MarketId: "ParaSpaceMM",
@@ -93,8 +45,10 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   // so change index no more than it here
   GatewayAdminIndex: 4,
   ReserveFactorTreasuryAddress: "0x03D10cda221C2faA9F5CA22087654011ceE1802D",
-  WETH: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
-  USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  Tokens: {
+    // WETH: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+    // USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  },
   BendDAO: {
     Oracle: "0x7c2a19e54e48718f6c60908a9cff3396e4ea1eba",
   },
@@ -111,7 +65,7 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
     Seaport: "0x00000000006c3852cbEf3e08E8dF289169EdE581",
   },
   Oracle: {
-    ETH: "0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e",
+    // ETH: "0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e",
     // MAINNET
     // ETH: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
     // DAI: "0x773616E4d11A78F511299002da57A0a94577F1f4",
@@ -145,12 +99,7 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
     UniswapV3: strategyUniswapV3,
   },
   // MOCK ORACLES
-  Mocks: {
-    USDPriceInWEI: "5848466240000000",
-    AllAssetsInitialPrices: {
-      ...MOCK_CHAINLINK_AGGREGATORS_PRICES,
-    },
-  },
+  Mocks: MocksConfig,
 };
 
 export default ParaSpaceConfig;

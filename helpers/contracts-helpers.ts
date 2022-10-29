@@ -1,6 +1,8 @@
-import {constants, Contract, Signer} from "ethers";
+import {constants, Contract, Signer, utils} from "ethers";
 import {signTypedData_v4} from "eth-sig-util";
 import {fromRpcSig, ECDSASignature} from "ethereumjs-util";
+import {Fragment, isAddress} from "ethers/lib/utils";
+import {isZeroAddress} from "ethereumjs-util";
 import {
   DRE,
   getDb,
@@ -45,6 +47,7 @@ import {InitializableImmutableAdminUpgradeabilityProxy} from "../../types";
 import {decodeEvents} from "./seaport-helpers/events";
 import {expect} from "chai";
 import ParaSpaceConfig from "../market-config";
+import {ABI} from "hardhat-deploy/dist/types";
 
 export type ERC20TokenMap = {[symbol: string]: ERC20};
 export type ERC721TokenMap = {[symbol: string]: ERC721};
@@ -59,21 +62,22 @@ export const registerContractInDb = async (
   const currentNetwork = DRE.network.name;
   const FORK = process.env.FORK;
   const key = `${id}.${DRE.network.name}`;
+
   if (FORK || !isLocalTestnet()) {
     console.log(`*** ${id} ***\n`);
     console.log(`Network: ${currentNetwork}`);
-    console.log(`tx: ${instance.deployTransaction.hash}`);
+    console.log(`tx: ${instance.deployTransaction?.hash}`);
     console.log(`contract address: ${instance.address}`);
-    console.log(`deployer address: ${instance.deployTransaction.from}`);
-    console.log(`gas price: ${instance.deployTransaction.gasPrice}`);
-    console.log(`gas used: ${instance.deployTransaction.gasLimit}`);
+    console.log(`deployer address: ${instance.deployTransaction?.from}`);
+    console.log(`gas price: ${instance.deployTransaction?.gasPrice}`);
+    console.log(`gas used: ${instance.deployTransaction?.gasLimit}`);
     console.log(`\n******`);
     console.log();
   }
 
   const value = {
     address: instance.address,
-    deployer: instance.deployTransaction.from,
+    deployer: instance.deployTransaction?.from,
     constructorArgs,
     verified: false,
   };
@@ -432,4 +436,35 @@ export const getParaSpaceAdmins = async (): Promise<{
     riskAdmin: signers[RiskAdminIndex],
     gatewayAdmin: signers[GatewayAdminIndex],
   };
+};
+
+export const getFunctionSignatures = (
+  abi: string | ReadonlyArray<Fragment | Fragment | string> | ABI
+): Array<iFunctionSignature> => {
+  const i = new utils.Interface(abi);
+  return Object.keys(i.functions).map((f) => {
+    return {
+      name: f,
+      signature: i.getSighash(i.functions[f]),
+    };
+  });
+};
+
+export const getContractAddresses = (contracts: {[name: string]: Contract}) => {
+  return Object.entries(contracts).reduce(
+    (accum: {[name: string]: tEthereumAddress}, [name, contract]) => ({
+      ...accum,
+      [name]: contract.address,
+    }),
+    {}
+  );
+};
+
+export const isNotFalsyOrZeroAddress = (
+  address: tEthereumAddress | null | undefined
+): boolean => {
+  if (!address) {
+    return false;
+  }
+  return isAddress(address) && !isZeroAddress(address);
 };

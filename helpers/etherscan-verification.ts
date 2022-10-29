@@ -91,10 +91,10 @@ export const verifyEtherscanContract = async (
   libraries?: LibraryAddresses
 ) => {
   const currentNetwork = DRE.network.name;
-  const verifyContract =
-    process.env.ETHERSCAN_VERIFICATION_CONTRACT?.trim().split(/\s?,\s?/);
+  const verifyContracts =
+    process.env.ETHERSCAN_VERIFICATION_CONTRACTS?.trim().split(/\s?,\s?/);
 
-  if (verifyContract?.every((p) => !minimatch(contractId, p))) {
+  if (verifyContracts?.every((p) => !minimatch(contractId, p))) {
     return;
   }
 
@@ -106,6 +106,9 @@ export const verifyEtherscanContract = async (
   if (isLocalTestnet() || isForkMainnet()) {
     return;
   }
+
+  console.log(`- Verifying ${contractId}`);
+  console.log(`  - address: ${address}`);
 
   if (!SUPPORTED_ETHERSCAN_NETWORKS.includes(currentNetwork)) {
     throw Error(
@@ -122,7 +125,9 @@ export const verifyEtherscanContract = async (
       "[ETHERSCAN][WARNING] Delaying Etherscan verification due their API can not find newly deployed contracts"
     );
     const msDelay = 3000;
-    const times = 3;
+    const times = parseInt(
+      process.env.ETHERSCAN_VERIFICATION_MAX_RETRIES ?? "3"
+    );
     // Write a temporal file to host complex parameters for buidler-etherscan https://github.com/nomiclabs/buidler/tree/development/packages/buidler-etherscan#complex-arguments
 
     const params: VerificationArgs = {
