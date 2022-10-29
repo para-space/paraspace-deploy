@@ -6,7 +6,6 @@ import {
 } from "../../../../helpers/contracts-getters";
 import {
   getParaSpaceAdmins,
-  insertContractAddressInDb,
   registerContractInDb,
 } from "../../../../helpers/contracts-helpers";
 import {waitForTx} from "../../../../helpers/misc-utils";

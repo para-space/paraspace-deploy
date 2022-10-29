@@ -49,7 +49,6 @@ import {
   UniswapV3Factory__factory,
   UniswapV3OracleWrapper__factory,
   NTokenUniswapV3__factory,
-  UniswapV3DynamicConfigsStrategy__factory,
   StETH__factory,
   PTokenStETH__factory,
   MockAToken__factory,
@@ -647,21 +646,6 @@ export const getNTokenUniswapV3 = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-export const getUniswapV3DynamicConfigsStrategy = async (
-  address?: tEthereumAddress
-) =>
-  await UniswapV3DynamicConfigsStrategy__factory.connect(
-    address ||
-      (
-        await getDb()
-          .get(
-            `${eContractid.UniswapV3DynamicConfigsStrategy}.${DRE.network.name}`
-          )
-          .value()
-      ).address,
-    await getFirstSigner()
-  );
-
 export const getChainId = async () =>
   (await DRE.ethers.provider.getNetwork()).chainId;
 
@@ -808,21 +792,6 @@ export const getMockIncentivesController = async (address?: tEthereumAddress) =>
       (
         await getDb()
           .get(`${eContractid.MockIncentivesController}.${DRE.network.name}`)
-          .value()
-      ).address,
-    await getFirstSigner()
-  );
-
-export const getUniswapDynamicConfigStrategy = async (
-  address?: tEthereumAddress
-) =>
-  await UniswapV3DynamicConfigsStrategy__factory.connect(
-    address ||
-      (
-        await getDb()
-          .get(
-            `${eContractid.UniswapV3DynamicConfigsStrategy}.${DRE.network.name}`
-          )
           .value()
       ).address,
     await getFirstSigner()
