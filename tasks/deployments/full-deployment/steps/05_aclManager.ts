@@ -4,8 +4,7 @@ import {waitForTx} from "../../../../helpers/misc-utils";
 import {getPoolAddressesProvider} from "../../../../helpers/contracts-getters";
 
 export const step_05 = async (verify = false) => {
-  const {deployer, emergencyAdmin, riskAdmin} =
-    await getParaSpaceAdmins();
+  const {deployer, emergencyAdmin, riskAdmin} = await getParaSpaceAdmins();
   const addressesProvider = await getPoolAddressesProvider();
 
   try {
