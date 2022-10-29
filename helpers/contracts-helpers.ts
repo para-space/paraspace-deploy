@@ -62,21 +62,22 @@ export const registerContractInDb = async (
   const currentNetwork = DRE.network.name;
   const FORK = process.env.FORK;
   const key = `${id}.${DRE.network.name}`;
+
   if (FORK || !isLocalTestnet()) {
     console.log(`*** ${id} ***\n`);
     console.log(`Network: ${currentNetwork}`);
-    console.log(`tx: ${instance.deployTransaction.hash}`);
+    console.log(`tx: ${instance.deployTransaction?.hash}`);
     console.log(`contract address: ${instance.address}`);
-    console.log(`deployer address: ${instance.deployTransaction.from}`);
-    console.log(`gas price: ${instance.deployTransaction.gasPrice}`);
-    console.log(`gas used: ${instance.deployTransaction.gasLimit}`);
+    console.log(`deployer address: ${instance.deployTransaction?.from}`);
+    console.log(`gas price: ${instance.deployTransaction?.gasPrice}`);
+    console.log(`gas used: ${instance.deployTransaction?.gasLimit}`);
     console.log(`\n******`);
     console.log();
   }
 
   const value = {
     address: instance.address,
-    deployer: instance.deployTransaction.from,
+    deployer: instance.deployTransaction?.from,
     constructorArgs,
     verified: false,
   };

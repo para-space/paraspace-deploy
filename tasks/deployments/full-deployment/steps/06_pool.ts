@@ -4,7 +4,10 @@ import {
   getPoolProxy,
   getPoolAddressesProvider,
 } from "../../../../helpers/contracts-getters";
-import {insertContractAddressInDb} from "../../../../helpers/contracts-helpers";
+import {
+  insertContractAddressInDb,
+  registerContractInDb,
+} from "../../../../helpers/contracts-helpers";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {eContractid} from "../../../../helpers/types";
 
@@ -68,8 +71,9 @@ export const step_06 = async (verify = false) => {
     );
 
     const poolProxy = await getPoolProxy(poolAddress);
-
-    await insertContractAddressInDb(eContractid.PoolProxy, poolProxy.address);
+    await registerContractInDb(eContractid.PoolProxy, poolProxy, [
+      addressesProvider.address,
+    ]);
   } catch (error) {
     console.error(error);
     process.exit(1);

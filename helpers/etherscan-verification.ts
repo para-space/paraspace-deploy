@@ -98,8 +98,6 @@ export const verifyEtherscanContract = async (
     return;
   }
 
-  console.log(`- Verifying ${contractId}`);
-  console.log(`  - address: ${address}`);
   let isVerified = await getIsVerified(contractId, address, currentNetwork);
   if (isVerified) {
     return;
@@ -108,6 +106,9 @@ export const verifyEtherscanContract = async (
   if (isLocalTestnet() || isForkMainnet()) {
     return;
   }
+
+  console.log(`- Verifying ${contractId}`);
+  console.log(`  - address: ${address}`);
 
   if (!SUPPORTED_ETHERSCAN_NETWORKS.includes(currentNetwork)) {
     throw Error(
