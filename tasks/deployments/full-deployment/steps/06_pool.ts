@@ -4,10 +4,7 @@ import {
   getPoolProxy,
   getPoolAddressesProvider,
 } from "../../../../helpers/contracts-getters";
-import {
-  insertContractAddressInDb,
-  registerContractInDb,
-} from "../../../../helpers/contracts-helpers";
+import {registerContractInDb} from "../../../../helpers/contracts-helpers";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {eContractid} from "../../../../helpers/types";
 
