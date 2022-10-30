@@ -103,7 +103,9 @@ export const GoerliParaSpaceConfig: IParaSpaceConfiguration = {
   ...CommonConfig,
   ParaSpaceTeam: "0x03D10cda221C2faA9F5CA22087654011ceE1802D",
   Treasury: "0x03D10cda221C2faA9F5CA22087654011ceE1802D",
-  Tokens: {},
+  Tokens: {
+    WETH: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
+  },
   BendDAO: {},
   Uniswap: {
     V2Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
@@ -171,7 +173,6 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     WBTC: "0xdeb288F737066589598e9214E782fa5A8eD689e8",
     APE: "0xc7de7f4d4C9c991fF62a07D18b3E31e349833A18",
   },
-  // RESERVE ASSETS - CONFIG, ASSETS, BORROW RATES,
   ReservesConfig: {
     DAI: strategyDAI,
     USDC: strategyUSDC,
