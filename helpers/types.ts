@@ -532,7 +532,7 @@ export interface ICommonConfiguration {
   Marketplace: IMarketplaceConfig;
   Oracle: IChainlinkConfig;
   ReservesConfig: iMultiPoolsAssets<IReserveParams>;
-  ReserveFactorTreasuryAddress: tEthereumAddress;
+  Treasury: tEthereumAddress;
 }
 
 export interface IParaSpaceConfiguration extends ICommonConfiguration {

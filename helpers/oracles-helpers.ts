@@ -16,14 +16,13 @@ import {
   deployMockAggregator,
   deployUniswapV3OracleWrapper,
 } from "./contracts-deployments";
-import {waitForTx} from "./misc-utils";
+import {getParaSpaceConfig, waitForTx} from "./misc-utils";
 import {
   getAllTokens,
   getPoolAddressesProvider,
   getUniswapV3Factory,
 } from "./contracts-getters";
 import {getContractAddresses} from "./contracts-helpers";
-import ParaSpaceConfig from "../market-config";
 
 export const setInitialAssetPricesInOracle = async (
   prices: iAssetBase<tEthereumAddress>,
@@ -53,7 +52,7 @@ export const deployAllAggregators = async (
       | ERC721OracleWrapper;
   } = {};
   const addressesProvider = await getPoolAddressesProvider();
-  const oracleConfig = ParaSpaceConfig.Oracle;
+  const oracleConfig = getParaSpaceConfig().Oracle;
   for (const tokenSymbol of Object.keys(tokens)) {
     if (tokenSymbol === ERC20TokenContractId.WETH) {
       continue;

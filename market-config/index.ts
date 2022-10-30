@@ -1,4 +1,4 @@
-import {IParaSpaceConfiguration} from "../helpers/types";
+import {eEthereumNetwork, IParaSpaceConfiguration} from "../helpers/types";
 import {MocksConfig} from "./mocks";
 import {
   strategyDAI,
@@ -45,7 +45,7 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   // Gateway Admin, for polkadot evm only 5 accounts initialized
   // so change index no more than it here
   GatewayAdminIndex: 4,
-  ReserveFactorTreasuryAddress: "0x03D10cda221C2faA9F5CA22087654011ceE1802D",
+  Treasury: "0x03D10cda221C2faA9F5CA22087654011ceE1802D",
   Tokens: {
     // WETH: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
     // USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -103,4 +103,9 @@ export const ParaSpaceConfig: IParaSpaceConfiguration = {
   Mocks: MocksConfig,
 };
 
-export default ParaSpaceConfig;
+export const ParaSpaceConfigs: Partial<
+  Record<eEthereumNetwork, IParaSpaceConfiguration>
+> = {
+  [eEthereumNetwork.hardhat]: ParaSpaceConfig,
+  [eEthereumNetwork.goerli]: ParaSpaceConfig,
+};

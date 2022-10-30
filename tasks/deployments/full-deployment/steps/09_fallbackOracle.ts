@@ -9,13 +9,13 @@ import {
   getCryptoPunksMarket,
 } from "../../../../helpers/contracts-getters";
 import {
+  getParaSpaceConfig,
   isLocalTestnet,
   isMainnet,
   isPublicTestnet,
 } from "../../../../helpers/misc-utils";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {setInitialAssetPricesInOracle} from "../../../../helpers/oracles-helpers";
-import ParaSpaceConfig from "../../../../market-config";
 import {ERC721TokenContractId} from "../../../../helpers/types";
 
 export const step_09 = async (verify = false) => {
@@ -34,11 +34,11 @@ export const step_09 = async (verify = false) => {
       );
       await deployParaSpaceFallbackOracle(
         [
-          ParaSpaceConfig.BendDAO.Oracle,
-          ParaSpaceConfig.Uniswap.V2Factory,
-          ParaSpaceConfig.Uniswap.V2Router,
-          ParaSpaceConfig.Tokens.WETH,
-          ParaSpaceConfig.Tokens.USDC,
+          getParaSpaceConfig().BendDAO.Oracle,
+          getParaSpaceConfig().Uniswap.V2Factory,
+          getParaSpaceConfig().Uniswap.V2Router,
+          getParaSpaceConfig().Tokens.WETH,
+          getParaSpaceConfig().Tokens.USDC,
         ],
         verify
       );
@@ -49,10 +49,12 @@ export const step_09 = async (verify = false) => {
       await deployNFTFloorPriceOracle([], verify);
       const fallbackOracle = await deployPriceOracle(verify);
       await waitForTx(
-        await fallbackOracle.setEthUsdPrice(ParaSpaceConfig.Mocks.USDPriceInWEI)
+        await fallbackOracle.setEthUsdPrice(
+          getParaSpaceConfig().Mocks.USDPriceInWEI
+        )
       );
       await setInitialAssetPricesInOracle(
-        ParaSpaceConfig.Mocks.AllAssetsInitialPrices,
+        getParaSpaceConfig().Mocks.AllAssetsInitialPrices,
         {
           // ERC20
           WETH: erc20Tokens.WETH.address,
