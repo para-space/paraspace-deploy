@@ -26,7 +26,7 @@ type VerificationArgs = {
 };
 
 export const SUPPORTED_ETHERSCAN_NETWORKS = [
-  "main",
+  "mainnet",
   "ropsten",
   "kovan",
   "matic",
@@ -36,7 +36,7 @@ export const SUPPORTED_ETHERSCAN_NETWORKS = [
 ];
 
 export const ETHERSCAN_APIS = {
-  main: "api.etherscan.io",
+  mainnet: "api.etherscan.io",
   ropsten: "api-ropsten.etherscan.io",
   kovan: "api-kovan.etherscan.io",
   rinkeby: "api-rinkeby.etherscan.io",

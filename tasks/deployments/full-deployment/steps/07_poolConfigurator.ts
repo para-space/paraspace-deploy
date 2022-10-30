@@ -8,9 +8,8 @@ import {
   getParaSpaceAdmins,
   registerContractInDb,
 } from "../../../../helpers/contracts-helpers";
-import {waitForTx} from "../../../../helpers/misc-utils";
+import {getParaSpaceConfig, waitForTx} from "../../../../helpers/misc-utils";
 import {eContractid} from "../../../../helpers/types";
-import ParaSpaceConfig from "../../../../market-config";
 
 export const step_07 = async (verify = false) => {
   const {riskAdmin} = await getParaSpaceAdmins();
@@ -31,12 +30,12 @@ export const step_07 = async (verify = false) => {
     );
     await waitForTx(
       await poolConfiguratorProxy.setMaxAtomicTokensAllowed(
-        ParaSpaceConfig.MaxUserAtomicTokensAllowed
+        getParaSpaceConfig().MaxUserAtomicTokensAllowed
       )
     );
     await waitForTx(
       await poolConfiguratorProxy.setAuctionRecoveryHealthFactor(
-        ParaSpaceConfig.AuctionRecoveryHealthFactor
+        getParaSpaceConfig().AuctionRecoveryHealthFactor
       )
     );
     await registerContractInDb(
