@@ -1,5 +1,6 @@
 import {ZERO_ADDRESS} from "../../../../helpers/constants";
 import {
+  deployApeCoinStaking,
   deployMockIncentivesController,
   deployMockReserveAuctionStrategy,
   deployUniswapDynamicConfigStrategy,
@@ -23,6 +24,7 @@ import {
   isLocalTestnet,
   waitForTx,
 } from "../../../../helpers/misc-utils";
+
 import {
   ERC721TokenContractId,
   tEthereumAddress,

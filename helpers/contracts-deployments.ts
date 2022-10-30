@@ -113,6 +113,9 @@ import {
   PoolCore__factory,
   PoolParameters__factory,
   PoolMarketplace__factory,
+  ApeCoinStaking__factory,
+  NTokenBAYC__factory,
+  NTokenMAYC__factory
 } from "../../types";
 
 import * as nonfungiblePositionManager from "@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json";
@@ -1810,5 +1813,48 @@ export const deployMockAirdropProject = async (
     ),
     eContractid.MockAirdropProject,
     [underlyingAddress],
+    verify
+  );
+
+export const deployApeCoinStaking = async (
+  args: [string, string, string, string],
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    await new ApeCoinStaking__factory(
+      await getFirstSigner()
+    ).deploy(...args),
+    eContractid.ApeCoinStaking,
+    [...args],
+    verify
+  );
+
+export const deployBAYCNTokenImpl = async (
+  apeCoinStaking: tEthereumAddress,
+  poolAddress: tEthereumAddress,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    await new NTokenBAYC__factory(await getFirstSigner()).deploy(
+      poolAddress,
+      apeCoinStaking
+    ),
+    eContractid.NTokenBAYC,
+    [poolAddress, apeCoinStaking],
+    verify
+  );
+
+export const deployMAYCNTokenImpl = async (
+  apeCoinStaking: tEthereumAddress,
+  poolAddress: tEthereumAddress,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    await new NTokenMAYC__factory(await getFirstSigner()).deploy(
+      poolAddress,
+      apeCoinStaking
+    ),
+    eContractid.NTokenMAYC,
+    [poolAddress, apeCoinStaking],
     verify
   );
