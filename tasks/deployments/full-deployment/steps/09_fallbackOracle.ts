@@ -23,6 +23,7 @@ export const step_09 = async (verify = false) => {
     const erc20Tokens = await getAllERC20Tokens();
     const erc721Tokens = await getAllERC721Tokens();
     const punks = await getCryptoPunksMarket();
+    const paraSpaceConfig = getParaSpaceConfig();
 
     // UniswapV3 should use price from `UniswapV3OracleWrapper` instead of NFTFloorOracle
     delete erc721Tokens[ERC721TokenContractId.UniswapV3];
@@ -32,13 +33,22 @@ export const step_09 = async (verify = false) => {
         Object.values(erc721Tokens).map((x) => x.address),
         verify
       );
+      if (
+        !paraSpaceConfig.BendDAO.Oracle ||
+        !paraSpaceConfig.Uniswap.V2Factory ||
+        !paraSpaceConfig.Uniswap.V2Router ||
+        !paraSpaceConfig.Tokens.WETH ||
+        !paraSpaceConfig.Tokens.USDC
+      ) {
+        throw new Error("Missing BendDAO-Oracle/UniswapV2/WETH/USDC config");
+      }
       await deployParaSpaceFallbackOracle(
         [
-          getParaSpaceConfig().BendDAO.Oracle,
-          getParaSpaceConfig().Uniswap.V2Factory,
-          getParaSpaceConfig().Uniswap.V2Router,
-          getParaSpaceConfig().Tokens.WETH,
-          getParaSpaceConfig().Tokens.USDC,
+          paraSpaceConfig.BendDAO.Oracle,
+          paraSpaceConfig.Uniswap.V2Factory,
+          paraSpaceConfig.Uniswap.V2Router,
+          paraSpaceConfig.Tokens.WETH,
+          paraSpaceConfig.Tokens.USDC,
         ],
         verify
       );
@@ -49,12 +59,10 @@ export const step_09 = async (verify = false) => {
       await deployNFTFloorPriceOracle([], verify);
       const fallbackOracle = await deployPriceOracle(verify);
       await waitForTx(
-        await fallbackOracle.setEthUsdPrice(
-          getParaSpaceConfig().Mocks.USDPriceInWEI
-        )
+        await fallbackOracle.setEthUsdPrice(paraSpaceConfig.Mocks.USDPriceInWEI)
       );
       await setInitialAssetPricesInOracle(
-        getParaSpaceConfig().Mocks.AllAssetsInitialPrices,
+        paraSpaceConfig.Mocks.AllAssetsInitialPrices,
         {
           // ERC20
           WETH: erc20Tokens.WETH.address,

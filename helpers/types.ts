@@ -31,7 +31,7 @@ export enum eEthereumNetwork {
   kovan = "kovan",
   ropsten = "ropsten",
   goerli = "goerli",
-  main = "main",
+  mainnet = "mainnet",
   coverage = "coverage",
   hardhat = "hardhat",
   tenderlyMain = "tenderlyMain",
@@ -448,7 +448,7 @@ export interface iEthereumParamsPerNetwork<T> {
   [eEthereumNetwork.kovan]: T;
   [eEthereumNetwork.ropsten]: T;
   [eEthereumNetwork.goerli]: T;
-  [eEthereumNetwork.main]: T;
+  [eEthereumNetwork.mainnet]: T;
   [eEthereumNetwork.hardhat]: T;
   [eEthereumNetwork.ganache]: T;
   [eEthereumNetwork.parallel]: T;
@@ -472,7 +472,7 @@ export interface IUniswapV3Config {
 }
 
 export interface IMarketplaceConfig {
-  Seaport: tEthereumAddress;
+  Seaport?: tEthereumAddress;
 }
 
 export interface IChainlinkConfig {
@@ -486,14 +486,14 @@ export interface IChainlinkConfig {
 }
 
 export interface IBendDAOConfig {
-  Oracle: tEthereumAddress;
+  Oracle?: tEthereumAddress;
 }
 
 export interface IUniswapConfig {
-  V2Factory: tEthereumAddress;
-  V2Router: tEthereumAddress;
-  V3Factory: tEthereumAddress;
-  V3NFTPositionManager: tEthereumAddress;
+  V2Factory?: tEthereumAddress;
+  V2Router?: tEthereumAddress;
+  V3Factory?: tEthereumAddress;
+  V3NFTPositionManager?: tEthereumAddress;
 }
 
 export interface IMocksConfig {
@@ -530,7 +530,7 @@ export interface ICommonConfiguration {
   BendDAO: IBendDAOConfig;
   Uniswap: IUniswapConfig;
   Marketplace: IMarketplaceConfig;
-  Oracle: IChainlinkConfig;
+  Chainlink: IChainlinkConfig;
   ReservesConfig: iMultiPoolsAssets<IReserveParams>;
   Treasury: tEthereumAddress;
 }
