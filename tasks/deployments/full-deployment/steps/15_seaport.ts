@@ -14,7 +14,7 @@ import {
   OPENSEA_SEAPORT_ID,
   PARASPACE_SEAPORT_ID,
 } from "../../../../helpers/constants";
-import {waitForTx} from "../../../../helpers/misc-utils";
+import {getParaSpaceConfig, waitForTx} from "../../../../helpers/misc-utils";
 import {
   createZone,
   insertContractAddressInDb,
@@ -22,12 +22,12 @@ import {
   getParaSpaceAdmins,
 } from "../../../../helpers/contracts-helpers";
 import {eContractid} from "../../../../helpers/types";
-import ParaSpaceConfig from "../../../../market-config";
 
 export const step_15 = async (verify = false) => {
   try {
     const {paraSpaceAdmin} = await getParaSpaceAdmins();
-    const mockTokens = await getAllTokens();
+    const paraSpaceConfig = getParaSpaceConfig();
+    const allTokens = await getAllTokens();
     const addressesProvider = await getPoolAddressesProvider();
     const protocolDataProvider = await getProtocolDataProvider();
     const conduitController = await deployConduitController(verify);
@@ -62,18 +62,20 @@ export const step_15 = async (verify = false) => {
         false
       )
     );
-    await waitForTx(
-      await addressesProvider.setMarketplace(
-        OPENSEA_SEAPORT_ID,
-        ParaSpaceConfig.Marketplace.Seaport,
-        seaportAdapter.address,
-        ParaSpaceConfig.Marketplace.Seaport,
-        false
-      )
-    );
-    await waitForTx(
-      await addressesProvider.setWETH(mockTokens["WETH"].address)
-    );
+
+    if (paraSpaceConfig.Marketplace.Seaport) {
+      await waitForTx(
+        await addressesProvider.setMarketplace(
+          OPENSEA_SEAPORT_ID,
+          paraSpaceConfig.Marketplace.Seaport,
+          seaportAdapter.address,
+          paraSpaceConfig.Marketplace.Seaport,
+          false
+        )
+      );
+    }
+
+    await waitForTx(await addressesProvider.setWETH(allTokens.WETH.address));
     await insertContractAddressInDb(eContractid.ConduitKey, conduitKey, false);
     await insertContractAddressInDb(eContractid.Conduit, conduit);
     await insertContractAddressInDb(eContractid.PausableZone, zone);

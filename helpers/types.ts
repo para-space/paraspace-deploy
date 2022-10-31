@@ -31,7 +31,7 @@ export enum eEthereumNetwork {
   kovan = "kovan",
   ropsten = "ropsten",
   goerli = "goerli",
-  main = "main",
+  mainnet = "mainnet",
   coverage = "coverage",
   hardhat = "hardhat",
   tenderlyMain = "tenderlyMain",
@@ -268,7 +268,9 @@ export enum ProtocolErrors {
   AUCTIONED_BALANCE_NOT_ZERO = "116", //auctioned balance not zero
   LIQUIDATOR_CAN_NOT_BE_SELF = "117", //user can not liquidate himself
   UNIV3_NOT_ALLOWED = "119", //flash claim is not allowed for UniswapV3
-  NOT_ENOUGH_LIQUIDITY_IN_RESERVE = "120", //not enough funds in the reserve to fulfill the request
+  NTOKEN_BALANCE_EXCEEDED = "120", //ntoken balance exceed limit.
+  NOT_ENOUGH_LIQUIDITY_IN_RESERVE = "121", //not enough funds in the reserve to fulfill the request
+
   // SafeCast
   SAFECAST_UINT128_OVERFLOW = "SafeCast: value doesn't fit in 128 bits",
 
@@ -448,7 +450,7 @@ export interface iEthereumParamsPerNetwork<T> {
   [eEthereumNetwork.kovan]: T;
   [eEthereumNetwork.ropsten]: T;
   [eEthereumNetwork.goerli]: T;
-  [eEthereumNetwork.main]: T;
+  [eEthereumNetwork.mainnet]: T;
   [eEthereumNetwork.hardhat]: T;
   [eEthereumNetwork.ganache]: T;
   [eEthereumNetwork.parallel]: T;
@@ -472,7 +474,7 @@ export interface IUniswapV3Config {
 }
 
 export interface IMarketplaceConfig {
-  Seaport: tEthereumAddress;
+  Seaport?: tEthereumAddress;
 }
 
 export interface IChainlinkConfig {
@@ -486,14 +488,14 @@ export interface IChainlinkConfig {
 }
 
 export interface IBendDAOConfig {
-  Oracle: tEthereumAddress;
+  Oracle?: tEthereumAddress;
 }
 
 export interface IUniswapConfig {
-  V2Factory: tEthereumAddress;
-  V2Router: tEthereumAddress;
-  V3Factory: tEthereumAddress;
-  V3NFTPositionManager: tEthereumAddress;
+  V2Factory?: tEthereumAddress;
+  V2Router?: tEthereumAddress;
+  V3Factory?: tEthereumAddress;
+  V3NFTPositionManager?: tEthereumAddress;
 }
 
 export interface IMocksConfig {
@@ -513,7 +515,6 @@ export interface ICommonConfiguration {
   VariableDebtTokenNamePrefix: string;
   SymbolPrefix: string;
   ProviderId: number;
-  MaxUserAtomicTokensAllowed: number;
   AuctionRecoveryHealthFactor: string | number;
   Mocks: IMocksConfig;
   ParaSpaceAdmin: tEthereumAddress | undefined;
@@ -530,9 +531,9 @@ export interface ICommonConfiguration {
   BendDAO: IBendDAOConfig;
   Uniswap: IUniswapConfig;
   Marketplace: IMarketplaceConfig;
-  Oracle: IChainlinkConfig;
+  Chainlink: IChainlinkConfig;
   ReservesConfig: iMultiPoolsAssets<IReserveParams>;
-  ReserveFactorTreasuryAddress: tEthereumAddress;
+  Treasury: tEthereumAddress;
 }
 
 export interface IParaSpaceConfiguration extends ICommonConfiguration {

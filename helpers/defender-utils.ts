@@ -6,6 +6,7 @@ import {Signer, utils} from "ethers";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import {DRE, impersonateAccountsHardhat} from "./misc-utils";
 import {usingTenderly} from "./tenderly-utils";
+import {eEthereumNetwork} from "./types";
 
 export const usingDefender = () => process.env.DEFENDER === "true";
 
@@ -34,7 +35,7 @@ export const getDefenderRelaySigner = async () => {
   console.log("  - Using Defender Relay: ", defenderAddress);
 
   // Replace signer if FORK=main is active
-  if (process.env.FORK === "main") {
+  if (process.env.FORK === eEthereumNetwork.mainnet) {
     console.log("  - Impersonating Defender Relay");
     await impersonateAccountsHardhat([defenderAddress]);
     defenderSigner = await (DRE as HardhatRuntimeEnvironment).ethers.getSigner(

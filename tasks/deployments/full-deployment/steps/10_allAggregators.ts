@@ -10,13 +10,12 @@ import {
   getPoolAddressesProvider,
   getPriceOracle,
 } from "../../../../helpers/contracts-getters";
-import {waitForTx} from "../../../../helpers/misc-utils";
+import {getParaSpaceConfig, waitForTx} from "../../../../helpers/misc-utils";
 import {
   deployAllAggregators,
   getPairsTokenAggregators,
 } from "../../../../helpers/oracles-helpers";
 import {ERC20TokenContractId} from "../../../../helpers/types";
-import ParaSpaceConfig from "../../../../market-config";
 
 export const step_10 = async (verify = false) => {
   try {
@@ -28,7 +27,7 @@ export const step_10 = async (verify = false) => {
     const [allTokenAddresses, allAggregatorsAddresses] =
       await deployAllAggregators(
         nftFloorOracle.address,
-        ParaSpaceConfig.Mocks.AllAssetsInitialPrices,
+        getParaSpaceConfig().Mocks.AllAssetsInitialPrices,
         verify
       );
 

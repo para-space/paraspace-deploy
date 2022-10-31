@@ -9,6 +9,7 @@ import {
   waitForTx,
   impersonateAccountsHardhat,
   isLocalTestnet,
+  getParaSpaceConfig,
 } from "./misc-utils";
 import {
   iFunctionSignature,
@@ -46,7 +47,6 @@ import {verifyEtherscanContract} from "./etherscan-verification";
 import {InitializableImmutableAdminUpgradeabilityProxy} from "../../types";
 import {decodeEvents} from "./seaport-helpers/events";
 import {expect} from "chai";
-import ParaSpaceConfig from "../market-config";
 import {ABI} from "hardhat-deploy/dist/types";
 
 export type ERC20TokenMap = {[symbol: string]: ERC20};
@@ -62,21 +62,22 @@ export const registerContractInDb = async (
   const currentNetwork = DRE.network.name;
   const FORK = process.env.FORK;
   const key = `${id}.${DRE.network.name}`;
+
   if (FORK || !isLocalTestnet()) {
     console.log(`*** ${id} ***\n`);
     console.log(`Network: ${currentNetwork}`);
-    console.log(`tx: ${instance.deployTransaction.hash}`);
+    console.log(`tx: ${instance.deployTransaction?.hash}`);
     console.log(`contract address: ${instance.address}`);
-    console.log(`deployer address: ${instance.deployTransaction.from}`);
-    console.log(`gas price: ${instance.deployTransaction.gasPrice}`);
-    console.log(`gas used: ${instance.deployTransaction.gasLimit}`);
+    console.log(`deployer address: ${instance.deployTransaction?.from}`);
+    console.log(`gas price: ${instance.deployTransaction?.gasPrice}`);
+    console.log(`gas used: ${instance.deployTransaction?.gasLimit}`);
     console.log(`\n******`);
     console.log();
   }
 
   const value = {
     address: instance.address,
-    deployer: instance.deployTransaction.from,
+    deployer: instance.deployTransaction?.from,
     constructorArgs,
     verified: false,
   };
@@ -428,7 +429,7 @@ export const getParaSpaceAdmins = async (): Promise<{
     EmergencyAdminIndex,
     RiskAdminIndex,
     GatewayAdminIndex,
-  } = ParaSpaceConfig;
+  } = getParaSpaceConfig();
   return {
     paraSpaceAdmin: signers[ParaSpaceAdminIndex],
     emergencyAdmin: signers[EmergencyAdminIndex],

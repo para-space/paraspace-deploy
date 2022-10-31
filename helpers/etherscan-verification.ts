@@ -26,7 +26,7 @@ type VerificationArgs = {
 };
 
 export const SUPPORTED_ETHERSCAN_NETWORKS = [
-  "main",
+  "mainnet",
   "ropsten",
   "kovan",
   "matic",
@@ -36,7 +36,7 @@ export const SUPPORTED_ETHERSCAN_NETWORKS = [
 ];
 
 export const ETHERSCAN_APIS = {
-  main: "api.etherscan.io",
+  mainnet: "api.etherscan.io",
   ropsten: "api-ropsten.etherscan.io",
   kovan: "api-kovan.etherscan.io",
   rinkeby: "api-rinkeby.etherscan.io",
@@ -98,8 +98,6 @@ export const verifyEtherscanContract = async (
     return;
   }
 
-  console.log(`- Verifying ${contractId}`);
-  console.log(`  - address: ${address}`);
   let isVerified = await getIsVerified(contractId, address, currentNetwork);
   if (isVerified) {
     return;
@@ -108,6 +106,9 @@ export const verifyEtherscanContract = async (
   if (isLocalTestnet() || isForkMainnet()) {
     return;
   }
+
+  console.log(`- Verifying ${contractId}`);
+  console.log(`  - address: ${address}`);
 
   if (!SUPPORTED_ETHERSCAN_NETWORKS.includes(currentNetwork)) {
     throw Error(

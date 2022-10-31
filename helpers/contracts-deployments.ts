@@ -1,4 +1,4 @@
-import {DRE, getDb} from "./misc-utils";
+import {DRE, getDb, getParaSpaceConfig} from "./misc-utils";
 import {
   tEthereumAddress,
   eContractid,
@@ -103,7 +103,6 @@ import {
   SeaportAdapter__factory,
   LooksRareAdapter__factory,
   UniswapV3Factory__factory,
-  UniswapV3DynamicConfigsStrategy__factory,
   StETH__factory,
   MockAToken__factory,
   PTokenAToken__factory,
@@ -126,7 +125,6 @@ import {
 } from "./contracts-helpers";
 import {MintableDelegationERC20} from "../../types";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
-import ParaSpaceConfig from "../market-config";
 import {Address} from "hardhat-deploy/dist/types";
 import {Contract} from "ethers";
 import {LiquidationLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/LiquidationLogic__factory";
@@ -763,7 +761,7 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
       | MockAToken;
   } = {};
 
-  const protoConfigData = ParaSpaceConfig.ReservesConfig;
+  const protoConfigData = getParaSpaceConfig().ReservesConfig;
 
   for (const tokenSymbol of Object.keys(ERC20TokenContractId)) {
     const db = getDb();
@@ -776,7 +774,7 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
     if (contractAddress) {
       console.log("contract address is already in db ", tokenSymbol);
       continue;
-    } else if (ParaSpaceConfig.Tokens[tokenSymbol]) {
+    } else if (getParaSpaceConfig().Tokens[tokenSymbol]) {
       console.log("contract address is already onchain ", tokenSymbol);
       insertContractAddressInDb(tokenSymbol, configData?.address, false);
       continue;
@@ -830,7 +828,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
       | Moonbirds
       | Contract;
   } = {};
-  const protoConfigData = ParaSpaceConfig.ReservesConfig;
+  const protoConfigData = getParaSpaceConfig().ReservesConfig;
 
   for (const tokenSymbol of Object.keys(ERC721TokenContractId)) {
     const db = getDb();
@@ -843,7 +841,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
     if (contractAddress) {
       console.log("contract address is already in db ", tokenSymbol);
       continue;
-    } else if (ParaSpaceConfig.Tokens[tokenSymbol]) {
+    } else if (getParaSpaceConfig().Tokens[tokenSymbol]) {
       console.log("contract address is already onchain ", tokenSymbol);
       insertContractAddressInDb(tokenSymbol, configData?.address, false);
       continue;
@@ -867,8 +865,8 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
             "MOON",
             "MOON",
             "0x0000000000000000000000000000000000000000",
-            ParaSpaceConfig.ParaSpaceTeam,
-            ParaSpaceConfig.ParaSpaceTeam,
+            getParaSpaceConfig().ParaSpaceTeam,
+            getParaSpaceConfig().ParaSpaceTeam,
           ],
           verify
         );
@@ -1731,18 +1729,6 @@ export const deployUniswapSwapRouter = async (
     verify
   );
 };
-export const deployUniswapDynamicConfigStrategy = async (
-  args: [string, string],
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new UniswapV3DynamicConfigsStrategy__factory(
-      await getFirstSigner()
-    ).deploy(...args),
-    eContractid.UniswapV3DynamicConfigsStrategy,
-    [...args],
-    verify
-  );
 
 export const deployStETH = async (
   args: [string, string, string],

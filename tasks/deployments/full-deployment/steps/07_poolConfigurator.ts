@@ -6,11 +6,10 @@ import {
 } from "../../../../helpers/contracts-getters";
 import {
   getParaSpaceAdmins,
-  insertContractAddressInDb,
+  registerContractInDb,
 } from "../../../../helpers/contracts-helpers";
-import {waitForTx} from "../../../../helpers/misc-utils";
+import {getParaSpaceConfig, waitForTx} from "../../../../helpers/misc-utils";
 import {eContractid} from "../../../../helpers/types";
-import ParaSpaceConfig from "../../../../market-config";
 
 export const step_07 = async (verify = false) => {
   const {riskAdmin} = await getParaSpaceAdmins();
@@ -30,18 +29,14 @@ export const step_07 = async (verify = false) => {
       await addressesProvider.getPoolConfigurator()
     );
     await waitForTx(
-      await poolConfiguratorProxy.setMaxAtomicTokensAllowed(
-        ParaSpaceConfig.MaxUserAtomicTokensAllowed
-      )
-    );
-    await waitForTx(
       await poolConfiguratorProxy.setAuctionRecoveryHealthFactor(
-        ParaSpaceConfig.AuctionRecoveryHealthFactor
+        getParaSpaceConfig().AuctionRecoveryHealthFactor
       )
     );
-    await insertContractAddressInDb(
+    await registerContractInDb(
       eContractid.PoolConfiguratorProxy,
-      poolConfiguratorProxy.address
+      poolConfiguratorProxy,
+      [addressesProvider.address]
     );
   } catch (error) {
     console.error(error);
