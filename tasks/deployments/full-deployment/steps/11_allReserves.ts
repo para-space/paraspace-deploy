@@ -15,16 +15,15 @@ import {
   configureReservesByHelper,
   initReservesByHelper,
 } from "../../../../helpers/init-helpers";
-import {isLocalTestnet} from "../../../../helpers/misc-utils";
+import {getParaSpaceConfig, isLocalTestnet} from "../../../../helpers/misc-utils";
 import {tEthereumAddress} from "../../../../helpers/types";
-import ParaSpaceConfig from "../../../../market-config";
 import {auctionStrategyLinear} from "../../../../market-config/auctionStrategies";
 
 export const step_11 = async (verify = false) => {
   try {
     const allTokens = await getAllTokens();
     const {paraSpaceAdmin} = await getParaSpaceAdmins();
-    const reservesParams = ParaSpaceConfig.ReservesConfig;
+    const reservesParams = getParaSpaceConfig().ReservesConfig;
     const admin = await paraSpaceAdmin.getAddress();
     const protocolDataProvider = await getProtocolDataProvider();
 
@@ -32,11 +31,11 @@ export const step_11 = async (verify = false) => {
 
     console.log("Initialize configuration");
 
-    const config = ParaSpaceConfig;
+    const config = getParaSpaceConfig();
 
     const {PTokenNamePrefix, VariableDebtTokenNamePrefix, SymbolPrefix} =
       config;
-    const treasuryAddress = config.ReserveFactorTreasuryAddress;
+    const treasuryAddress = config.Treasury;
 
     // Add an IncentivesController
     let incentivesController = ZERO_ADDRESS;

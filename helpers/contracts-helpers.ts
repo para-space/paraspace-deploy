@@ -9,6 +9,7 @@ import {
   waitForTx,
   impersonateAccountsHardhat,
   isLocalTestnet,
+  getParaSpaceConfig,
 } from "./misc-utils";
 import {
   iFunctionSignature,
@@ -46,7 +47,6 @@ import {verifyEtherscanContract} from "./etherscan-verification";
 import {InitializableImmutableAdminUpgradeabilityProxy} from "../../types";
 import {decodeEvents} from "./seaport-helpers/events";
 import {expect} from "chai";
-import ParaSpaceConfig from "../market-config";
 import {ABI} from "hardhat-deploy/dist/types";
 
 export type ERC20TokenMap = {[symbol: string]: ERC20};
@@ -429,7 +429,7 @@ export const getParaSpaceAdmins = async (): Promise<{
     EmergencyAdminIndex,
     RiskAdminIndex,
     GatewayAdminIndex,
-  } = ParaSpaceConfig;
+  } = getParaSpaceConfig();
   return {
     paraSpaceAdmin: signers[ParaSpaceAdminIndex],
     emergencyAdmin: signers[EmergencyAdminIndex],
