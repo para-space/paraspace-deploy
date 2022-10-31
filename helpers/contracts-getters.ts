@@ -61,7 +61,7 @@ import {
   MockReserveAuctionStrategy__factory,
   NTokenBAYC__factory,
   NTokenMAYC__factory,
-  ApeCoinStaking__factory
+  ApeCoinStaking__factory,
 } from "../../types";
 import {
   getEthersSigners,
@@ -917,7 +917,6 @@ export const getMockReserveAuctionStrategy = async (
       ).address,
     await getFirstSigner()
   );
-
 
 export const getNTokenBAYC = async (address?: tEthereumAddress) =>
   await NTokenBAYC__factory.connect(

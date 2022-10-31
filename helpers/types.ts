@@ -161,7 +161,7 @@ export enum eContractid {
   PoolParametersImpl = "PoolParametersImpl",
   ApeCoinStaking = "ApeCoinStaking",
   NTokenBAYC = "NTokenBAYC",
-  NTokenMAYC = "NTOkenMAYC"
+  NTokenMAYC = "NTOkenMAYC",
 }
 
 /*

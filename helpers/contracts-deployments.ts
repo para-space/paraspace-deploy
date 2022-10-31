@@ -115,7 +115,7 @@ import {
   PoolMarketplace__factory,
   ApeCoinStaking__factory,
   NTokenBAYC__factory,
-  NTokenMAYC__factory
+  NTokenMAYC__factory,
 } from "../../types";
 
 import * as nonfungiblePositionManager from "@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json";
@@ -1821,9 +1821,7 @@ export const deployApeCoinStaking = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new ApeCoinStaking__factory(
-      await getFirstSigner()
-    ).deploy(...args),
+    await new ApeCoinStaking__factory(await getFirstSigner()).deploy(...args),
     eContractid.ApeCoinStaking,
     [...args],
     verify

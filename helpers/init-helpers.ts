@@ -16,7 +16,10 @@ import {
   getPoolProxy,
   getAllTokens,
 } from "./contracts-getters";
-import {convertToCurrencyDecimals, insertContractAddressInDb} from "./contracts-helpers";
+import {
+  convertToCurrencyDecimals,
+  insertContractAddressInDb,
+} from "./contracts-helpers";
 import {BigNumber, BigNumberish} from "ethers";
 import {
   deployReserveInterestRateStrategy,
@@ -144,11 +147,31 @@ export const initReservesByHelper = async (
 
   if (isLocalTestnet() || isPublicTestnet()) {
     const allTokens = await getAllTokens();
-    const apeCoinStaking = await deployApeCoinStaking([allTokens.APE.address, allTokens.BAYC.address, allTokens.MAYC.address, ZERO_ADDRESS]);
-    const amount = await convertToCurrencyDecimals(allTokens.APE.address, "100000000000000000000")
+    const apeCoinStaking = await deployApeCoinStaking([
+      allTokens.APE.address,
+      allTokens.BAYC.address,
+      allTokens.MAYC.address,
+      ZERO_ADDRESS,
+    ]);
+    const amount = await convertToCurrencyDecimals(
+      allTokens.APE.address,
+      "100000000000000000000"
+    );
 
-    await apeCoinStaking.addTimeRange(1, amount, "1666771200", "1761465600",amount);
-    await apeCoinStaking.addTimeRange(2, amount, "1666771200", "1761465600",amount);
+    await apeCoinStaking.addTimeRange(
+      1,
+      amount,
+      "1666771200",
+      "1761465600",
+      amount
+    );
+    await apeCoinStaking.addTimeRange(
+      2,
+      amount,
+      "1666771200",
+      "1761465600",
+      amount
+    );
 
     apeCoinStakingAddress = apeCoinStaking.address;
   } else {
@@ -323,11 +346,17 @@ export const initReservesByHelper = async (
         xTokenToUse = nTokenUniSwapV3ImplementationAddress;
       } else if (reserveSymbols[i] === ERC721TokenContractId.BAYC) {
         console.log("IS BAYC");
-        const nTokenBAYC = await deployBAYCNTokenImpl(apeCoinStakingAddress, pool.address);
+        const nTokenBAYC = await deployBAYCNTokenImpl(
+          apeCoinStakingAddress,
+          pool.address
+        );
         xTokenToUse = nTokenBAYC.address;
       } else if (reserveSymbols[i] === ERC721TokenContractId.MAYC) {
         console.log("IS MAYC");
-        const nTokenMAYC = await deployMAYCNTokenImpl(apeCoinStakingAddress, pool.address);
+        const nTokenMAYC = await deployMAYCNTokenImpl(
+          apeCoinStakingAddress,
+          pool.address
+        );
         xTokenToUse = nTokenMAYC.address;
       } else {
         console.log("IS", reserveSymbols[i]);
