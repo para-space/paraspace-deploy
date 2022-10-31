@@ -103,7 +103,6 @@ import {
   SeaportAdapter__factory,
   LooksRareAdapter__factory,
   UniswapV3Factory__factory,
-  UniswapV3DynamicConfigsStrategy__factory,
   StETH__factory,
   MockAToken__factory,
   PTokenAToken__factory,
@@ -1730,18 +1729,6 @@ export const deployUniswapSwapRouter = async (
     verify
   );
 };
-export const deployUniswapDynamicConfigStrategy = async (
-  args: [string, string],
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new UniswapV3DynamicConfigsStrategy__factory(
-      await getFirstSigner()
-    ).deploy(...args),
-    eContractid.UniswapV3DynamicConfigsStrategy,
-    [...args],
-    verify
-  );
 
 export const deployStETH = async (
   args: [string, string, string],

@@ -269,6 +269,7 @@ export enum ProtocolErrors {
 
   LIQUIDATOR_CAN_NOT_BE_SELF = "117", //user can not liquidate himself
   UNIV3_NOT_ALLOWED = "119", //flash claim is not allowed for UniswapV3
+  NTOKEN_BALANCE_EXCEEDED = "120", //ntoken balance exceed limit.
   // SafeCast
   SAFECAST_UINT128_OVERFLOW = "SafeCast: value doesn't fit in 128 bits",
 
@@ -513,7 +514,6 @@ export interface ICommonConfiguration {
   VariableDebtTokenNamePrefix: string;
   SymbolPrefix: string;
   ProviderId: number;
-  MaxUserAtomicTokensAllowed: number;
   AuctionRecoveryHealthFactor: string | number;
   Mocks: IMocksConfig;
   ParaSpaceAdmin: tEthereumAddress | undefined;
