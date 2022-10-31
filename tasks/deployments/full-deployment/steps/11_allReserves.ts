@@ -15,7 +15,10 @@ import {
   configureReservesByHelper,
   initReservesByHelper,
 } from "../../../../helpers/init-helpers";
-import {getParaSpaceConfig, isLocalTestnet} from "../../../../helpers/misc-utils";
+import {
+  getParaSpaceConfig,
+  isLocalTestnet,
+} from "../../../../helpers/misc-utils";
 import {tEthereumAddress} from "../../../../helpers/types";
 import {auctionStrategyLinear} from "../../../../market-config/auctionStrategies";
 
