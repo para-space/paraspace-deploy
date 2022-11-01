@@ -1,14 +1,13 @@
-import {DRE, getDb, getFunctionSignatureObjs} from "./misc-utils";
+import {DRE, getDb, getParaSpaceConfig} from "./misc-utils";
 import {
   tEthereumAddress,
   eContractid,
   tStringTokenSmallUnits,
-  TokenContractId,
+  ERC20TokenContractId,
   ERC721TokenContractId,
 } from "./types";
 import {
   AuctionLogic__factory,
-  // IPool__factory,
   MintableERC20,
   MintableERC721,
   MockReserveAuctionStrategy__factory,
@@ -18,14 +17,10 @@ import {
 } from "../../types";
 import {StETH, MockAToken} from "../../types";
 import {MockContract} from "ethereum-waffle";
-import {
-  getFirstSigner,
-  getMintableERC721,
-  getWETHMocked,
-} from "./contracts-getters";
+import {getFirstSigner, getWETHMocked} from "./contracts-getters";
 import {
   getEthersSignersAddresses,
-  normalizeLibraryAddresses,
+  getFunctionSignatures,
 } from "./contracts-helpers";
 import {
   ProtocolDataProvider__factory,
@@ -72,10 +67,6 @@ import {
   BoredApeYachtClub__factory,
   MutantApeYachtClub__factory,
   Doodles__factory,
-  // ParaSpaceToken__factory,
-  // StakedParaSpaceV3__factory,
-  // RewardsController__factory,
-  // PCV__factory,
   ParaSpaceFallbackOracle__factory,
   Doodles,
   BoredApeYachtClub,
@@ -112,7 +103,6 @@ import {
   SeaportAdapter__factory,
   LooksRareAdapter__factory,
   UniswapV3Factory__factory,
-  UniswapV3DynamicConfigsStrategy__factory,
   StETH__factory,
   MockAToken__factory,
   PTokenAToken__factory,
@@ -132,30 +122,17 @@ import * as nonfungibleTokenPositionDescriptor from "@uniswap/v3-periphery/artif
 import {
   withSaveAndVerify,
   insertContractAddressInDb,
-  registerContractInJsonDb,
 } from "./contracts-helpers";
 import {MintableDelegationERC20} from "../../types";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
-import ParaSpaceConfig from "../market-config";
 import {Address} from "hardhat-deploy/dist/types";
-import {
-  COVERAGE_CHAINID,
-  GOERLI_CHAINID,
-  HARDHAT_CHAINID,
-} from "./hardhat-constants";
 import {Contract} from "ethers";
 import {LiquidationLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/LiquidationLogic__factory";
 import {MarketplaceLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/MarketplaceLogic__factory";
 import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/PoolCore__factory";
 import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
 import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
-import {FormatTypes} from "ethers/lib/utils";
-import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/pool/PoolConfigurator__factory";
-import _ from "lodash";
-import {UNISWAP_V3_POSITION_MANAGER_ADDRESS} from "../tasks/deployments/testnet/helpers/constants";
-import {WETH} from "../tasks/deployments/testnet/helpers/constants";
-
-declare let hre: HardhatRuntimeEnvironment;
+import {pick} from "lodash";
 
 const readArtifact = async (id: string) => {
   return (DRE as HardhatRuntimeEnvironment).artifacts.readArtifact(id);
@@ -305,19 +282,6 @@ export const deployAuctionLogic = async (verify?: boolean) => {
   );
 };
 
-export const deployBridgeLogic = async (verify?: boolean) => {
-  const bridgeLogicArtifact = await readArtifact(eContractid.BridgeLogic);
-  const bridgeLogicFactory = await DRE.ethers.getContractFactory(
-    bridgeLogicArtifact.abi,
-    bridgeLogicArtifact.bytecode
-  );
-  const bridgeLogic = await (
-    await bridgeLogicFactory.connect(await getFirstSigner()).deploy()
-  ).deployed();
-
-  return withSaveAndVerify(bridgeLogic, eContractid.BridgeLogic, [], verify);
-};
-
 export const deployPoolLogic = async (verify?: boolean) => {
   const poolLogicArtifact = await readArtifact(eContractid.PoolLogic);
 
@@ -366,7 +330,7 @@ export const deployPoolMarketplaceLibraries = async (
   verify?: boolean
 ): Promise<PoolMarketplaceLibraryAddresses> => {
   const marketplaceLogic = await deployMarketplaceLogic(
-    _.pick(coreLibraries, [
+    pick(coreLibraries, [
       "contracts/protocol/libraries/logic/SupplyLogic.sol:SupplyLogic",
       "contracts/protocol/libraries/logic/BorrowLogic.sol:BorrowLogic",
     ]),
@@ -389,17 +353,17 @@ export const deployPoolParametersLibraries = async (
 };
 
 const checkPoolSignatures = () => {
-  const poolCoreSelectors = getFunctionSignatureObjs(PoolCore__factory.abi);
+  const poolCoreSelectors = getFunctionSignatures(PoolCore__factory.abi);
 
-  const poolParametersSelectors = getFunctionSignatureObjs(
+  const poolParametersSelectors = getFunctionSignatures(
     PoolParameters__factory.abi
   );
 
-  const poolMarketplaceSelectors = getFunctionSignatureObjs(
+  const poolMarketplaceSelectors = getFunctionSignatures(
     PoolMarketplace__factory.abi
   );
 
-  const poolProxySelectors = getFunctionSignatureObjs(ParaProxy__factory.abi);
+  const poolProxySelectors = getFunctionSignatures(ParaProxy__factory.abi);
 
   const allSelectors = {};
   const poolSelectors = [
@@ -521,7 +485,7 @@ export const deployParaSpaceOracle = async (
     verify
   );
 
-export const deployNftFloorPriceOracle = async (
+export const deployNFTFloorPriceOracle = async (
   projects: tEthereumAddress[],
   verify?: boolean
 ) => {
@@ -559,7 +523,7 @@ export const deployMintableERC20 = async (
 ): Promise<MintableERC20> =>
   withSaveAndVerify(
     await new MintableERC20__factory(await getFirstSigner()).deploy(...args),
-    args[1].toUpperCase(),
+    args[1],
     [...args],
     verify
   );
@@ -570,7 +534,7 @@ export const deployMintableERC721 = async (
 ): Promise<MintableERC721> =>
   withSaveAndVerify(
     await new MintableERC721__factory(await getFirstSigner()).deploy(...args),
-    args[1].toUpperCase(),
+    args[1],
     [...args],
     verify
   );
@@ -787,7 +751,7 @@ export const deployDelegationAwarePTokenImpl = async (
     verify
   );
 
-export const deployAllMockERC20Tokens = async (verify?: boolean) => {
+export const deployAllERC20Tokens = async (verify?: boolean) => {
   const tokens: {
     [symbol: string]:
       | MockContract
@@ -797,64 +761,57 @@ export const deployAllMockERC20Tokens = async (verify?: boolean) => {
       | MockAToken;
   } = {};
 
-  const protoConfigData = ParaSpaceConfig.ReservesConfig;
+  const protoConfigData = getParaSpaceConfig().ReservesConfig;
 
-  for (const tokenSymbol of Object.keys(TokenContractId)) {
+  for (const tokenSymbol of Object.keys(ERC20TokenContractId)) {
     const db = getDb();
     const contractAddress = db
-      .get(`${tokenSymbol.toUpperCase()}.${DRE.network.name}`)
+      .get(`${tokenSymbol}.${DRE.network.name}`)
       .value()?.address;
+    const configData = protoConfigData[tokenSymbol];
 
     // if contract address is already in db, then skip to next tokenSymbol
     if (contractAddress) {
       console.log("contract address is already in db ", tokenSymbol);
       continue;
+    } else if (getParaSpaceConfig().Tokens[tokenSymbol]) {
+      console.log("contract address is already onchain ", tokenSymbol);
+      insertContractAddressInDb(tokenSymbol, configData?.address, false);
+      continue;
     } else {
       console.log("deploying now ", tokenSymbol);
-
-      if (tokenSymbol === "WETH") {
-        if (
-          hre.network.config.chainId === HARDHAT_CHAINID ||
-          hre.network.config.chainId === COVERAGE_CHAINID
-        ) {
-          tokens[tokenSymbol] = await deployWETHMocked(verify);
-        } else {
-          insertContractAddressInDb(eContractid.WETHMocked, WETH, false);
-          tokens[tokenSymbol] = await getWETHMocked(WETH);
-        }
+      if (tokenSymbol === ERC20TokenContractId.WETH) {
+        tokens[tokenSymbol] = await deployWETHMocked(verify);
         continue;
       }
 
-      if (tokenSymbol === "stETH") {
+      if (tokenSymbol === ERC20TokenContractId.stETH) {
         tokens[tokenSymbol] = await deployStETH(
-          [tokenSymbol, tokenSymbol, "18"],
+          [tokenSymbol, tokenSymbol, configData.reserveDecimals],
           verify
         );
         continue;
       }
 
-      if (tokenSymbol === "aWETH") {
+      if (tokenSymbol === ERC20TokenContractId.aWETH) {
         tokens[tokenSymbol] = await deployMockAToken(
-          [tokenSymbol, tokenSymbol, "18"],
+          [tokenSymbol, tokenSymbol, configData.reserveDecimals],
           verify
         );
         continue;
       }
 
-      const configData = protoConfigData[tokenSymbol];
-      const args: [string, string, string] = [
-        tokenSymbol,
-        tokenSymbol,
-        configData ? configData.reserveDecimals : 18,
-      ];
-      tokens[tokenSymbol] = await deployMintableERC20(args, verify);
+      tokens[tokenSymbol] = await deployMintableERC20(
+        [tokenSymbol, tokenSymbol, configData.reserveDecimals],
+        verify
+      );
     }
   }
 
   return tokens;
 };
 
-export const deployAllMockERC721Tokens = async (verify?: boolean) => {
+export const deployAllERC721Tokens = async (verify?: boolean) => {
   const tokens: {
     [symbol: string]:
       | MockContract
@@ -871,423 +828,77 @@ export const deployAllMockERC721Tokens = async (verify?: boolean) => {
       | Moonbirds
       | Contract;
   } = {};
+  const protoConfigData = getParaSpaceConfig().ReservesConfig;
 
   for (const tokenSymbol of Object.keys(ERC721TokenContractId)) {
     const db = getDb();
     const contractAddress = db
       .get(`${tokenSymbol}.${DRE.network.name}`)
       .value()?.address;
+    const configData = protoConfigData[tokenSymbol];
 
     // if contract address is already in db, then skip to next tokenSymbol
     if (contractAddress) {
       console.log("contract address is already in db ", tokenSymbol);
       continue;
-    } else {
-      console.log("deploying now ", tokenSymbol);
-
-      // we are using hardhat, we want to use mock ERC721 contracts
-      if (
-        hre.network.config.chainId === HARDHAT_CHAINID ||
-        hre.network.config.chainId === COVERAGE_CHAINID
-      ) {
-        if (tokenSymbol === "WPUNKS") {
-          const cryptoPunksMarket = await deployCryptoPunksMarket([], verify);
-          tokens["PUNKS"] = cryptoPunksMarket;
-
-          const wrappedPunk = await deployWrappedPunk(
-            [cryptoPunksMarket.address],
-            verify
-          );
-          tokens[tokenSymbol] = wrappedPunk;
-
-          continue;
-        }
-
-        if (tokenSymbol === "MOONBIRD") {
-          const moonbirdContract = await deployMoonbirds(
-            [
-              "MOON",
-              "MOON",
-              "0x0000000000000000000000000000000000000000",
-              "0x69C33aB569816F1D564a420490AbB894a44071Fb",
-              "0x69C33aB569816F1D564a420490AbB894a44071Fb",
-            ],
-            verify
-          );
-
-          tokens["MOONBIRD"] = moonbirdContract;
-
-          continue;
-        }
-
-        if (tokenSymbol === "UniswapV3") {
-          const weth = await getWETHMocked();
-
-          const positionDescriptor =
-            await deployNonfungibleTokenPositionDescriptor(
-              [
-                weth.address,
-                // 'ETH' as a bytes32 string
-                "0x4554480000000000000000000000000000000000000000000000000000000000",
-              ],
-              verify
-            );
-          const factory = await deployUniswapV3([], verify);
-          await deployUniswapSwapRouter(
-            [factory.address, weth.address],
-            verify
-          );
-          const nonfungiblePositionManager =
-            await deployNonfungiblePositionManager(
-              [factory.address, weth.address, positionDescriptor.address],
-              verify
-            );
-          tokens["UniswapV3"] = nonfungiblePositionManager;
-          continue;
-        }
-
-        tokens[tokenSymbol] = await deployMintableERC721(
-          [tokenSymbol, tokenSymbol, ""],
-          verify
-        );
-      }
-      // else use actual token addresses
-      else {
-        switch (tokenSymbol) {
-          case "WPUNKS":
-            tokens["PUNKS"] = await deployCryptoPunksMarket([], verify);
-
-            tokens[tokenSymbol] = await deployWrappedPunk(
-              [tokens["PUNKS"].address],
-              verify
-            );
-
-            break;
-          case "BAYC":
-            tokens[tokenSymbol] = await deployBAYC(
-              [tokenSymbol, tokenSymbol, "8000", "0"],
-              verify
-            );
-            // code block
-            break;
-
-          case "MAYC":
-            tokens[tokenSymbol] = await deployMAYC(
-              [
-                tokenSymbol,
-                tokenSymbol,
-                "0x0000000000000000000000000000000000000000",
-                "0x0000000000000000000000000000000000000000",
-              ],
-              verify
-            );
-            // code block
-            break;
-          case "DOODLE":
-            tokens[tokenSymbol] = await deployDoodle([], verify);
-            // code block
-            break;
-          case "AZUKI":
-            tokens[tokenSymbol] = await deployAzuki(
-              [5, 10000, 8900, 200],
-              verify
-            );
-            // code block
-            break;
-          case "CLONEX":
-            tokens[tokenSymbol] = await deployCloneX([], verify);
-            // code block
-            break;
-          case "MOONBIRD":
-            const moonbirdContract = await deployMoonbirds(
-              [
-                "MOON",
-                "MOON",
-                "0x0000000000000000000000000000000000000000",
-                "0x69C33aB569816F1D564a420490AbB894a44071Fb",
-                "0x69C33aB569816F1D564a420490AbB894a44071Fb",
-              ],
-              verify
-            );
-
-            await moonbirdContract.setNestingOpen(true);
-            tokens[tokenSymbol] = moonbirdContract;
-
-            // code block
-            break;
-          case "MEEBITS":
-            // eslint-disable-next-line no-case-declarations
-            const punkAddress = await getDb()
-              .get(`${eContractid.CryptoPunksMarket}.${DRE.network.name}`)
-              .value().address;
-            tokens[tokenSymbol] = await deployMeebits(
-              [
-                punkAddress, // our rinkeby punks address
-                "0x0000000000000000000000000000000000000000",
-                "0x69C33aB569816F1D564a420490AbB894a44071Fb", // shared wallet account 1
-              ],
-              verify
-            );
-            // code block
-            break;
-          case "OTHR":
-            tokens[tokenSymbol] = await deployOTHR(
-              [
-                "OTHR",
-                "OTHR",
-                [
-                  "0x0000000000000000000000000000000000000000",
-                  "0x0000000000000000000000000000000000000000",
-                  "0x0000000000000000000000000000000000000000",
-                ],
-                [10, 100, 1000, 10000],
-                [["0x69C33aB569816F1D564a420490AbB894a44071Fb", 100]],
-                "0x69C33aB569816F1D564a420490AbB894a44071Fb",
-                "0x69C33aB569816F1D564a420490AbB894a44071Fb",
-                "0x63616e6469646174653100000000000000000000000000000000000000000000",
-                5,
-                "0x69C33aB569816F1D564a420490AbB894a44071Fb",
-              ],
-              verify
-            );
-            // code block
-            break;
-          case "UniswapV3":
-            insertContractAddressInDb(
-              eContractid.UniswapV3,
-              UNISWAP_V3_POSITION_MANAGER_ADDRESS,
-              false
-            );
-            tokens[tokenSymbol] = await getMintableERC721(
-              UNISWAP_V3_POSITION_MANAGER_ADDRESS
-            );
-            break;
-          default:
-            tokens[tokenSymbol] = await deployMintableERC721(
-              [tokenSymbol, tokenSymbol, ""],
-              verify
-            );
-        }
-      }
-    }
-  }
-
-  return tokens;
-};
-
-export const deployAllMockTokens = async (verify?: boolean) => {
-  const tokens: {
-    [symbol: string]:
-      | MockContract
-      | MintableERC20
-      | WETH9Mocked
-      | MintableERC721
-      | WPunk
-      | CryptoPunksMarket
-      | Doodles
-      | BoredApeYachtClub
-      | MutantApeYachtClub
-      | Azuki
-      | CloneX
-      | Land
-      | Meebits
-      | Moonbirds;
-  } = {};
-
-  const protoConfigData = ParaSpaceConfig.ReservesConfig;
-
-  for (const tokenSymbol of Object.keys(TokenContractId)) {
-    console.log(
-      "DRE.network.name from contract-deployments is",
-      DRE.network.name
-    );
-    const db = getDb();
-    const contract_address = db
-      .get(`${tokenSymbol.toUpperCase()}.${DRE.network.name}`)
-      .value()?.address;
-
-    // if contract address is already in db, then skip to next tokenSymbol
-    if (contract_address) {
-      console.log("contract address is already in db ", tokenSymbol);
+    } else if (getParaSpaceConfig().Tokens[tokenSymbol]) {
+      console.log("contract address is already onchain ", tokenSymbol);
+      insertContractAddressInDb(tokenSymbol, configData?.address, false);
       continue;
     } else {
       console.log("deploying now ", tokenSymbol);
 
-      if (tokenSymbol === "WETH") {
-        tokens[tokenSymbol] = await deployWETHMocked(verify);
-
+      // we are using hardhat, we want to use mock ERC721 contracts
+      if (tokenSymbol === ERC721TokenContractId.WPUNKS) {
+        const cryptoPunksMarket = await deployCryptoPunksMarket([], verify);
+        tokens[eContractid.CryptoPunksMarket] = cryptoPunksMarket;
+        tokens[tokenSymbol] = await deployWrappedPunk(
+          [cryptoPunksMarket.address],
+          verify
+        );
         continue;
       }
 
-      const configData = protoConfigData[tokenSymbol];
+      if (tokenSymbol === ERC721TokenContractId.MOONBIRD) {
+        tokens[tokenSymbol] = await deployMoonbirds(
+          [
+            "MOON",
+            "MOON",
+            "0x0000000000000000000000000000000000000000",
+            getParaSpaceConfig().ParaSpaceTeam,
+            getParaSpaceConfig().ParaSpaceTeam,
+          ],
+          verify
+        );
+        continue;
+      }
 
-      tokens[tokenSymbol] = await deployMintableERC20(
-        [
-          tokenSymbol,
-          tokenSymbol,
-          configData ? configData.reserveDecimals : 18,
-        ],
-        verify
-      );
-    }
-  }
-
-  for (const tokenSymbol of Object.keys(ERC721TokenContractId)) {
-    const db = getDb();
-    const contract_address = db
-      .get(`${tokenSymbol.toUpperCase()}.${DRE.network.name}`)
-      .value()?.address;
-
-    // if contract address is already in db, then skip to next tokenSymbol
-    if (contract_address) {
-      console.log("contract address is already in db ", tokenSymbol);
-      continue;
-    } else {
-      // let args;
-
-      console.log("deploying now ", tokenSymbol);
-
-      // we are using hardhat, we want to use mock ERC721 contracts
-      if (
-        hre.network.config.chainId === HARDHAT_CHAINID ||
-        hre.network.config.chainId === COVERAGE_CHAINID
-      ) {
-        if (tokenSymbol === "WPUNKS") {
-          const cryptoPunksMarket = await deployCryptoPunksMarket([], verify);
-          tokens["PUNKS"] = cryptoPunksMarket;
-
-          const wrappedPunk = await deployWrappedPunk(
-            [cryptoPunksMarket.address],
-            verify
-          );
-          tokens[tokenSymbol] = wrappedPunk;
-
-          continue;
-        }
-
-        if (tokenSymbol === "MOONBIRD") {
-          const moonbirdContract = await deployMoonbirds(
+      if (tokenSymbol === ERC721TokenContractId.UniswapV3) {
+        const weth = await getWETHMocked();
+        const positionDescriptor =
+          await deployNonfungibleTokenPositionDescriptor(
             [
-              "MOON",
-              "MOON",
-              "0x0000000000000000000000000000000000000000",
-              "0x69C33aB569816F1D564a420490AbB894a44071Fb",
-              "0x69C33aB569816F1D564a420490AbB894a44071Fb",
+              weth.address,
+              // 'ETH' as a bytes32 string
+              "0x4554480000000000000000000000000000000000000000000000000000000000",
             ],
             verify
           );
-
-          tokens["MOONBIRD"] = moonbirdContract;
-
-          continue;
-        }
-
-        tokens[tokenSymbol] = await deployMintableERC721(
-          [tokenSymbol, tokenSymbol, ""],
-          verify
-        );
+        const factory = await deployUniswapV3([], verify);
+        await deployUniswapSwapRouter([factory.address, weth.address], verify);
+        const nonfungiblePositionManager =
+          await deployNonfungiblePositionManager(
+            [factory.address, weth.address, positionDescriptor.address],
+            verify
+          );
+        tokens[tokenSymbol] = nonfungiblePositionManager;
+        continue;
       }
-      // else use actual token addresses
-      else {
-        switch (tokenSymbol) {
-          case "WPUNKS":
-            tokens["PUNKS"] = await deployCryptoPunksMarket([], verify);
 
-            tokens[tokenSymbol] = await deployWrappedPunk(
-              [tokens["PUNKS"].address],
-              verify
-            );
-
-            break;
-          case "BAYC":
-            tokens[tokenSymbol] = await deployBAYC(
-              [tokenSymbol, tokenSymbol, "8000", "0"],
-              verify
-            );
-            // code block
-            break;
-
-          case "MAYC":
-            tokens[tokenSymbol] = await deployMAYC(
-              [
-                tokenSymbol,
-                tokenSymbol,
-                "0x0000000000000000000000000000000000000000",
-                "0x0000000000000000000000000000000000000000",
-              ],
-              verify
-            );
-            // code block
-            break;
-          case "DOODLE":
-            tokens[tokenSymbol] = await deployDoodle([], verify);
-            // code block
-            break;
-          case "AZUKI":
-            tokens[tokenSymbol] = await deployAzuki(
-              [5, 10000, 8900, 200],
-              verify
-            );
-            // code block
-            break;
-          case "CLONEX":
-            tokens[tokenSymbol] = await deployCloneX([], verify);
-            // code block
-            break;
-          case "MOONBIRD":
-            tokens[tokenSymbol] = await deployMoonbirds(
-              [
-                "MOON",
-                "MOON",
-                "0x0000000000000000000000000000000000000000",
-                "0x69C33aB569816F1D564a420490AbB894a44071Fb",
-                "0x69C33aB569816F1D564a420490AbB894a44071Fb",
-              ],
-              verify
-            );
-            // code block
-            break;
-          case "MEEBITS":
-            // eslint-disable-next-line no-case-declarations
-            const punkAddress = await getDb()
-              .get(`${eContractid.CryptoPunksMarket}.${DRE.network.name}`)
-              .value().address;
-            tokens[tokenSymbol] = await deployMeebits([
-              punkAddress, // our rinkeby punks address
-              "0x0000000000000000000000000000000000000000",
-              "0x69C33aB569816F1D564a420490AbB894a44071Fb", // shared wallet account 1
-            ]);
-            // code block
-            break;
-          case "OTHR":
-            tokens[tokenSymbol] = await deployOTHR(
-              [
-                "OTHR",
-                "OTHR",
-                [
-                  "0x0000000000000000000000000000000000000000",
-                  "0x0000000000000000000000000000000000000000",
-                  "0x0000000000000000000000000000000000000000",
-                ],
-                [10, 100, 1000, 10000],
-                [["0x69C33aB569816F1D564a420490AbB894a44071Fb", 100]],
-                "0x69C33aB569816F1D564a420490AbB894a44071Fb",
-                "0x69C33aB569816F1D564a420490AbB894a44071Fb",
-                "0x63616e6469646174653100000000000000000000000000000000000000000000",
-                5,
-                "0x69C33aB569816F1D564a420490AbB894a44071Fb",
-              ],
-              verify
-            );
-            // code block
-            break;
-          default:
-            tokens[tokenSymbol] = await deployMintableERC721(
-              [tokenSymbol, tokenSymbol, ""],
-              verify
-            );
-        }
-      }
+      tokens[tokenSymbol] = await deployMintableERC721(
+        [tokenSymbol, tokenSymbol, ""],
+        verify
+      );
     }
   }
 
@@ -2069,17 +1680,17 @@ export const deployNonfungibleTokenPositionDescriptor = async (
 export const deployUniswapV3OracleWrapper = async (
   factory: string,
   manager: string,
-  oracle: string,
+  addressProvider: string,
   verify?: boolean
 ) =>
   withSaveAndVerify(
     await new UniswapV3OracleWrapper__factory(await getFirstSigner()).deploy(
       factory,
       manager,
-      oracle
+      addressProvider
     ),
     eContractid.UniswapV3OracleWrapper,
-    [factory, manager, oracle],
+    [factory, manager, addressProvider],
     verify
   );
 
@@ -2118,18 +1729,6 @@ export const deployUniswapSwapRouter = async (
     verify
   );
 };
-export const deployUniswapDynamicConfigStrategy = async (
-  args: [string, string],
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new UniswapV3DynamicConfigsStrategy__factory(
-      await getFirstSigner()
-    ).deploy(...args),
-    eContractid.UniswapV3DynamicConfigsStrategy,
-    [...args],
-    verify
-  );
 
 export const deployStETH = async (
   args: [string, string, string],
@@ -2137,7 +1736,7 @@ export const deployStETH = async (
 ): Promise<StETH> =>
   withSaveAndVerify(
     await new StETH__factory(await getFirstSigner()).deploy(...args),
-    args[1].toUpperCase(),
+    args[1],
     [...args],
     verify
   );
@@ -2148,7 +1747,7 @@ export const deployMockAToken = async (
 ): Promise<MockAToken> =>
   withSaveAndVerify(
     await new MockAToken__factory(await getFirstSigner()).deploy(...args),
-    args[1].toUpperCase(),
+    args[1],
     [...args],
     verify
   );

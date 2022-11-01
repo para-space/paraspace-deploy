@@ -36,19 +36,27 @@ export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
   [eEthereumNetwork.ropsten]: ALCHEMY_KEY
     ? `https://eth-ropsten.alchemyapi.io/v2/${ALCHEMY_KEY}`
     : `https://ropsten.infura.io/v3/${INFURA_KEY}`,
-  [eEthereumNetwork.main]: ALCHEMY_KEY
+  [eEthereumNetwork.goerli]: ALCHEMY_KEY
+    ? `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_KEY}`
+    : `https://goerli.infura.io/v3/${INFURA_KEY}`,
+  [eEthereumNetwork.mainnet]: ALCHEMY_KEY
     ? `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`
     : `https://mainnet.infura.io/v3/${INFURA_KEY}`,
   [eEthereumNetwork.coverage]: "http://localhost:8555",
   [eEthereumNetwork.hardhat]: "http://localhost:8545",
+  [eEthereumNetwork.ganache]: "http://localhost:8545",
   [eEthereumNetwork.tenderlyMain]: `https://rpc.tenderly.co/fork/${TENDERLY_FORK_ID}`,
+  [eEthereumNetwork.parallel]: "http://localhost:29933",
 };
 
 export const BLOCK_TO_FORK: iParamsPerNetwork<number | undefined> = {
-  [eEthereumNetwork.main]: 12406069,
+  [eEthereumNetwork.mainnet]: 12406069,
   [eEthereumNetwork.kovan]: undefined,
   [eEthereumNetwork.ropsten]: undefined,
+  [eEthereumNetwork.goerli]: undefined,
   [eEthereumNetwork.coverage]: undefined,
   [eEthereumNetwork.hardhat]: undefined,
+  [eEthereumNetwork.ganache]: undefined,
+  [eEthereumNetwork.parallel]: undefined,
   [eEthereumNetwork.tenderlyMain]: 12406069,
 };

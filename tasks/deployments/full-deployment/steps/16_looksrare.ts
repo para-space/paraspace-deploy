@@ -12,24 +12,28 @@ import {
   deployTransferSelectorNFT,
 } from "../../../../helpers/contracts-deployments";
 import {
-  getAllMockedTokens,
+  getAllTokens,
   getPoolAddressesProvider,
 } from "../../../../helpers/contracts-getters";
 import {LOOKSRARE_ID} from "../../../../helpers/constants";
-import {waitForTx} from "../../../../helpers/misc-utils";
+import {
+  waitForTx,
+  isLocalTestnet,
+  isPublicTestnet,
+} from "../../../../helpers/misc-utils";
 
 export const step_16 = async (verify = false) => {
   try {
-    const mockTokens = await getAllMockedTokens();
+    if (!isLocalTestnet() && !isPublicTestnet()) {
+      return;
+    }
+
+    const allTokens = await getAllTokens();
     const currencyManager = await deployCurrencyManager(verify);
     const addressesProvider = await getPoolAddressesProvider();
 
-    await waitForTx(
-      await currencyManager.addCurrency(mockTokens["DAI"].address)
-    );
-    await waitForTx(
-      await currencyManager.addCurrency(mockTokens["WETH"].address)
-    );
+    await waitForTx(await currencyManager.addCurrency(allTokens.DAI.address));
+    await waitForTx(await currencyManager.addCurrency(allTokens.WETH.address));
 
     const executionManager = await deployExecutionManager(verify);
 
@@ -44,7 +48,7 @@ export const step_16 = async (verify = false) => {
       currencyManager.address,
       executionManager.address,
       royaltyFeeManager.address,
-      mockTokens["WETH"].address,
+      allTokens.WETH.address,
       protocolFeeRecipient,
       verify
     );

@@ -1,15 +1,14 @@
-import {FormatTypes} from "ethers/lib/utils";
 import {ZERO_ADDRESS} from "../../../../helpers/constants";
 import {deployPoolComponents} from "../../../../helpers/contracts-deployments";
 import {
   getPoolProxy,
   getPoolAddressesProvider,
 } from "../../../../helpers/contracts-getters";
-import {insertContractAddressInDb} from "../../../../helpers/contracts-helpers";
+import {registerContractInDb} from "../../../../helpers/contracts-helpers";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {eContractid} from "../../../../helpers/types";
 
-export const step_07 = async (verify = false) => {
+export const step_06 = async (verify = false) => {
   const addressesProvider = await getPoolAddressesProvider();
 
   try {
@@ -69,8 +68,9 @@ export const step_07 = async (verify = false) => {
     );
 
     const poolProxy = await getPoolProxy(poolAddress);
-
-    await insertContractAddressInDb(eContractid.PoolProxy, poolProxy.address);
+    await registerContractInDb(eContractid.PoolProxy, poolProxy, [
+      addressesProvider.address,
+    ]);
   } catch (error) {
     console.error(error);
     process.exit(1);

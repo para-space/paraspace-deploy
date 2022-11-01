@@ -30,10 +30,13 @@ export type ParaSpaceLibraryAddresses =
 export enum eEthereumNetwork {
   kovan = "kovan",
   ropsten = "ropsten",
-  main = "main",
+  goerli = "goerli",
+  mainnet = "mainnet",
   coverage = "coverage",
   hardhat = "hardhat",
   tenderlyMain = "tenderlyMain",
+  ganache = "ganache",
+  parallel = "parallel",
 }
 
 export enum eContractid {
@@ -97,7 +100,7 @@ export enum eContractid {
   WETHGatewayImpl = "WETHGatewayImpl",
   WETHGatewayProxy = "WETHGatewayProxy",
   ERC721OracleWrapper = "ERC721OracleWrapper",
-  CryptoPunksMarket = "PUNKS",
+  CryptoPunksMarket = "CryptoPunksMarket",
   WPunk = "WPUNKS",
   WPunkGatewayImpl = "WPunkGatewayImpl",
   WPunkGatewayProxy = "WPunkGatewayProxy",
@@ -266,6 +269,7 @@ export enum ProtocolErrors {
 
   LIQUIDATOR_CAN_NOT_BE_SELF = "117", //user can not liquidate himself
   UNIV3_NOT_ALLOWED = "119", //flash claim is not allowed for UniswapV3
+  NTOKEN_BALANCE_EXCEEDED = "120", //ntoken balance exceed limit.
   // SafeCast
   SAFECAST_UINT128_OVERFLOW = "SafeCast: value doesn't fit in 128 bits",
 
@@ -348,7 +352,7 @@ export type iMultiPoolsAssets<T> = iAssetCommon<T> | iParaSpacePoolAssets<T>;
 
 export type iAssetAggregatorBase<T> = iAssetsWithoutETH<T>;
 
-export enum TokenContractId {
+export enum ERC20TokenContractId {
   DAI = "DAI",
   WETH = "WETH",
   USDC = "USDC",
@@ -372,6 +376,23 @@ export enum ERC721TokenContractId {
   MEEBITS = "MEEBITS",
   OTHR = "OTHR",
   UniswapV3 = "UniswapV3",
+}
+
+export enum NTokenContractId {
+  nBAYC = "nBAYC",
+  nMAYC = "nMAYC",
+  nDOODLES = "nDOODLES",
+  nWPUNKS = "nWPUNKS",
+  nMOONBIRD = "nMOONBIRD",
+  nUniswapV3 = "nUniswapV3",
+}
+
+export enum PTokenContractId {
+  pDAI = "pDAI",
+  pUSDC = "pUSDC",
+  pWETH = "pWETH",
+  paWETH = "paWETH",
+  pstETH = "pstETH",
 }
 
 export interface IReserveParams
@@ -427,8 +448,11 @@ export interface iEthereumParamsPerNetwork<T> {
   [eEthereumNetwork.coverage]: T;
   [eEthereumNetwork.kovan]: T;
   [eEthereumNetwork.ropsten]: T;
-  [eEthereumNetwork.main]: T;
+  [eEthereumNetwork.goerli]: T;
+  [eEthereumNetwork.mainnet]: T;
   [eEthereumNetwork.hardhat]: T;
+  [eEthereumNetwork.ganache]: T;
+  [eEthereumNetwork.parallel]: T;
   [eEthereumNetwork.tenderlyMain]: T;
 }
 
@@ -438,17 +462,45 @@ export enum RateMode {
   Variable = "2",
 }
 
-export interface IProtocolGlobalConfig {
-  TokenDistributorPercentageBase: string;
-  MockUsdPriceInWei: string;
-  UsdAddress: tEthereumAddress;
-  NilAddress: tEthereumAddress;
-  OneAddress: tEthereumAddress;
-  ParaSpaceReferral: string;
+export interface IUniswapV2Config {
+  Factory: tEthereumAddress;
+  Router: tEthereumAddress;
+}
+
+export interface IUniswapV3Config {
+  Factory: tEthereumAddress;
+  NFTPositionManager: tEthereumAddress;
+}
+
+export interface IMarketplaceConfig {
+  Seaport?: tEthereumAddress;
+}
+
+export interface IChainlinkConfig {
+  ETH?: tEthereumAddress;
+  DAI?: tEthereumAddress;
+  USDC?: tEthereumAddress;
+  USDT?: tEthereumAddress;
+  WBTC?: tEthereumAddress;
+  STETH?: tEthereumAddress;
+  APE?: tEthereumAddress;
+}
+
+export interface IBendDAOConfig {
+  Oracle?: tEthereumAddress;
+}
+
+export interface IUniswapConfig {
+  V2Factory?: tEthereumAddress;
+  V2Router?: tEthereumAddress;
+  V3Factory?: tEthereumAddress;
+  V3NFTPositionManager?: tEthereumAddress;
 }
 
 export interface IMocksConfig {
+  USDPriceInWEI: string;
   AllAssetsInitialPrices: iAssetBase<string>;
+  TokenFaucetMintValue: {[key: string]: number};
 }
 
 export interface IRate {
@@ -457,22 +509,13 @@ export interface IRate {
 
 export interface ICommonConfiguration {
   MarketId: string;
+  ParaSpaceTeam: tEthereumAddress;
   PTokenNamePrefix: string;
   VariableDebtTokenNamePrefix: string;
   SymbolPrefix: string;
   ProviderId: number;
-  MaxUserAtomicTokensAllowed: number;
   AuctionRecoveryHealthFactor: string | number;
-  ProtocolGlobalParams: IProtocolGlobalConfig;
   Mocks: IMocksConfig;
-  ProviderRegistry: tEthereumAddress | undefined;
-  ProviderRegistryOwner: tEthereumAddress | undefined;
-  PoolConfigurator: tEthereumAddress | undefined;
-  Pool: tEthereumAddress | undefined;
-  TokenDistributor: tEthereumAddress | undefined;
-  ParaSpaceOracle: tEthereumAddress | undefined;
-  FallbackOracle: tEthereumAddress | undefined;
-  ChainlinkAggregator: tEthereumAddress | undefined;
   ParaSpaceAdmin: tEthereumAddress | undefined;
   ParaSpaceAdminIndex: number;
   EmergencyAdmin: tEthereumAddress | undefined;
@@ -483,13 +526,13 @@ export interface ICommonConfiguration {
 
   GatewayAdmin: tEthereumAddress | undefined;
   GatewayAdminIndex: number;
-  ReserveAssets: SymbolMap<tEthereumAddress> | SymbolMap<undefined>;
+  Tokens: iMultiPoolsAssets<tEthereumAddress>;
+  BendDAO: IBendDAOConfig;
+  Uniswap: IUniswapConfig;
+  Marketplace: IMarketplaceConfig;
+  Chainlink: IChainlinkConfig;
   ReservesConfig: iMultiPoolsAssets<IReserveParams>;
-  PTokenDomainSeparator: string;
-  WETH: tEthereumAddress | undefined;
-  WrappedNativeToken: tEthereumAddress | undefined;
-  ReserveFactorTreasuryAddress: tEthereumAddress;
-  IncentivesController: tEthereumAddress | undefined;
+  Treasury: tEthereumAddress;
 }
 
 export interface IParaSpaceConfiguration extends ICommonConfiguration {

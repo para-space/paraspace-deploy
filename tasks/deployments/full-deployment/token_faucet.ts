@@ -1,52 +1,52 @@
 import {deployMockTokenFaucet} from "../../../helpers/contracts-deployments";
-import {MOCK_TOKEN_MINT_VALUE} from "../../../market-config";
+import {getParaSpaceConfig} from "../../../helpers/misc-utils";
 
 export const deployFaucet = async (mockTokens, verify?: boolean) => {
   const erc20configs = [
     {
       name: "DAI",
       addr: mockTokens.DAI,
-      mintValue: MOCK_TOKEN_MINT_VALUE.DAI,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.DAI,
     },
     {
       name: "APE",
       addr: mockTokens.APE,
-      mintValue: MOCK_TOKEN_MINT_VALUE.APE,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.APE,
     },
     {
       name: "USDC",
       addr: mockTokens.USDC,
-      mintValue: MOCK_TOKEN_MINT_VALUE.USDC,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.USDC,
     },
     {
       name: "USDT",
       addr: mockTokens.USDT,
-      mintValue: MOCK_TOKEN_MINT_VALUE.USDT,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.USDT,
     },
     {
       name: "WBTC",
       addr: mockTokens.WBTC,
-      mintValue: MOCK_TOKEN_MINT_VALUE.WBTC,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.WBTC,
     },
     {
       name: "STETH",
       addr: mockTokens.stETH,
-      mintValue: MOCK_TOKEN_MINT_VALUE.stETH,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.stETH,
     },
     {
       name: "aWETH",
       addr: mockTokens.aWETH,
-      mintValue: MOCK_TOKEN_MINT_VALUE.aWETH,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.aWETH,
     },
     {
       name: "cWETH",
       addr: mockTokens.cWETH,
-      mintValue: MOCK_TOKEN_MINT_VALUE.cWETH,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.cWETH,
     },
     {
       name: "PUNK",
       addr: mockTokens.PUNK,
-      mintValue: MOCK_TOKEN_MINT_VALUE.PUNK,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.PUNK,
     },
   ];
 
@@ -54,49 +54,49 @@ export const deployFaucet = async (mockTokens, verify?: boolean) => {
     {
       name: "BAYC",
       addr: mockTokens.BAYC,
-      mintValue: MOCK_TOKEN_MINT_VALUE.BAYC,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.BAYC,
     },
     {
       name: "MAYC",
       addr: mockTokens.MAYC,
-      mintValue: MOCK_TOKEN_MINT_VALUE.MAYC,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.MAYC,
     },
     {
       name: "DOODLES",
       addr: mockTokens.DOODLE,
-      mintValue: MOCK_TOKEN_MINT_VALUE.DOODLE,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.DOODLE,
     },
     {
       name: "MOONBIRD",
       addr: mockTokens.MOONBIRD,
-      mintValue: MOCK_TOKEN_MINT_VALUE.MOONBIRD,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.MOONBIRD,
     },
     {
       name: "MEEBITS",
       addr: mockTokens.MEEBITS,
-      mintValue: MOCK_TOKEN_MINT_VALUE.MEEBITS,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.MEEBITS,
     },
     {
       name: "AZUKI",
       addr: mockTokens.AZUKI,
-      mintValue: MOCK_TOKEN_MINT_VALUE.AZUKI,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.AZUKI,
     },
     {
       name: "OTHR",
       addr: mockTokens.OTHR,
-      mintValue: MOCK_TOKEN_MINT_VALUE.OTHR,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.OTHR,
     },
     {
       name: "CLONEX",
       addr: mockTokens.CLONEX,
-      mintValue: MOCK_TOKEN_MINT_VALUE.CLONEX,
+      mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.CLONEX,
     },
   ];
 
   const punkConfig = {
     name: "CRYPTO_PUNK",
     addr: mockTokens.CRYPTO_PUNK,
-    mintValue: MOCK_TOKEN_MINT_VALUE.CRYPTO_PUNK,
+    mintValue: getParaSpaceConfig().Mocks.TokenFaucetMintValue.CRYPTO_PUNK,
   };
 
   const faucet = await deployMockTokenFaucet(

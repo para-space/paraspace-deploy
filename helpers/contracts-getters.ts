@@ -10,7 +10,6 @@ import {
   PoolConfigurator__factory,
   MintableERC20__factory,
   MintableERC721__factory,
-  // MockFlashLoanReceiver__factory,
   MockVariableDebtToken__factory,
   PriceOracle__factory,
   VariableDebtToken__factory,
@@ -21,24 +20,16 @@ import {
   SupplyLogic__factory,
   BorrowLogic__factory,
   LiquidationLogic__factory,
-  // BridgeLogic__factory,
   ACLManager__factory,
-  // EModeLogic__factory,
   DefaultReserveInterestRateStrategy__factory,
-  // FlashLoanLogic__factory,
   UiPoolDataProvider__factory,
   UiIncentiveDataProvider__factory,
   WETHGateway__factory,
-  // WPunk,
   WPunk__factory,
   CryptoPunksMarket__factory,
   WPunkGateway__factory,
   MockAggregator__factory,
-  // ParaSpaceToken__factory,
-  // StakedParaSpaceV3__factory,
-  // PCV__factory,
   ERC20__factory,
-  // ERC721__factory,
   MockTokenFaucet__factory,
   IERC20Detailed__factory,
   MockIncentivesController__factory,
@@ -58,7 +49,6 @@ import {
   UniswapV3Factory__factory,
   UniswapV3OracleWrapper__factory,
   NTokenUniswapV3__factory,
-  UniswapV3DynamicConfigsStrategy__factory,
   StETH__factory,
   PTokenStETH__factory,
   MockAToken__factory,
@@ -69,25 +59,23 @@ import {
   IPool__factory,
   MockReserveAuctionStrategy__factory,
 } from "../../types";
-// import {PoolLibraryAddresses} from "../types/Pool__factory";
 import {
   getEthersSigners,
-  MockTokenMap,
-  MockTokenMapERC721,
+  ERC20TokenMap,
+  ERC721TokenMap,
 } from "./contracts-helpers";
-import {DRE, getDb, notFalsyOrZeroAddress} from "./misc-utils";
+import {DRE, getDb} from "./misc-utils";
 import {
   eContractid,
   ERC721TokenContractId,
   tEthereumAddress,
-  TokenContractId,
+  ERC20TokenContractId,
 } from "./types";
 
 import {
   INonfungiblePositionManager__factory,
   ISwapRouter__factory,
 } from "../../types";
-import {ZERO_ADDRESS} from "./constants";
 
 declare let hre: HardhatRuntimeEnvironment;
 
@@ -340,25 +328,14 @@ export const getParaSpaceOracle = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-// export const getMockFlashLoanReceiver = async (address?: tEthereumAddress) =>
-//   await MockFlashLoanReceiver__factory.connect(
-//     address ||
-//       (
-//         await getDb()
-//           .get(`${eContractid.MockFlashLoanReceiver}.${DRE.network.name}`)
-//           .value()
-//       ).address,
-//     await getFirstSigner()
-//   );
-
-export const getAllMockedTokens = async () => {
+export const getAllERC20Tokens = async () => {
   const db = getDb();
-  const tokens1: MockTokenMap = await Object.keys(TokenContractId).reduce<
-    Promise<MockTokenMap>
+  const tokens: ERC20TokenMap = await Object.keys(ERC20TokenContractId).reduce<
+    Promise<ERC20TokenMap>
   >(async (acc, tokenSymbol) => {
     const accumulator = await acc;
     const address = db
-      .get(`${tokenSymbol.toUpperCase()}.${DRE.network.name}`)
+      .get(`${tokenSymbol}.${DRE.network.name}`)
       .value()?.address;
     if (address) {
       accumulator[tokenSymbol] = await getMintableERC20(address);
@@ -367,10 +344,14 @@ export const getAllMockedTokens = async () => {
       return Promise.reject(`${tokenSymbol} is not in db`);
     }
   }, Promise.resolve({}));
+  return tokens;
+};
 
-  const tokens2: MockTokenMapERC721 = await Object.keys(
+export const getAllERC721Tokens = async () => {
+  const db = getDb();
+  const tokens: ERC721TokenMap = await Object.keys(
     ERC721TokenContractId
-  ).reduce<Promise<MockTokenMapERC721>>(async (acc, tokenSymbol) => {
+  ).reduce<Promise<ERC721TokenMap>>(async (acc, tokenSymbol) => {
     const accumulator = await acc;
     const address = db
       .get(`${tokenSymbol}.${DRE.network.name}`)
@@ -382,49 +363,24 @@ export const getAllMockedTokens = async () => {
       return Promise.reject(`${tokenSymbol} is not in db`);
     }
   }, Promise.resolve({}));
-
-  return Object.assign(tokens1, tokens2);
+  return tokens;
 };
-
-export const getPairsTokenAggregator = (
-  allAssetsAddresses: {
-    [tokenSymbol: string]: tEthereumAddress;
-  },
-  aggregatorsAddresses: {[tokenSymbol: string]: tEthereumAddress}
-): [string[], string[]] => {
-  const {...assetsAddressesWithoutEth} = allAssetsAddresses;
-
-  const pairs = Object.entries(assetsAddressesWithoutEth).map(
-    ([tokenSymbol, tokenAddress]) => {
-      const aggregatorAddressIndex = Object.keys(
-        aggregatorsAddresses
-      ).findIndex((value) => value === tokenSymbol);
-      const [, aggregatorAddress] = (
-        Object.entries(aggregatorsAddresses) as [string, tEthereumAddress][]
-      )[aggregatorAddressIndex];
-      return [tokenAddress, aggregatorAddress];
-    }
-  ) as [string, string][];
-
-  const mappedPairs = pairs.map(([asset]) => asset);
-  const mappedAggregators = pairs.map(([, source]) => source);
-
-  return [mappedPairs, mappedAggregators];
+export const getAllTokens = async () => {
+  return Object.assign(await getAllERC20Tokens(), await getAllERC721Tokens());
 };
 
 export const getPoolAddressesProviderRegistry = async (
   address?: tEthereumAddress
 ) =>
   await PoolAddressesProviderRegistry__factory.connect(
-    notFalsyOrZeroAddress(address)
-      ? address
-      : (
-          await getDb()
-            .get(
-              `${eContractid.PoolAddressesProviderRegistry}.${DRE.network.name}`
-            )
-            .value()
-        ).address,
+    address ||
+      (
+        await getDb()
+          .get(
+            `${eContractid.PoolAddressesProviderRegistry}.${DRE.network.name}`
+          )
+          .value()
+      ).address,
     await getFirstSigner()
   );
 
@@ -450,7 +406,7 @@ export const getWETHMocked = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-export const getPunk = async (address?: tEthereumAddress) =>
+export const getCryptoPunksMarket = async (address?: tEthereumAddress) =>
   await CryptoPunksMarket__factory.connect(
     address ||
       (
@@ -690,21 +646,6 @@ export const getNTokenUniswapV3 = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-export const getUniswapV3DynamicConfigsStrategy = async (
-  address?: tEthereumAddress
-) =>
-  await UniswapV3DynamicConfigsStrategy__factory.connect(
-    address ||
-      (
-        await getDb()
-          .get(
-            `${eContractid.UniswapV3DynamicConfigsStrategy}.${DRE.network.name}`
-          )
-          .value()
-      ).address,
-    await getFirstSigner()
-  );
-
 export const getChainId = async () =>
   (await DRE.ethers.provider.getNetwork()).chainId;
 
@@ -851,21 +792,6 @@ export const getMockIncentivesController = async (address?: tEthereumAddress) =>
       (
         await getDb()
           .get(`${eContractid.MockIncentivesController}.${DRE.network.name}`)
-          .value()
-      ).address,
-    await getFirstSigner()
-  );
-
-export const getUniswapDynamicConfigStrategy = async (
-  address?: tEthereumAddress
-) =>
-  await UniswapV3DynamicConfigsStrategy__factory.connect(
-    address ||
-      (
-        await getDb()
-          .get(
-            `${eContractid.UniswapV3DynamicConfigsStrategy}.${DRE.network.name}`
-          )
           .value()
       ).address,
     await getFirstSigner()

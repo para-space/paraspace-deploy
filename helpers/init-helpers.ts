@@ -1,5 +1,7 @@
 import {
   eContractid,
+  ERC20TokenContractId,
+  ERC721TokenContractId,
   iMultiPoolsAssets,
   IReserveParams,
   tEthereumAddress,
@@ -287,18 +289,18 @@ export const initReservesByHelper = async (
   for (let i = 0; i < reserveSymbols.length; i++) {
     let xTokenToUse: string;
     if (xTokenType[reserveSymbols[i]] === "generic") {
-      if (reserveSymbols[i] === "stETH") {
+      if (reserveSymbols[i] === ERC20TokenContractId.stETH) {
         xTokenToUse = (await deployPTokenStETH(pool.address, verify)).address;
-      } else if (reserveSymbols[i] === "aWETH") {
+      } else if (reserveSymbols[i] === ERC20TokenContractId.aWETH) {
         xTokenToUse = (await deployPTokenAToken(pool.address, verify)).address;
       } else {
         xTokenToUse = pTokenImplementationAddress;
       }
     } else if (xTokenType[reserveSymbols[i]] === "nft") {
-      if (reserveSymbols[i] === "MOONBIRD") {
+      if (reserveSymbols[i] === ERC721TokenContractId.MOONBIRD) {
         console.log("IS MOONBIRDS");
         xTokenToUse = nTokenMoonBirdImplementationAddress;
-      } else if (reserveSymbols[i] === "UniswapV3") {
+      } else if (reserveSymbols[i] === ERC721TokenContractId.UniswapV3) {
         console.log("IS UniSwapV3");
         xTokenToUse = nTokenUniSwapV3ImplementationAddress;
       } else {
@@ -349,46 +351,17 @@ export const initReservesByHelper = async (
     chunkIndex < chunkedInitInputParams.length;
     chunkIndex++
   ) {
-    const tx3 = await waitForTx(
+    const tx = await waitForTx(
       await configurator.initReserves(chunkedInitInputParams[chunkIndex])
     );
 
     console.log(
       `  - Reserve ready for: ${chunkedSymbols[chunkIndex].join(", ")}`
     );
-    console.log("    * gasUsed", tx3.gasUsed.toString());
-    //gasUsage = gasUsage.add(tx3.gasUsed);
+    console.log("    * gasUsed", tx.gasUsed.toString());
   }
 
   return gasUsage; // Deprecated
-};
-
-export const getPairsTokenAggregator = (
-  allAssetsAddresses: {
-    [tokenSymbol: string]: tEthereumAddress;
-  },
-  aggregatorsAddresses: {[tokenSymbol: string]: tEthereumAddress}
-): [string[], string[]] => {
-  const {...assetsAddressesWithoutEth} = allAssetsAddresses;
-
-  const pairs = Object.entries(assetsAddressesWithoutEth).map(
-    ([tokenSymbol, tokenAddress]) => {
-      if (tokenSymbol !== "WETH" && tokenSymbol !== "ETH") {
-        const aggregatorAddressIndex = Object.keys(
-          aggregatorsAddresses
-        ).findIndex((value) => value === tokenSymbol);
-        const [, aggregatorAddress] = (
-          Object.entries(aggregatorsAddresses) as [string, tEthereumAddress][]
-        )[aggregatorAddressIndex];
-        return [tokenAddress, aggregatorAddress];
-      }
-    }
-  ) as [string, string][];
-
-  const mappedPairs = pairs.map(([asset]) => asset);
-  const mappedAggregators = pairs.map(([, source]) => source);
-
-  return [mappedPairs, mappedAggregators];
 };
 
 export const configureReservesByHelper = async (

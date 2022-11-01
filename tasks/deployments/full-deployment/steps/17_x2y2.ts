@@ -5,11 +5,19 @@ import {
 } from "../../../../helpers/contracts-deployments";
 import {getPoolAddressesProvider} from "../../../../helpers/contracts-getters";
 import {X2Y2_ID} from "../../../../helpers/constants";
-import {waitForTx} from "../../../../helpers/misc-utils";
+import {
+  isLocalTestnet,
+  isPublicTestnet,
+  waitForTx,
+} from "../../../../helpers/misc-utils";
 import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 
 export const step_17 = async (verify = false) => {
   try {
+    if (!isLocalTestnet() && !isPublicTestnet()) {
+      return;
+    }
+
     const {paraSpaceAdmin} = await getParaSpaceAdmins();
     const addressesProvider = await getPoolAddressesProvider();
     addressesProvider.getACLAdmin();

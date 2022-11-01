@@ -1,13 +1,18 @@
 import {
-  getAllMockedTokens,
-  getPunk,
+  getAllTokens,
+  getCryptoPunksMarket,
 } from "../../../../helpers/contracts-getters";
 import {deployFaucet} from "../token_faucet";
+import {isLocalTestnet, isPublicTestnet} from "../../../../helpers/misc-utils";
 
 export const step_03 = async (verify = false) => {
   try {
-    const mockTokens = await getAllMockedTokens();
-    const punks = await getPunk();
+    if (!isLocalTestnet() && !isPublicTestnet()) {
+      return;
+    }
+
+    const mockTokens = await getAllTokens();
+    const punks = await getCryptoPunksMarket();
 
     await deployFaucet(
       {
