@@ -80,6 +80,7 @@ export enum eContractid {
   FlashClaimRegistry = "FlashClaimRegistry",
   ProtocolDataProvider = "ProtocolDataProvider",
   MockPToken = "MockPToken",
+  MockNToken = "MockNToken",
   IERC20Detailed = "IERC20Detailed",
   FeeProvider = "FeeProvider",
   TokenDistributor = "TokenDistributor",
@@ -550,5 +551,5 @@ export enum XTokenType {
   DelegationAwarePToken,
   RebasingPToken,
   PTokenAToken,
-  PTokenStETH
+  PTokenStETH,
 }

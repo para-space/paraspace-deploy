@@ -20,7 +20,7 @@ export const upgradeAll = async () => {
   await upgradePToken();
   await upgradeNToken();
   await upgradeNTokenUniswapV3();
-  await upgradeNTokenMoonBirds()
+  await upgradeNTokenMoonBirds();
   console.log("upgrade all finished!");
 };
 
