@@ -296,7 +296,7 @@ export const strategyClonex: IReserveParams = {
 export const strategyUniswapV3: IReserveParams = {
   // address: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
   strategy: rateStrategyNFT,
-  auctionStrategy: auctionStrategyZero,
+  auctionStrategy: auctionStrategyExp,
   baseLTVAsCollateral: "3000",
   liquidationThreshold: "7000",
   liquidationBonus: "10500",
