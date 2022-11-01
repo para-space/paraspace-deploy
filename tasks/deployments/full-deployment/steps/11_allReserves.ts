@@ -17,10 +17,11 @@ import {
   initReservesByHelper,
 } from "../../../../helpers/init-helpers";
 
+import {tEthereumAddress} from "../../../../helpers/types";
 import {
-  tEthereumAddress,
-} from "../../../../helpers/types";
-import {getParaSpaceConfig, isLocalTestnet} from "../../../../helpers/misc-utils";
+  getParaSpaceConfig,
+  isLocalTestnet,
+} from "../../../../helpers/misc-utils";
 import {tEthereumAddress} from "../../../../helpers/types";
 import {auctionStrategyLinear} from "../../../../market-config/auctionStrategies";
 
