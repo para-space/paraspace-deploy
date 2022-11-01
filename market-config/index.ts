@@ -30,7 +30,6 @@ export const CommonConfig: Pick<
   | "VariableDebtTokenNamePrefix"
   | "SymbolPrefix"
   | "ProviderId"
-  | "MaxUserAtomicTokensAllowed"
   | "AuctionRecoveryHealthFactor"
   | "ParaSpaceAdmin"
   | "EmergencyAdmin"
@@ -47,7 +46,6 @@ export const CommonConfig: Pick<
   VariableDebtTokenNamePrefix: "ParaSpace Variable Debt Token",
   SymbolPrefix: "",
   ProviderId: 1,
-  MaxUserAtomicTokensAllowed: 256,
   AuctionRecoveryHealthFactor: "1500000000000000000",
   // ACL CONFIGURATION
   ParaSpaceAdmin: undefined,

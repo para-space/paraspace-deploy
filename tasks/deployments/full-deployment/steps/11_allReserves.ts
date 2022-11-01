@@ -3,12 +3,9 @@ import {
   deployApeCoinStaking,
   deployMockIncentivesController,
   deployMockReserveAuctionStrategy,
-  deployUniswapDynamicConfigStrategy,
 } from "../../../../helpers/contracts-deployments";
 import {
   getAllTokens,
-  getPoolAddressesProvider,
-  getPoolConfiguratorProxy,
   getProtocolDataProvider,
 } from "../../../../helpers/contracts-getters";
 import {
@@ -19,27 +16,21 @@ import {
   configureReservesByHelper,
   initReservesByHelper,
 } from "../../../../helpers/init-helpers";
-import {
-  getParaSpaceConfig,
-  isLocalTestnet,
-  waitForTx,
-} from "../../../../helpers/misc-utils";
 
 import {
-  ERC721TokenContractId,
   tEthereumAddress,
 } from "../../../../helpers/types";
+import {getParaSpaceConfig, isLocalTestnet} from "../../../../helpers/misc-utils";
+import {tEthereumAddress} from "../../../../helpers/types";
 import {auctionStrategyLinear} from "../../../../market-config/auctionStrategies";
 
 export const step_11 = async (verify = false) => {
   try {
     const allTokens = await getAllTokens();
-    const addressesProvider = await getPoolAddressesProvider();
     const {paraSpaceAdmin} = await getParaSpaceAdmins();
     const reservesParams = getParaSpaceConfig().ReservesConfig;
     const admin = await paraSpaceAdmin.getAddress();
     const protocolDataProvider = await getProtocolDataProvider();
-    const poolConfigurator = await getPoolConfiguratorProxy();
 
     const allTokenAddresses = getContractAddresses(allTokens);
 
@@ -96,24 +87,6 @@ export const step_11 = async (verify = false) => {
       allTokenAddresses,
       protocolDataProvider,
       admin
-    );
-
-    const uniswapV3Token = allTokens[ERC721TokenContractId.UniswapV3];
-    const dynamicConfigsStrategy = await deployUniswapDynamicConfigStrategy(
-      [uniswapV3Token.address, addressesProvider.address],
-      verify
-    );
-    await waitForTx(
-      await poolConfigurator.setReserveDynamicConfigsStrategyAddress(
-        uniswapV3Token.address,
-        dynamicConfigsStrategy.address
-      )
-    );
-    await waitForTx(
-      await poolConfigurator.setDynamicConfigsEnabled(
-        uniswapV3Token.address,
-        true
-      )
     );
   } catch (error) {
     console.error(error);
