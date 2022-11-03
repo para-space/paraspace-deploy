@@ -37,6 +37,7 @@ export enum eEthereumNetwork {
   tenderlyMain = "tenderlyMain",
   ganache = "ganache",
   parallel = "parallel",
+  localhost = "localhost",
 }
 
 export enum eContractid {
@@ -271,6 +272,8 @@ export enum ProtocolErrors {
   LIQUIDATOR_CAN_NOT_BE_SELF = "117", //user can not liquidate himself
   UNIV3_NOT_ALLOWED = "119", //flash claim is not allowed for UniswapV3
   NTOKEN_BALANCE_EXCEEDED = "120", //ntoken balance exceed limit.
+  ORACLE_PRICE_NOT_READY = "121", //oracle price not ready
+  SET_ORACLE_SOURCE_NOT_ALLOWED = "122", //set oracle source not allowed
   // SafeCast
   SAFECAST_UINT128_OVERFLOW = "SafeCast: value doesn't fit in 128 bits",
 
