@@ -533,7 +533,7 @@ export interface ICommonConfiguration {
   SymbolPrefix: string;
   ProviderId: number;
   AuctionRecoveryHealthFactor: string | number;
-  Mocks: IMocksConfig;
+  Mocks?: IMocksConfig;
   ParaSpaceAdmin: tEthereumAddress | undefined;
   ParaSpaceAdminIndex: number;
   EmergencyAdmin: tEthereumAddress | undefined;

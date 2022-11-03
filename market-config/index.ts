@@ -199,6 +199,7 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     OTHR: strategyOthr,
     CLONEX: strategyClonex,
   },
+  Mocks: undefined,
 };
 
 export const ParaSpaceConfigs: Partial<

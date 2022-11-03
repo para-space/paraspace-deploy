@@ -46,10 +46,12 @@ export const step_09 = async (verify = false) => {
       await deployNFTFloorPriceOracle([], verify);
       const fallbackOracle = await deployPriceOracle(verify);
       await waitForTx(
-        await fallbackOracle.setEthUsdPrice(paraSpaceConfig.Mocks.USDPriceInWEI)
+        await fallbackOracle.setEthUsdPrice(
+          paraSpaceConfig.Mocks!.USDPriceInWEI
+        )
       );
       await setInitialAssetPricesInOracle(
-        paraSpaceConfig.Mocks.AllAssetsInitialPrices,
+        paraSpaceConfig.Mocks!.AllAssetsInitialPrices,
         {
           // ERC20
           WETH: erc20Tokens.WETH.address,
