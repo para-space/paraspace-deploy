@@ -558,15 +558,3 @@ export interface IParaSpaceConfiguration extends ICommonConfiguration {
 }
 
 export type PoolConfiguration = ICommonConfiguration | IParaSpaceConfiguration;
-
-export enum XTokenType {
-  NoneType, // unused
-  NToken,
-  NTokenMoonBirds,
-  NTokenUniswapV3,
-  PToken,
-  DelegationAwarePToken,
-  RebasingPToken,
-  PTokenAToken,
-  PTokenStETH,
-}
