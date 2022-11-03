@@ -16,8 +16,6 @@ import {
   configureReservesByHelper,
   initReservesByHelper,
 } from "../../../../helpers/init-helpers";
-
-import {tEthereumAddress} from "../../../../helpers/types";
 import {
   getParaSpaceConfig,
   isLocalTestnet,
