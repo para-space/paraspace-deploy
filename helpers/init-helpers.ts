@@ -387,6 +387,7 @@ export const configureReservesByHelper = async (
   const inputParams: {
     asset: string;
     baseLTV: BigNumberish;
+    liquidationProtocolFeePercentage: BigNumberish;
     liquidationThreshold: BigNumberish;
     liquidationBonus: BigNumberish;
     reserveFactor: BigNumberish;
@@ -400,6 +401,7 @@ export const configureReservesByHelper = async (
     {
       baseLTVAsCollateral,
       liquidationBonus,
+      liquidationProtocolFeePercentage,
       liquidationThreshold,
       reserveFactor,
       borrowCap,
@@ -435,6 +437,7 @@ export const configureReservesByHelper = async (
     inputParams.push({
       asset: tokenAddress,
       baseLTV: baseLTVAsCollateral,
+      liquidationProtocolFeePercentage,
       liquidationThreshold,
       liquidationBonus,
       reserveFactor,

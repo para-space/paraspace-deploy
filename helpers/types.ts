@@ -451,6 +451,7 @@ export interface IReserveBorrowParams {
 
 export interface IReserveCollateralParams {
   baseLTVAsCollateral: string;
+  liquidationProtocolFeePercentage: string;
   liquidationThreshold: string;
   liquidationBonus: string;
 }
