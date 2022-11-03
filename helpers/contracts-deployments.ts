@@ -10,6 +10,7 @@ import {
   AuctionLogic__factory,
   MintableERC20,
   MintableERC721,
+  MockNToken__factory,
   MockReserveAuctionStrategy__factory,
   NFTFloorOracle__factory,
   ParaProxy__factory,
@@ -970,6 +971,36 @@ export const deployMockVariableDebtToken = async (
     args[1],
     args[2],
     "18",
+    args[3],
+    args[4],
+    args[5]
+  );
+
+  return instance;
+};
+
+export const deployMockNToken = async (
+  args: [
+    tEthereumAddress,
+    tEthereumAddress,
+    tEthereumAddress,
+    string,
+    string,
+    string
+  ],
+  verify?: boolean
+) => {
+  const instance = await withSaveAndVerify(
+    await new MockNToken__factory(await getFirstSigner()).deploy(args[0]),
+    eContractid.MockNToken,
+    [args[0], false],
+    verify
+  );
+
+  await instance.initialize(
+    args[0],
+    args[1],
+    args[2],
     args[3],
     args[4],
     args[5]
