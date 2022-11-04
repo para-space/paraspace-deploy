@@ -2,7 +2,7 @@ import type {Contract, ContractTransaction} from "ethers";
 
 type DecodedTransactionEvent = {
   eventName: string;
-  data: {[key: string | number]: string | number | boolean};
+  data: {[key in string | number]: string | number | boolean};
 };
 
 type EventDecoder = {

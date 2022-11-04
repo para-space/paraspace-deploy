@@ -5,6 +5,23 @@ import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/Pool
 import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
 import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
 
+export enum AssetType {
+  ERC20 = 0,
+  ERC721 = 1,
+}
+
+export enum XTokenType {
+  NoneType = 0,
+  NToken = 1,
+  NTokenMoonBirds = 2,
+  NTokenUniswapV3 = 3,
+  PToken = 4,
+  DelegationAwarePToken = 5,
+  RebasingPToken = 6,
+  PTokenAToken = 7,
+  PTokenStETH = 8,
+}
+
 export interface SymbolMap<T> {
   [symbol: string]: T;
 }
@@ -440,6 +457,7 @@ export interface IReserveBorrowParams {
 
 export interface IReserveCollateralParams {
   baseLTVAsCollateral: string;
+  liquidationProtocolFeePercentage: string;
   liquidationThreshold: string;
   liquidationBonus: string;
 }
@@ -522,7 +540,7 @@ export interface ICommonConfiguration {
   SymbolPrefix: string;
   ProviderId: number;
   AuctionRecoveryHealthFactor: string | number;
-  Mocks: IMocksConfig;
+  Mocks?: IMocksConfig;
   ParaSpaceAdmin: tEthereumAddress | undefined;
   ParaSpaceAdminIndex: number;
   EmergencyAdmin: tEthereumAddress | undefined;
@@ -547,15 +565,3 @@ export interface IParaSpaceConfiguration extends ICommonConfiguration {
 }
 
 export type PoolConfiguration = ICommonConfiguration | IParaSpaceConfiguration;
-
-export enum XTokenType {
-  NoneType, // unused
-  NToken,
-  NTokenMoonBirds,
-  NTokenUniswapV3,
-  PToken,
-  DelegationAwarePToken,
-  RebasingPToken,
-  PTokenAToken,
-  PTokenStETH,
-}

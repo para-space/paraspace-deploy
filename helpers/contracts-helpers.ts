@@ -1,4 +1,4 @@
-import {constants, Contract, Signer, utils} from "ethers";
+import {constants, Contract, Signer, utils, BigNumber} from "ethers";
 import {signTypedData_v4} from "eth-sig-util";
 import {fromRpcSig, ECDSASignature} from "ethereumjs-util";
 import {Fragment, isAddress} from "ethers/lib/utils";
@@ -468,3 +468,15 @@ export const isNotFalsyOrZeroAddress = (
   }
   return isAddress(address) && !isZeroAddress(address);
 };
+
+export const isBorrowing = (conf, id) =>
+  conf
+    .div(BigNumber.from(2).pow(BigNumber.from(id).mul(2)))
+    .and(1)
+    .gt(0);
+
+export const isUsingAsCollateral = (conf, id) =>
+  conf
+    .div(BigNumber.from(2).pow(BigNumber.from(id).mul(2).add(1)))
+    .and(1)
+    .gt(0);
