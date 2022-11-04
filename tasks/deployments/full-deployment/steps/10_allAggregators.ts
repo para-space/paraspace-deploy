@@ -27,7 +27,7 @@ export const step_10 = async (verify = false) => {
     const [allTokenAddresses, allAggregatorsAddresses] =
       await deployAllAggregators(
         nftFloorOracle.address,
-        getParaSpaceConfig().Mocks.AllAssetsInitialPrices,
+        getParaSpaceConfig().Mocks?.AllAssetsInitialPrices,
         verify
       );
 

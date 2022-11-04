@@ -5,6 +5,23 @@ import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/Pool
 import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
 import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
 
+export enum AssetType {
+  ERC20 = 0,
+  ERC721 = 1,
+}
+
+export enum XTokenType {
+  NoneType = 0,
+  NToken = 1,
+  NTokenMoonBirds = 2,
+  NTokenUniswapV3 = 3,
+  PToken = 4,
+  DelegationAwarePToken = 5,
+  RebasingPToken = 6,
+  PTokenAToken = 7,
+  PTokenStETH = 8,
+}
+
 export interface SymbolMap<T> {
   [symbol: string]: T;
 }
@@ -37,6 +54,7 @@ export enum eEthereumNetwork {
   tenderlyMain = "tenderlyMain",
   ganache = "ganache",
   parallel = "parallel",
+  localhost = "localhost",
 }
 
 export enum eContractid {
@@ -160,6 +178,9 @@ export enum eContractid {
   PoolCoreImpl = "PoolCoreImpl",
   PoolMarketplaceImpl = "PoolMarketplaceImpl",
   PoolParametersImpl = "PoolParametersImpl",
+  ApeCoinStaking = "ApeCoinStaking",
+  NTokenBAYC = "NTokenBAYC",
+  NTokenMAYC = "NTOkenMAYC",
 }
 
 /*
@@ -271,7 +292,9 @@ export enum ProtocolErrors {
   LIQUIDATOR_CAN_NOT_BE_SELF = "117", //user can not liquidate himself
   UNIV3_NOT_ALLOWED = "119", //flash claim is not allowed for UniswapV3
   NTOKEN_BALANCE_EXCEEDED = "120", //ntoken balance exceed limit.
-  RESERVE_NOT_ACTIVE_FOR_UNIV3 = "121", //reserve is not active for UniswapV3.
+  ORACLE_PRICE_NOT_READY = "121", //oracle price not ready
+  SET_ORACLE_SOURCE_NOT_ALLOWED = "122", //set oracle source not allowed
+  RESERVE_NOT_ACTIVE_FOR_UNIV3 = "123", //reserve is not active for UniswapV3.
   // SafeCast
   SAFECAST_UINT128_OVERFLOW = "SafeCast: value doesn't fit in 128 bits",
 
@@ -435,6 +458,7 @@ export interface IReserveBorrowParams {
 
 export interface IReserveCollateralParams {
   baseLTVAsCollateral: string;
+  liquidationProtocolFeePercentage: string;
   liquidationThreshold: string;
   liquidationBonus: string;
 }
@@ -517,7 +541,7 @@ export interface ICommonConfiguration {
   SymbolPrefix: string;
   ProviderId: number;
   AuctionRecoveryHealthFactor: string | number;
-  Mocks: IMocksConfig;
+  Mocks?: IMocksConfig;
   ParaSpaceAdmin: tEthereumAddress | undefined;
   ParaSpaceAdminIndex: number;
   EmergencyAdmin: tEthereumAddress | undefined;
@@ -542,15 +566,3 @@ export interface IParaSpaceConfiguration extends ICommonConfiguration {
 }
 
 export type PoolConfiguration = ICommonConfiguration | IParaSpaceConfiguration;
-
-export enum XTokenType {
-  NoneType, // unused
-  NToken,
-  NTokenMoonBirds,
-  NTokenUniswapV3,
-  PToken,
-  DelegationAwarePToken,
-  RebasingPToken,
-  PTokenAToken,
-  PTokenStETH,
-}

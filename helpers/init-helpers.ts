@@ -7,15 +7,19 @@ import {
   tEthereumAddress,
 } from "./types";
 import {ProtocolDataProvider} from "../../types";
-import {chunk, waitForTx} from "./misc-utils";
+import {chunk, isLocalTestnet, isPublicTestnet, waitForTx} from "./misc-utils";
 import {
   getACLManager,
   getReservesSetupHelper,
   getPoolAddressesProvider,
   getPoolConfiguratorProxy,
   getPoolProxy,
+  getAllTokens,
 } from "./contracts-getters";
-import {insertContractAddressInDb} from "./contracts-helpers";
+import {
+  convertToCurrencyDecimals,
+  insertContractAddressInDb,
+} from "./contracts-helpers";
 import {BigNumber, BigNumberish} from "ethers";
 import {
   deployReserveInterestRateStrategy,
@@ -28,6 +32,9 @@ import {
   deployReserveAuctionStrategy,
   deployPTokenStETH,
   deployPTokenAToken,
+  deployApeCoinStaking,
+  deployBAYCNTokenImpl,
+  deployMAYCNTokenImpl,
 } from "./contracts-deployments";
 import {ZERO_ADDRESS} from "./constants";
 
@@ -103,6 +110,7 @@ export const initReservesByHelper = async (
   let nTokenMoonBirdImplementationAddress = "";
   let nTokenUniSwapV3ImplementationAddress = "";
   let variableDebtTokenImplementationAddress = "";
+  let apeCoinStakingAddress = "";
 
   if (!genericVariableDebtTokenAddress) {
     variableDebtTokenImplementationAddress = await (
@@ -136,6 +144,39 @@ export const initReservesByHelper = async (
     pool.address,
     verify
   );
+
+  if (isLocalTestnet() || isPublicTestnet()) {
+    const allTokens = await getAllTokens();
+    const apeCoinStaking = await deployApeCoinStaking([
+      allTokens.APE.address,
+      allTokens.BAYC.address,
+      allTokens.MAYC.address,
+      ZERO_ADDRESS,
+    ]);
+    const amount = await convertToCurrencyDecimals(
+      allTokens.APE.address,
+      "100000000000000000000"
+    );
+
+    await apeCoinStaking.addTimeRange(
+      1,
+      amount,
+      "1666771200",
+      "1761465600",
+      amount
+    );
+    await apeCoinStaking.addTimeRange(
+      2,
+      amount,
+      "1666771200",
+      "1761465600",
+      amount
+    );
+
+    apeCoinStakingAddress = apeCoinStaking.address;
+  } else {
+    // apeCoinStakingAddress = APE COIN STAKING MAINNET CONtRACT ADDRESS
+  }
 
   const nTokenUniSwapV3 = await deployUniswapV3NTokenImpl(pool.address, verify);
 
@@ -303,6 +344,20 @@ export const initReservesByHelper = async (
       } else if (reserveSymbols[i] === ERC721TokenContractId.UniswapV3) {
         console.log("IS UniSwapV3");
         xTokenToUse = nTokenUniSwapV3ImplementationAddress;
+      } else if (reserveSymbols[i] === ERC721TokenContractId.BAYC) {
+        console.log("IS BAYC");
+        const nTokenBAYC = await deployBAYCNTokenImpl(
+          apeCoinStakingAddress,
+          pool.address
+        );
+        xTokenToUse = nTokenBAYC.address;
+      } else if (reserveSymbols[i] === ERC721TokenContractId.MAYC) {
+        console.log("IS MAYC");
+        const nTokenMAYC = await deployMAYCNTokenImpl(
+          apeCoinStakingAddress,
+          pool.address
+        );
+        xTokenToUse = nTokenMAYC.address;
       } else {
         console.log("IS", reserveSymbols[i]);
         xTokenToUse = nTokenImplementationAddress;
@@ -387,6 +442,7 @@ export const configureReservesByHelper = async (
   const inputParams: {
     asset: string;
     baseLTV: BigNumberish;
+    liquidationProtocolFeePercentage: BigNumberish;
     liquidationThreshold: BigNumberish;
     liquidationBonus: BigNumberish;
     reserveFactor: BigNumberish;
@@ -400,6 +456,7 @@ export const configureReservesByHelper = async (
     {
       baseLTVAsCollateral,
       liquidationBonus,
+      liquidationProtocolFeePercentage,
       liquidationThreshold,
       reserveFactor,
       borrowCap,
@@ -435,6 +492,7 @@ export const configureReservesByHelper = async (
     inputParams.push({
       asset: tokenAddress,
       baseLTV: baseLTVAsCollateral,
+      liquidationProtocolFeePercentage,
       liquidationThreshold,
       liquidationBonus,
       reserveFactor,
