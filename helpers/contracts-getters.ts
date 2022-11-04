@@ -58,6 +58,9 @@ import {
   MockAirdropProject__factory,
   IPool__factory,
   MockReserveAuctionStrategy__factory,
+  NTokenBAYC__factory,
+  NTokenMAYC__factory,
+  ApeCoinStaking__factory,
 } from "../../types";
 import {
   getEthersSigners,
@@ -879,6 +882,39 @@ export const getMockReserveAuctionStrategy = async (
       (
         await getDb()
           .get(`${eContractid.MockReserveAuctionStrategy}.${DRE.network.name}`)
+          .value()
+      ).address,
+    await getFirstSigner()
+  );
+
+export const getNTokenBAYC = async (address?: tEthereumAddress) =>
+  await NTokenBAYC__factory.connect(
+    address ||
+      (
+        await getDb()
+          .get(`${eContractid.NTokenImpl}.${DRE.network.name}`)
+          .value()
+      ).address,
+    await getFirstSigner()
+  );
+
+export const getNTokenMAYC = async (address?: tEthereumAddress) =>
+  await NTokenMAYC__factory.connect(
+    address ||
+      (
+        await getDb()
+          .get(`${eContractid.NTokenImpl}.${DRE.network.name}`)
+          .value()
+      ).address,
+    await getFirstSigner()
+  );
+
+export const getApeCoinStaking = async (address?: tEthereumAddress) =>
+  await ApeCoinStaking__factory.connect(
+    address ||
+      (
+        await getDb()
+          .get(`${eContractid.ApeCoinStaking}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()
