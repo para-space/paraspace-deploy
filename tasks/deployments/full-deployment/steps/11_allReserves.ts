@@ -1,6 +1,5 @@
 import {ZERO_ADDRESS} from "../../../../helpers/constants";
 import {
-  deployApeCoinStaking,
   deployMockIncentivesController,
   deployMockReserveAuctionStrategy,
 } from "../../../../helpers/contracts-deployments";
