@@ -294,6 +294,7 @@ export enum ProtocolErrors {
   NTOKEN_BALANCE_EXCEEDED = "120", //ntoken balance exceed limit.
   ORACLE_PRICE_NOT_READY = "121", //oracle price not ready
   SET_ORACLE_SOURCE_NOT_ALLOWED = "122", //set oracle source not allowed
+  RESERVE_NOT_ACTIVE_FOR_UNIV3 = "123", //reserve is not active for UniswapV3.
   // SafeCast
   SAFECAST_UINT128_OVERFLOW = "SafeCast: value doesn't fit in 128 bits",
 
