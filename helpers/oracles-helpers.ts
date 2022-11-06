@@ -54,9 +54,6 @@ export const deployAllAggregators = async (
   const addressesProvider = await getPoolAddressesProvider();
   const chainlinkConfig = getParaSpaceConfig().Chainlink;
   for (const tokenSymbol of Object.keys(tokens)) {
-    if (tokenSymbol === ERC20TokenContractId.WETH) {
-      continue;
-    }
     if (tokenSymbol === ERC721TokenContractId.UniswapV3) {
       const univ3Factory = await getUniswapV3Factory();
       const univ3Token = await tokens[ERC721TokenContractId.UniswapV3];

@@ -3,6 +3,7 @@ import {
   deployParaSpaceOracle,
   deployProtocolDataProvider,
   deployUiPoolDataProvider,
+  deployWalletBalanceProvider,
 } from "../../../../helpers/contracts-deployments";
 import {
   getAllTokens,
@@ -60,10 +61,11 @@ export const step_10 = async (verify = false) => {
     );
 
     await deployUiPoolDataProvider(
-      allAggregatorsAddresses[ERC20TokenContractId.USDT],
-      allAggregatorsAddresses[ERC20TokenContractId.USDC],
+      allAggregatorsAddresses[ERC20TokenContractId.WETH],
+      allAggregatorsAddresses[ERC20TokenContractId.WETH],
       verify
     );
+    await deployWalletBalanceProvider(verify);
   } catch (error) {
     console.error(error);
     process.exit(1);

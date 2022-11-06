@@ -503,7 +503,7 @@ export interface IMarketplaceConfig {
 }
 
 export interface IChainlinkConfig {
-  ETH?: tEthereumAddress;
+  WETH?: tEthereumAddress;
   DAI?: tEthereumAddress;
   USDC?: tEthereumAddress;
   USDT?: tEthereumAddress;

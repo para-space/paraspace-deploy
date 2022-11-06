@@ -102,7 +102,8 @@ export const GoerliParaSpaceConfig: IParaSpaceConfiguration = {
   ParaSpaceTeam: "0x03D10cda221C2faA9F5CA22087654011ceE1802D",
   Treasury: "0x03D10cda221C2faA9F5CA22087654011ceE1802D",
   Tokens: {
-    WETH: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
+    WETH: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+    UniswapV3: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
   },
   BendDAO: {},
   Uniswap: {
@@ -115,7 +116,7 @@ export const GoerliParaSpaceConfig: IParaSpaceConfiguration = {
     Seaport: "0x00000000006c3852cbEf3e08E8dF289169EdE581",
   },
   Chainlink: {
-    ETH: "0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e",
+    WETH: "0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e",
   },
   // RESERVE ASSETS - CONFIG, ASSETS, BORROW RATES,
   ReservesConfig: {
@@ -162,6 +163,7 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     AZUKI: "0xed5af388653567af2f388e6224dc7c4b3241c544",
     OTHR: "0x34d85c9cdeb23fa97cb08333b511ac86e1c4e258",
     CLONEX: "0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b",
+    UniswapV3: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
   },
   BendDAO: {
     Oracle: "0x7c2a19e54e48718f6c60908a9cff3396e4ea1eba",
@@ -176,7 +178,7 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     Seaport: "0x00000000006c3852cbEf3e08E8dF289169EdE581",
   },
   Chainlink: {
-    ETH: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
+    WETH: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
     DAI: "0x773616E4d11A78F511299002da57A0a94577F1f4",
     USDC: "0x986b5E1e1755e3C2440e960477f25201B0a8bbD4",
     USDT: "0xEe9F2375b4bdF6387aa8265dD4FB8F16512A1d46",

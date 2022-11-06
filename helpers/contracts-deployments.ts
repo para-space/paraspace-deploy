@@ -18,8 +18,14 @@ import {
 } from "../../types";
 import {StETH, MockAToken} from "../../types";
 import {MockContract} from "ethereum-waffle";
-import {getFirstSigner, getWETHMocked} from "./contracts-getters";
 import {
+  getAllERC20Tokens,
+  getCryptoPunksMarket,
+  getFirstSigner,
+  getWETHMocked,
+} from "./contracts-getters";
+import {
+  convertToCurrencyDecimals,
   getEthersSignersAddresses,
   getFunctionSignatures,
 } from "./contracts-helpers";
@@ -137,6 +143,7 @@ import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/Pool
 import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
 import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
 import {pick} from "lodash";
+import {ZERO_ADDRESS} from "./constants";
 
 const readArtifact = async (id: string) => {
   return (DRE as HardhatRuntimeEnvironment).artifacts.readArtifact(id);
@@ -816,6 +823,7 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
 };
 
 export const deployAllERC721Tokens = async (verify?: boolean) => {
+  const erc20Tokens = await getAllERC20Tokens();
   const tokens: {
     [symbol: string]:
       | MockContract
@@ -832,7 +840,8 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
       | Moonbirds
       | Contract;
   } = {};
-  const protoConfigData = getParaSpaceConfig().ReservesConfig;
+  const paraSpaceConfig = getParaSpaceConfig();
+  const protoConfigData = paraSpaceConfig.ReservesConfig;
 
   for (const tokenSymbol of Object.keys(ERC721TokenContractId)) {
     const db = getDb();
@@ -845,9 +854,16 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
     if (contractAddress) {
       console.log("contract address is already in db ", tokenSymbol);
       continue;
-    } else if (getParaSpaceConfig().Tokens[tokenSymbol]) {
+    } else if (paraSpaceConfig.Tokens[tokenSymbol]) {
       console.log("contract address is already onchain ", tokenSymbol);
       insertContractAddressInDb(tokenSymbol, configData?.address, false);
+      if (tokenSymbol === ERC721TokenContractId.UniswapV3) {
+        insertContractAddressInDb(
+          eContractid.UniswapV3Factory,
+          paraSpaceConfig.Uniswap.V3Factory!,
+          false
+        );
+      }
       continue;
     } else {
       console.log("deploying now ", tokenSymbol);
@@ -863,17 +879,102 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
         continue;
       }
 
+      if (tokenSymbol === ERC721TokenContractId.BAYC) {
+        tokens[tokenSymbol] = await deployBAYC(
+          [tokenSymbol, tokenSymbol, "8000", "0"],
+          verify
+        );
+        continue;
+      }
+
+      if (tokenSymbol === ERC721TokenContractId.MAYC) {
+        tokens[tokenSymbol] = await deployMAYC(
+          [tokenSymbol, tokenSymbol, ZERO_ADDRESS, ZERO_ADDRESS],
+          verify
+        );
+        const apeCoinStaking = await deployApeCoinStaking([
+          erc20Tokens.APE.address,
+          tokens.BAYC.address,
+          tokens.MAYC.address,
+          ZERO_ADDRESS,
+        ]);
+        const amount = await convertToCurrencyDecimals(
+          erc20Tokens.APE.address,
+          "100000000000000000000"
+        );
+
+        await apeCoinStaking.addTimeRange(
+          1,
+          amount,
+          "1666771200",
+          "1761465600",
+          amount
+        );
+        await apeCoinStaking.addTimeRange(
+          2,
+          amount,
+          "1666771200",
+          "1761465600",
+          amount
+        );
+        continue;
+      }
+
+      if (tokenSymbol === ERC721TokenContractId.DOODLE) {
+        tokens[tokenSymbol] = await deployDoodle([], verify);
+        continue;
+      }
+
+      if (tokenSymbol === ERC721TokenContractId.AZUKI) {
+        tokens[tokenSymbol] = await deployAzuki([5, 10000, 8900, 200], verify);
+        continue;
+      }
+
+      if (tokenSymbol === ERC721TokenContractId.CLONEX) {
+        tokens[tokenSymbol] = await deployCloneX([], verify);
+        continue;
+      }
+
+      if (tokenSymbol === ERC721TokenContractId.MEEBITS) {
+        const punks = await getCryptoPunksMarket();
+        tokens[tokenSymbol] = await deployMeebits(
+          [punks.address, ZERO_ADDRESS, paraSpaceConfig.ParaSpaceTeam],
+          verify
+        );
+        continue;
+      }
+
+      if (tokenSymbol === ERC721TokenContractId.OTHR) {
+        tokens[tokenSymbol] = await deployOTHR(
+          [
+            "OTHR",
+            "OTHR",
+            [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS],
+            [10, 100, 1000, 10000],
+            [[paraSpaceConfig.ParaSpaceTeam, 100]],
+            paraSpaceConfig.ParaSpaceTeam,
+            paraSpaceConfig.ParaSpaceTeam,
+            "0x63616e6469646174653100000000000000000000000000000000000000000000",
+            5,
+            paraSpaceConfig.ParaSpaceTeam,
+          ],
+          verify
+        );
+        continue;
+      }
+
       if (tokenSymbol === ERC721TokenContractId.MOONBIRD) {
         tokens[tokenSymbol] = await deployMoonbirds(
           [
             "MOON",
             "MOON",
             "0x0000000000000000000000000000000000000000",
-            getParaSpaceConfig().ParaSpaceTeam,
-            getParaSpaceConfig().ParaSpaceTeam,
+            paraSpaceConfig.ParaSpaceTeam,
+            paraSpaceConfig.ParaSpaceTeam,
           ],
           verify
         );
+        await (tokens[tokenSymbol] as Moonbirds).setNestingOpen(true);
         continue;
       }
 
@@ -888,7 +989,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
             ],
             verify
           );
-        const factory = await deployUniswapV3([], verify);
+        const factory = await deployUniswapV3Factory([], verify);
         await deployUniswapSwapRouter([factory.address, weth.address], verify);
         const nonfungiblePositionManager =
           await deployNonfungiblePositionManager(
@@ -1660,7 +1761,7 @@ export const deployERC721Delegate = async (verify?: boolean) =>
     verify
   );
 
-export const deployUniswapV3 = async (args: [], verify?: boolean) => {
+export const deployUniswapV3Factory = async (args: [], verify?: boolean) => {
   const uniswapV3Factory = await new UniswapV3Factory__factory(
     await getFirstSigner()
   ).deploy(...args);
