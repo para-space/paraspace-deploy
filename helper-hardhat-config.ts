@@ -50,13 +50,13 @@ export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
 };
 
 export const BLOCK_TO_FORK: iParamsPerNetwork<number | undefined> = {
-  [eEthereumNetwork.mainnet]: 12406069,
+  [eEthereumNetwork.mainnet]: 15909885,
   [eEthereumNetwork.kovan]: undefined,
   [eEthereumNetwork.ropsten]: undefined,
-  [eEthereumNetwork.goerli]: undefined,
+  [eEthereumNetwork.goerli]: 7901881,
   [eEthereumNetwork.coverage]: undefined,
   [eEthereumNetwork.hardhat]: undefined,
   [eEthereumNetwork.ganache]: undefined,
   [eEthereumNetwork.parallel]: undefined,
-  [eEthereumNetwork.tenderlyMain]: 12406069,
+  [eEthereumNetwork.tenderlyMain]: 15909885,
 };
