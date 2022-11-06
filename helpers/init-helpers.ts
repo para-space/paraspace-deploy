@@ -7,20 +7,16 @@ import {
   tEthereumAddress,
 } from "./types";
 import {ProtocolDataProvider} from "../../types";
-import {chunk, isLocalTestnet, isPublicTestnet, waitForTx} from "./misc-utils";
+import {chunk, waitForTx} from "./misc-utils";
 import {
   getACLManager,
   getReservesSetupHelper,
   getPoolAddressesProvider,
   getPoolConfiguratorProxy,
   getPoolProxy,
-  getAllTokens,
   getApeCoinStaking,
 } from "./contracts-getters";
-import {
-  convertToCurrencyDecimals,
-  insertContractAddressInDb,
-} from "./contracts-helpers";
+import {insertContractAddressInDb} from "./contracts-helpers";
 import {BigNumber, BigNumberish} from "ethers";
 import {
   deployReserveInterestRateStrategy,
@@ -33,7 +29,6 @@ import {
   deployReserveAuctionStrategy,
   deployPTokenStETH,
   deployPTokenAToken,
-  deployApeCoinStaking,
   deployBAYCNTokenImpl,
   deployMAYCNTokenImpl,
 } from "./contracts-deployments";
