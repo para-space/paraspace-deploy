@@ -130,7 +130,6 @@ export enum eContractid {
   RewardsController = "RewardsController",
   PCV = "PCV",
   MockTokenFaucet = "MockTokenFaucet",
-  FallbackOracle = "FallbackOracle",
   BoredApeYachtClub = "BAYC",
   MutantApeYachtClub = "MAYC",
   Doodles = "DOODLE",

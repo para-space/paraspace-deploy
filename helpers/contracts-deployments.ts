@@ -1523,7 +1523,7 @@ export const deployParaSpaceFallbackOracle = async (
 
   return withSaveAndVerify(
     omnoFallBackOracle,
-    eContractid.FallbackOracle,
+    eContractid.PriceOracle,
     [...args],
     verify
   );
