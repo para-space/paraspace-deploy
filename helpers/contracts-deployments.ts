@@ -787,7 +787,11 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
       continue;
     } else if (getParaSpaceConfig().Tokens[tokenSymbol]) {
       console.log("contract address is already onchain ", tokenSymbol);
-      insertContractAddressInDb(tokenSymbol, configData?.address, false);
+      insertContractAddressInDb(
+        tokenSymbol,
+        getParaSpaceConfig().Tokens[tokenSymbol],
+        false
+      );
       continue;
     } else {
       console.log("deploying now ", tokenSymbol);
@@ -841,14 +845,12 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
       | Contract;
   } = {};
   const paraSpaceConfig = getParaSpaceConfig();
-  const protoConfigData = paraSpaceConfig.ReservesConfig;
 
   for (const tokenSymbol of Object.keys(ERC721TokenContractId)) {
     const db = getDb();
     const contractAddress = db
       .get(`${tokenSymbol}.${DRE.network.name}`)
       .value()?.address;
-    const configData = protoConfigData[tokenSymbol];
 
     // if contract address is already in db, then skip to next tokenSymbol
     if (contractAddress) {
@@ -856,7 +858,11 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
       continue;
     } else if (paraSpaceConfig.Tokens[tokenSymbol]) {
       console.log("contract address is already onchain ", tokenSymbol);
-      insertContractAddressInDb(tokenSymbol, configData?.address, false);
+      insertContractAddressInDb(
+        tokenSymbol,
+        paraSpaceConfig.Tokens[tokenSymbol],
+        false
+      );
       if (tokenSymbol === ERC721TokenContractId.UniswapV3) {
         insertContractAddressInDb(
           eContractid.UniswapV3Factory,
