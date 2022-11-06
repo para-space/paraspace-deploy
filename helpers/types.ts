@@ -79,7 +79,7 @@ export enum eContractid {
   ConfiguratorLogic = "ConfiguratorLogic",
   PoolProxy = "PoolProxy",
   PriceOracle = "PriceOracle",
-  MockAggregator = "MockAggregator",
+  Aggregator = "Aggregator",
   ParaSpaceOracle = "ParaSpaceOracle",
   DefaultReserveInterestRateStrategy = "DefaultReserveInterestRateStrategy",
   DefaultReserveAuctionStrategy = "DefaultReserveAuctionStrategy",
@@ -130,7 +130,6 @@ export enum eContractid {
   RewardsController = "RewardsController",
   PCV = "PCV",
   MockTokenFaucet = "MockTokenFaucet",
-  FallbackOracle = "FallbackOracle",
   BoredApeYachtClub = "BAYC",
   MutantApeYachtClub = "MAYC",
   Doodles = "DOODLE",
@@ -503,7 +502,7 @@ export interface IMarketplaceConfig {
 }
 
 export interface IChainlinkConfig {
-  ETH?: tEthereumAddress;
+  WETH?: tEthereumAddress;
   DAI?: tEthereumAddress;
   USDC?: tEthereumAddress;
   USDT?: tEthereumAddress;

@@ -34,8 +34,8 @@ export const step_09 = async (verify = false) => {
         Object.values(erc721Tokens).map((x) => x.address),
         verify
       );
-      insertContractAddressInDb(
-        eContractid.FallbackOracle,
+      await insertContractAddressInDb(
+        eContractid.PriceOracle,
         ZERO_ADDRESS,
         false
       );

@@ -3,6 +3,7 @@ import {
   deployParaSpaceOracle,
   deployProtocolDataProvider,
   deployUiPoolDataProvider,
+  deployWalletBalanceProvider,
 } from "../../../../helpers/contracts-deployments";
 import {
   getAllTokens,
@@ -23,6 +24,7 @@ export const step_10 = async (verify = false) => {
     const addressesProvider = await getPoolAddressesProvider();
     const nftFloorOracle = await getNFTFloorOracle();
     const fallbackOracle = await getPriceOracle();
+    const chainlinkConfig = getParaSpaceConfig().Chainlink;
 
     const [allTokenAddresses, allAggregatorsAddresses] =
       await deployAllAggregators(
@@ -60,10 +62,13 @@ export const step_10 = async (verify = false) => {
     );
 
     await deployUiPoolDataProvider(
-      allAggregatorsAddresses[ERC20TokenContractId.USDT],
-      allAggregatorsAddresses[ERC20TokenContractId.USDC],
+      (chainlinkConfig.WETH ||
+        allAggregatorsAddresses[ERC20TokenContractId.USDT])!,
+      (chainlinkConfig.WETH ||
+        allAggregatorsAddresses[ERC20TokenContractId.USDC])!,
       verify
     );
+    await deployWalletBalanceProvider(verify);
   } catch (error) {
     console.error(error);
     process.exit(1);

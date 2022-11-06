@@ -506,7 +506,7 @@ export const getMockInitializableImpleV2 = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-export const getMockAggregator = async (
+export const getAggregator = async (
   address?: tEthereumAddress,
   symbol?: string
 ) =>
@@ -514,7 +514,7 @@ export const getMockAggregator = async (
     address ||
       (
         await getDb()
-          .get(`${eContractid.MockAggregator}.${symbol}.${DRE.network.name}`)
+          .get(`${eContractid.Aggregator}.${symbol}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()
@@ -631,7 +631,11 @@ export const getUniswapV3OracleWrapper = async (address?: tEthereumAddress) => {
     address ||
       (
         await getDb()
-          .get(`${eContractid.UniswapV3OracleWrapper}.${DRE.network.name}`)
+          .get(
+            `${eContractid.Aggregator.concat(`.${eContractid.UniswapV3}`)}.${
+              DRE.network.name
+            }`
+          )
           .value()
       ).address,
     await getFirstSigner()
