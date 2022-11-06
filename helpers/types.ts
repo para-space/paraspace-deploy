@@ -79,7 +79,7 @@ export enum eContractid {
   ConfiguratorLogic = "ConfiguratorLogic",
   PoolProxy = "PoolProxy",
   PriceOracle = "PriceOracle",
-  MockAggregator = "MockAggregator",
+  Aggregator = "Aggregator",
   ParaSpaceOracle = "ParaSpaceOracle",
   DefaultReserveInterestRateStrategy = "DefaultReserveInterestRateStrategy",
   DefaultReserveAuctionStrategy = "DefaultReserveAuctionStrategy",

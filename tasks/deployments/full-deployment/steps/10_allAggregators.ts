@@ -24,6 +24,7 @@ export const step_10 = async (verify = false) => {
     const addressesProvider = await getPoolAddressesProvider();
     const nftFloorOracle = await getNFTFloorOracle();
     const fallbackOracle = await getPriceOracle();
+    const chainlinkConfig = getParaSpaceConfig().Chainlink;
 
     const [allTokenAddresses, allAggregatorsAddresses] =
       await deployAllAggregators(
@@ -61,8 +62,10 @@ export const step_10 = async (verify = false) => {
     );
 
     await deployUiPoolDataProvider(
-      allAggregatorsAddresses[ERC20TokenContractId.WETH],
-      allAggregatorsAddresses[ERC20TokenContractId.WETH],
+      (chainlinkConfig.WETH ||
+        allAggregatorsAddresses[ERC20TokenContractId.USDT])!,
+      (chainlinkConfig.WETH ||
+        allAggregatorsAddresses[ERC20TokenContractId.USDC])!,
       verify
     );
     await deployWalletBalanceProvider(verify);

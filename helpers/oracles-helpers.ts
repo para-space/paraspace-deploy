@@ -7,13 +7,13 @@ import {
 } from "./types";
 import {
   ERC721OracleWrapper,
+  MockAggregator,
   PriceOracle,
   UniswapV3OracleWrapper,
 } from "../../types";
-import {MockAggregator} from "../../types";
 import {
   deployERC721OracleWrapper,
-  deployMockAggregator,
+  deployAggregator,
   deployUniswapV3OracleWrapper,
 } from "./contracts-deployments";
 import {getParaSpaceConfig, waitForTx} from "./misc-utils";
@@ -54,6 +54,9 @@ export const deployAllAggregators = async (
   const addressesProvider = await getPoolAddressesProvider();
   const chainlinkConfig = getParaSpaceConfig().Chainlink;
   for (const tokenSymbol of Object.keys(tokens)) {
+    if (tokenSymbol === ERC20TokenContractId.WETH) {
+      continue;
+    }
     if (tokenSymbol === ERC721TokenContractId.UniswapV3) {
       const univ3Factory = await getUniswapV3Factory();
       const univ3Token = await tokens[ERC721TokenContractId.UniswapV3];
@@ -72,10 +75,11 @@ export const deployAllAggregators = async (
         addressesProvider.address,
         nftFloorOracle,
         tokens[tokenSymbol].address,
+        tokenSymbol,
         verify
       );
     } else if (initialPrices[tokenSymbol]) {
-      aggregators[tokenSymbol] = await deployMockAggregator(
+      aggregators[tokenSymbol] = await deployAggregator(
         tokenSymbol,
         initialPrices[tokenSymbol],
         verify

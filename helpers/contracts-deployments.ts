@@ -466,14 +466,14 @@ export const deployPriceOracle = async (verify?: boolean) =>
     verify
   );
 
-export const deployMockAggregator = async (
+export const deployAggregator = async (
   symbol: string,
   price: tStringTokenSmallUnits,
   verify?: boolean
 ) =>
   withSaveAndVerify(
     await new MockAggregator__factory(await getFirstSigner()).deploy(price),
-    eContractid.MockAggregator.concat(`.${symbol}`),
+    eContractid.Aggregator.concat(`.${symbol}`),
     [price],
     verify
   );
@@ -1380,6 +1380,7 @@ export const deployERC721OracleWrapper = async (
   addressesProvider: string,
   oracleAddress: string,
   asset: string,
+  symbol: string,
   verify?: boolean
 ) =>
   withSaveAndVerify(
@@ -1388,7 +1389,7 @@ export const deployERC721OracleWrapper = async (
       oracleAddress,
       asset
     ),
-    eContractid.ERC721OracleWrapper,
+    eContractid.Aggregator.concat(`.${symbol}`),
     [addressesProvider, oracleAddress, asset],
     verify
   );
@@ -1833,7 +1834,7 @@ export const deployUniswapV3OracleWrapper = async (
       manager,
       addressProvider
     ),
-    eContractid.UniswapV3OracleWrapper,
+    eContractid.Aggregator.concat(`.${eContractid.UniswapV3}`),
     [factory, manager, addressProvider],
     verify
   );
