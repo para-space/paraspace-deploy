@@ -892,12 +892,15 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
           [tokenSymbol, tokenSymbol, ZERO_ADDRESS, ZERO_ADDRESS],
           verify
         );
-        const apeCoinStaking = await deployApeCoinStaking([
-          erc20Tokens.APE.address,
-          tokens.BAYC.address,
-          tokens.MAYC.address,
-          ZERO_ADDRESS,
-        ]);
+        const apeCoinStaking = await deployApeCoinStaking(
+          [
+            erc20Tokens.APE.address,
+            tokens.BAYC.address,
+            tokens.MAYC.address,
+            ZERO_ADDRESS,
+          ],
+          verify
+        );
         const amount = await convertToCurrencyDecimals(
           erc20Tokens.APE.address,
           "100000000000000000000"
