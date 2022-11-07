@@ -113,6 +113,7 @@ export const initReservesByHelper = async (
     variableDebtTokenImplementationAddress = await (
       await deployGenericVariableDebtToken(pool.address, verify)
     ).address;
+    genericVariableDebtTokenAddress = variableDebtTokenImplementationAddress;
   } else {
     variableDebtTokenImplementationAddress = genericVariableDebtTokenAddress;
   }
@@ -296,14 +297,18 @@ export const initReservesByHelper = async (
     if (xTokenType[reserveSymbols[i]] === "generic") {
       if (reserveSymbols[i] === ERC20TokenContractId.stETH) {
         xTokenToUse = (await deployPTokenStETH(pool.address, verify)).address;
-        const debtToken = await deployStETHDebtToken(pool.address, verify);
-        variableDebtTokenImplementationAddress = debtToken.address;
+        variableDebtTokenImplementationAddress = (
+          await deployStETHDebtToken(pool.address, verify)
+        ).address;
       } else if (reserveSymbols[i] === ERC20TokenContractId.aWETH) {
         xTokenToUse = (await deployPTokenAToken(pool.address, verify)).address;
-        const debtToken = await deployATokenDebtToken(pool.address, verify);
-        variableDebtTokenImplementationAddress = debtToken.address;
+        variableDebtTokenImplementationAddress = (
+          await deployATokenDebtToken(pool.address, verify)
+        ).address;
       } else {
         xTokenToUse = pTokenImplementationAddress;
+        variableDebtTokenImplementationAddress =
+          genericVariableDebtTokenAddress;
       }
     } else if (xTokenType[reserveSymbols[i]] === "nft") {
       if (reserveSymbols[i] === ERC721TokenContractId.MOONBIRD) {
