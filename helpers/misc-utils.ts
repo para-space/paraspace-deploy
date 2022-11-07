@@ -113,7 +113,7 @@ export const mine = async () => {
   await DRE.network.provider.send("evm_mine", []);
 };
 
-export const waitForTx = async (tx: ContractTransaction) => await tx.wait(1);
+export const waitForTx = async (tx: ContractTransaction) => await tx.wait();
 
 export const chunk = <T>(arr: Array<T>, chunkSize: number): Array<Array<T>> => {
   return arr.reduce(
