@@ -180,6 +180,8 @@ export enum eContractid {
   ApeCoinStaking = "ApeCoinStaking",
   NTokenBAYC = "NTokenBAYC",
   NTokenMAYC = "NTOkenMAYC",
+  ATokenDebtToken = "ATokenDebtToken",
+  StETHDebtToken = "StETHDebtToken",
 }
 
 /*

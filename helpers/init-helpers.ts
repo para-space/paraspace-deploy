@@ -31,6 +31,8 @@ import {
   deployPTokenAToken,
   deployBAYCNTokenImpl,
   deployMAYCNTokenImpl,
+  deployATokenDebtToken,
+  deployStETHDebtToken,
 } from "./contracts-deployments";
 import {ZERO_ADDRESS} from "./constants";
 
@@ -294,8 +296,12 @@ export const initReservesByHelper = async (
     if (xTokenType[reserveSymbols[i]] === "generic") {
       if (reserveSymbols[i] === ERC20TokenContractId.stETH) {
         xTokenToUse = (await deployPTokenStETH(pool.address, verify)).address;
+        const debtToken = await deployStETHDebtToken(pool.address, verify);
+        variableDebtTokenImplementationAddress = debtToken.address;
       } else if (reserveSymbols[i] === ERC20TokenContractId.aWETH) {
         xTokenToUse = (await deployPTokenAToken(pool.address, verify)).address;
+        const debtToken = await deployATokenDebtToken(pool.address, verify);
+        variableDebtTokenImplementationAddress = debtToken.address;
       } else {
         xTokenToUse = pTokenImplementationAddress;
       }
