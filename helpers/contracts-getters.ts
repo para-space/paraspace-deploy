@@ -398,12 +398,12 @@ export const getReservesSetupHelper = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-export const getWETHMocked = async (address?: tEthereumAddress) =>
+export const getWETH = async (address?: tEthereumAddress) =>
   await WETH9Mocked__factory.connect(
     address ||
       (
         await getDb()
-          .get(`${eContractid.WETHMocked}.${DRE.network.name}`)
+          .get(`${eContractid.WETH}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()
