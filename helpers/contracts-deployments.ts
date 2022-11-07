@@ -22,7 +22,7 @@ import {
   getAllERC20Tokens,
   getCryptoPunksMarket,
   getFirstSigner,
-  getWETHMocked,
+  getWETH,
 } from "./contracts-getters";
 import {
   convertToCurrencyDecimals,
@@ -796,7 +796,7 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
     } else {
       console.log("deploying now ", tokenSymbol);
       if (tokenSymbol === ERC20TokenContractId.WETH) {
-        tokens[tokenSymbol] = await deployWETHMocked(verify);
+        tokens[tokenSymbol] = await deployWETH(verify);
         continue;
       }
 
@@ -988,7 +988,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
       }
 
       if (tokenSymbol === ERC721TokenContractId.UniswapV3) {
-        const weth = await getWETHMocked();
+        const weth = await getWETH();
         const positionDescriptor =
           await deployNonfungibleTokenPositionDescriptor(
             [
@@ -1051,10 +1051,10 @@ export const deployInitializableImmutableAdminUpgradeabilityProxy = async (
     verify
   );
 
-export const deployWETHMocked = async (verify?: boolean) =>
+export const deployWETH = async (verify?: boolean) =>
   withSaveAndVerify(
     await new WETH9Mocked__factory(await getFirstSigner()).deploy(),
-    eContractid.WETHMocked,
+    eContractid.WETH,
     [],
     verify
   );
@@ -1966,7 +1966,7 @@ export const deployBAYCNTokenImpl = async (
       poolAddress,
       apeCoinStaking
     ),
-    eContractid.NTokenBAYC,
+    eContractid.NTokenBAYCImpl,
     [poolAddress, apeCoinStaking],
     verify
   );
@@ -1981,7 +1981,7 @@ export const deployMAYCNTokenImpl = async (
       poolAddress,
       apeCoinStaking
     ),
-    eContractid.NTokenMAYC,
+    eContractid.NTokenMAYCImpl,
     [poolAddress, apeCoinStaking],
     verify
   );

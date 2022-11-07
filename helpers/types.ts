@@ -11,22 +11,18 @@ export enum AssetType {
 }
 
 export enum XTokenType {
-  NoneType = 0,
+  PhantomData = 0,
   NToken = 1,
   NTokenMoonBirds = 2,
   NTokenUniswapV3 = 3,
-  PToken = 4,
-  DelegationAwarePToken = 5,
-  RebasingPToken = 6,
-  PTokenAToken = 7,
-  PTokenStETH = 8,
+  NTokenBAYC = 4,
+  NTokenMAYC = 5,
+  PToken = 6,
+  DelegationAwarePToken = 7,
+  RebasingPToken = 8,
+  PTokenAToken = 9,
+  PTokenStETH = 10,
 }
-
-export interface SymbolMap<T> {
-  [symbol: string]: T;
-}
-
-export type eNetwork = eEthereumNetwork;
 
 export type ConstructorArgs =
   | string
@@ -73,9 +69,7 @@ export enum eContractid {
   BorrowLogic = "BorrowLogic",
   LiquidationLogic = "LiquidationLogic",
   AuctionLogic = "AuctionLogic",
-  BridgeLogic = "BridgeLogic",
   PoolLogic = "PoolLogic",
-  EModeLogic = "EModeLogic",
   ConfiguratorLogic = "ConfiguratorLogic",
   PoolProxy = "PoolProxy",
   PriceOracle = "PriceOracle",
@@ -103,7 +97,7 @@ export enum eContractid {
   FeeProvider = "FeeProvider",
   TokenDistributor = "TokenDistributor",
   ReservesSetupHelper = "ReservesSetupHelper",
-  WETHMocked = "WETH",
+  WETH = "WETH",
   PoolConfiguratorImpl = "PoolConfiguratorImpl",
   MockIncentivesController = "MockIncentivesController",
   MockReserveConfiguration = "MockReserveConfiguration",
@@ -161,7 +155,6 @@ export enum eContractid {
   StrategyStandardSaleForFixedPrice = "StrategyStandardSaleForFixedPrice",
   X2Y2R1 = "X2Y2R1",
   ERC721Delegate = "ERC721Delegate",
-  DataTypes = "DataTypes",
   MoonBirdHelper = "MoonBirdHelper",
   UniswapV3 = "UniswapV3",
   UniswapV3Factory = "UniswapV3Factory",
@@ -169,8 +162,6 @@ export enum eContractid {
   NFTDescriptor = "NFTDescriptor",
   NonfungibleTokenPositionDescriptor = "NonfungibleTokenPositionDescriptor",
   NonfungiblePositionManager = "NonfungiblePositionManager",
-  UniswapV3OracleWrapper = "UniswapV3OracleWrapper",
-  UniswapV3DynamicConfigsStrategy = "UniswapV3DynamicConfigsStrategy",
   StETH = "StETH",
   MockAToken = "MockAToken",
   MockAirdropProject = "MockAirdropProject",
@@ -178,8 +169,8 @@ export enum eContractid {
   PoolMarketplaceImpl = "PoolMarketplaceImpl",
   PoolParametersImpl = "PoolParametersImpl",
   ApeCoinStaking = "ApeCoinStaking",
-  NTokenBAYC = "NTokenBAYC",
-  NTokenMAYC = "NTOkenMAYC",
+  NTokenBAYCImpl = "NTokenBAYCImpl",
+  NTokenMAYCImpl = "NTOkenMAYCImpl",
 }
 
 /*
