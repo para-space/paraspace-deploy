@@ -402,9 +402,7 @@ export const getWETH = async (address?: tEthereumAddress) =>
   await WETH9Mocked__factory.connect(
     address ||
       (
-        await getDb()
-          .get(`${eContractid.WETH}.${DRE.network.name}`)
-          .value()
+        await getDb().get(`${eContractid.WETH}.${DRE.network.name}`).value()
       ).address,
     await getFirstSigner()
   );
