@@ -31,7 +31,7 @@ export const setDRE = (_DRE: HardhatRuntimeEnvironment) => {
 };
 
 export const getParaSpaceConfig = (): IParaSpaceConfiguration => {
-  return ParaSpaceConfigs[DRE.network.name];
+  return ParaSpaceConfigs[FORK || DRE.network.name];
 };
 
 export const isLocalTestnet = (): boolean => {
