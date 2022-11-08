@@ -792,7 +792,7 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
       continue;
     } else if (tokensConfig[tokenSymbol]) {
       console.log("contract address is already onchain ", tokenSymbol);
-      insertContractAddressInDb(
+      await insertContractAddressInDb(
         tokenSymbol,
         getParaSpaceConfig().Tokens[tokenSymbol],
         false
@@ -869,9 +869,13 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
       continue;
     } else if (tokensConfig[tokenSymbol]) {
       console.log("contract address is already onchain ", tokenSymbol);
-      insertContractAddressInDb(tokenSymbol, tokensConfig[tokenSymbol], false);
+      await insertContractAddressInDb(
+        tokenSymbol,
+        tokensConfig[tokenSymbol],
+        false
+      );
       if (tokenSymbol === ERC721TokenContractId.UniswapV3) {
-        insertContractAddressInDb(
+        await insertContractAddressInDb(
           eContractid.UniswapV3Factory,
           paraSpaceConfig.Uniswap.V3Factory!,
           false

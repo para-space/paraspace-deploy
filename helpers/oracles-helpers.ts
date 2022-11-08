@@ -4,6 +4,7 @@ import {
   iAssetAggregatorBase,
   ERC721TokenContractId,
   ERC20TokenContractId,
+  eContractid,
 } from "./types";
 import {
   ERC721OracleWrapper,
@@ -18,11 +19,15 @@ import {
 } from "./contracts-deployments";
 import {getParaSpaceConfig, waitForTx} from "./misc-utils";
 import {
+  getAggregator,
   getAllTokens,
   getPoolAddressesProvider,
   getUniswapV3Factory,
 } from "./contracts-getters";
-import {getContractAddresses} from "./contracts-helpers";
+import {
+  getContractAddresses,
+  insertContractAddressInDb,
+} from "./contracts-helpers";
 
 export const setInitialAssetPricesInOracle = async (
   prices: iAssetBase<tEthereumAddress>,
@@ -69,7 +74,12 @@ export const deployAllAggregators = async (
       continue;
     }
     if (chainlinkConfig[tokenSymbol]) {
-      aggregators[tokenSymbol] = chainlinkConfig[tokenSymbol];
+      await insertContractAddressInDb(
+        eContractid.Aggregator.concat(`.${tokenSymbol}`),
+        chainlinkConfig[tokenSymbol],
+        false
+      );
+      aggregators[tokenSymbol] = await getAggregator(undefined, tokenSymbol);
     } else if (!initialPrices) {
       aggregators[tokenSymbol] = await deployERC721OracleWrapper(
         addressesProvider.address,

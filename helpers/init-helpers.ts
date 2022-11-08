@@ -153,7 +153,7 @@ export const initReservesByHelper = async (
   if (delegatedAwareReserves.length > 0) {
     if (delegationAwarePTokenImpl) {
       delegationAwarePTokenImplementationAddress = delegationAwarePTokenImpl;
-      insertContractAddressInDb(
+      await insertContractAddressInDb(
         eContractid.DelegationAwarePTokenImpl,
         delegationAwarePTokenImplementationAddress,
         false
@@ -232,7 +232,7 @@ export const initReservesByHelper = async (
       } else if (defaultReserveAuctionStrategyAddress) {
         auctionStrategyAddresses[auctionStrategy.name] =
           defaultReserveAuctionStrategyAddress;
-        insertContractAddressInDb(
+        await insertContractAddressInDb(
           auctionStrategy.name,
           auctionStrategyAddresses[auctionStrategy.name],
           false
