@@ -772,14 +772,14 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
       | MockAToken;
   } = {};
 
-  const protoConfigData = getParaSpaceConfig().ReservesConfig;
+  const reservesConfig = getParaSpaceConfig().ReservesConfig;
 
-  for (const tokenSymbol of Object.keys(ERC20TokenContractId)) {
+  for (const tokenSymbol of Object.keys(reservesConfig)) {
     const db = getDb();
     const contractAddress = db
       .get(`${tokenSymbol}.${DRE.network.name}`)
       .value()?.address;
-    const configData = protoConfigData[tokenSymbol];
+    const reserveConfig = reservesConfig[tokenSymbol];
 
     // if contract address is already in db, then skip to next tokenSymbol
     if (contractAddress) {
@@ -802,7 +802,7 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
 
       if (tokenSymbol === ERC20TokenContractId.stETH) {
         tokens[tokenSymbol] = await deployStETH(
-          [tokenSymbol, tokenSymbol, configData.reserveDecimals],
+          [tokenSymbol, tokenSymbol, reserveConfig.reserveDecimals],
           verify
         );
         continue;
@@ -810,14 +810,14 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
 
       if (tokenSymbol === ERC20TokenContractId.aWETH) {
         tokens[tokenSymbol] = await deployMockAToken(
-          [tokenSymbol, tokenSymbol, configData.reserveDecimals],
+          [tokenSymbol, tokenSymbol, reserveConfig.reserveDecimals],
           verify
         );
         continue;
       }
 
       tokens[tokenSymbol] = await deployMintableERC20(
-        [tokenSymbol, tokenSymbol, configData.reserveDecimals],
+        [tokenSymbol, tokenSymbol, reserveConfig.reserveDecimals],
         verify
       );
     }
@@ -845,8 +845,9 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
       | Contract;
   } = {};
   const paraSpaceConfig = getParaSpaceConfig();
+  const reservesConfig = paraSpaceConfig.ReservesConfig;
 
-  for (const tokenSymbol of Object.keys(ERC721TokenContractId)) {
+  for (const tokenSymbol of Object.keys(reservesConfig)) {
     const db = getDb();
     const contractAddress = db
       .get(`${tokenSymbol}.${DRE.network.name}`)
