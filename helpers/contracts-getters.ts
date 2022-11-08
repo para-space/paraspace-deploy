@@ -67,7 +67,7 @@ import {
   ERC20TokenMap,
   ERC721TokenMap,
 } from "./contracts-helpers";
-import {DRE, getDb} from "./misc-utils";
+import {DRE, getDb, getParaSpaceConfig} from "./misc-utils";
 import {
   eContractid,
   ERC721TokenContractId,
@@ -333,39 +333,41 @@ export const getParaSpaceOracle = async (address?: tEthereumAddress) =>
 
 export const getAllERC20Tokens = async () => {
   const db = getDb();
-  const tokens: ERC20TokenMap = await Object.keys(ERC20TokenContractId).reduce<
-    Promise<ERC20TokenMap>
-  >(async (acc, tokenSymbol) => {
-    const accumulator = await acc;
-    const address = db
-      .get(`${tokenSymbol}.${DRE.network.name}`)
-      .value()?.address;
-    if (address) {
-      accumulator[tokenSymbol] = await getMintableERC20(address);
-      return Promise.resolve(accumulator);
-    } else {
-      return Promise.reject(`${tokenSymbol} is not in db`);
-    }
-  }, Promise.resolve({}));
+  const paraSpaceConfig = getParaSpaceConfig();
+  const tokens: ERC20TokenMap = await Object.keys(ERC20TokenContractId)
+    .filter((tokenSymbol) => !!paraSpaceConfig.ReservesConfig[tokenSymbol])
+    .reduce<Promise<ERC20TokenMap>>(async (acc, tokenSymbol) => {
+      const accumulator = await acc;
+      const address = db
+        .get(`${tokenSymbol}.${DRE.network.name}`)
+        .value()?.address;
+      if (address) {
+        accumulator[tokenSymbol] = await getMintableERC20(address);
+        return Promise.resolve(accumulator);
+      } else {
+        return Promise.reject(`${tokenSymbol} is not in db`);
+      }
+    }, Promise.resolve({}));
   return tokens;
 };
 
 export const getAllERC721Tokens = async () => {
   const db = getDb();
-  const tokens: ERC721TokenMap = await Object.keys(
-    ERC721TokenContractId
-  ).reduce<Promise<ERC721TokenMap>>(async (acc, tokenSymbol) => {
-    const accumulator = await acc;
-    const address = db
-      .get(`${tokenSymbol}.${DRE.network.name}`)
-      .value()?.address;
-    if (address) {
-      accumulator[tokenSymbol] = await getMintableERC721(address);
-      return Promise.resolve(accumulator);
-    } else {
-      return Promise.reject(`${tokenSymbol} is not in db`);
-    }
-  }, Promise.resolve({}));
+  const paraSpaceConfig = getParaSpaceConfig();
+  const tokens: ERC721TokenMap = await Object.keys(ERC721TokenContractId)
+    .filter((tokenSymbol) => !!paraSpaceConfig.ReservesConfig[tokenSymbol])
+    .reduce<Promise<ERC721TokenMap>>(async (acc, tokenSymbol) => {
+      const accumulator = await acc;
+      const address = db
+        .get(`${tokenSymbol}.${DRE.network.name}`)
+        .value()?.address;
+      if (address) {
+        accumulator[tokenSymbol] = await getMintableERC721(address);
+        return Promise.resolve(accumulator);
+      } else {
+        return Promise.reject(`${tokenSymbol} is not in db`);
+      }
+    }, Promise.resolve({}));
   return tokens;
 };
 export const getAllTokens = async () => {
