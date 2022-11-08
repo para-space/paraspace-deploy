@@ -1,3 +1,4 @@
+import {ZERO_ADDRESS} from "../../../../helpers/constants";
 import {
   deployMockIncentivesController,
   deployMockReserveAuctionStrategy,
@@ -40,20 +41,29 @@ export const step_11 = async (verify = false) => {
     const treasuryAddress = config.Treasury;
 
     // Add an IncentivesController
-    const incentivesController = (await deployMockIncentivesController(verify))
-      .address;
+    let incentivesController = ZERO_ADDRESS;
     let auctionStrategy: tEthereumAddress | undefined = undefined;
 
     if (isLocalTestnet()) {
+      incentivesController = (await deployMockIncentivesController(verify))
+        .address;
+      const {
+        maxPriceMultiplier,
+        minExpPriceMultiplier,
+        minPriceMultiplier,
+        stepLinear,
+        stepExp,
+        tickLength,
+      } = auctionStrategyLinear;
       auctionStrategy = (
         await deployMockReserveAuctionStrategy(
           [
-            auctionStrategyLinear.maxPriceMultiplier,
-            auctionStrategyLinear.minExpPriceMultiplier,
-            auctionStrategyLinear.minPriceMultiplier,
-            auctionStrategyLinear.stepLinear,
-            auctionStrategyLinear.stepExp,
-            auctionStrategyLinear.tickLength,
+            maxPriceMultiplier,
+            minExpPriceMultiplier,
+            minPriceMultiplier,
+            stepLinear,
+            stepExp,
+            tickLength,
           ],
           verify
         )
