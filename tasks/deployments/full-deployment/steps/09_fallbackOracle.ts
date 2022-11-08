@@ -23,7 +23,6 @@ export const step_09 = async (verify = false) => {
   try {
     const erc20Tokens = await getAllERC20Tokens();
     const erc721Tokens = await getAllERC721Tokens();
-    const punks = await getCryptoPunksMarket();
     const paraSpaceConfig = getParaSpaceConfig();
 
     // UniswapV3 should use price from `UniswapV3OracleWrapper` instead of NFTFloorOracle
@@ -42,6 +41,7 @@ export const step_09 = async (verify = false) => {
     }
 
     if (isLocalTestnet() || isPublicTestnet()) {
+      const punks = await getCryptoPunksMarket();
       //for testnet we only deploy but still use mock price instead
       await deployNFTFloorPriceOracle([], verify);
       const fallbackOracle = await deployPriceOracle(verify);
