@@ -1,6 +1,13 @@
 import {HardhatNetworkForkingUserConfig} from "hardhat/types";
 import {eEthereumNetwork, iParamsPerNetwork} from "./helpers/types";
 import dotenv from "dotenv";
+import {
+  COVERAGE_CHAINID,
+  FORK_MAINNET_CHAINID,
+  GOERLI_CHAINID,
+  HARDHAT_CHAINID,
+  MAINNET_CHAINID,
+} from "./helpers/hardhat-constants";
 
 dotenv.config();
 
@@ -47,6 +54,20 @@ export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
   [eEthereumNetwork.ganache]: "http://localhost:8545",
   [eEthereumNetwork.tenderlyMain]: `https://rpc.tenderly.co/fork/${TENDERLY_FORK_ID}`,
   [eEthereumNetwork.parallel]: "http://localhost:29933",
+};
+
+export const CHAIN_ID_TO_FORK: iParamsPerNetwork<number | undefined> = {
+  [eEthereumNetwork.mainnet]: MAINNET_CHAINID,
+  [eEthereumNetwork.kovan]: undefined,
+  [eEthereumNetwork.ropsten]: undefined,
+  [eEthereumNetwork.goerli]: GOERLI_CHAINID,
+  [eEthereumNetwork.coverage]: COVERAGE_CHAINID,
+  [eEthereumNetwork.hardhat]: process.env.FORK
+    ? FORK_MAINNET_CHAINID
+    : HARDHAT_CHAINID,
+  [eEthereumNetwork.ganache]: undefined,
+  [eEthereumNetwork.parallel]: undefined,
+  [eEthereumNetwork.tenderlyMain]: undefined,
 };
 
 export const BLOCK_TO_FORK: iParamsPerNetwork<number | undefined> = {

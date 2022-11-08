@@ -1,7 +1,10 @@
 import rawBRE from "hardhat";
+import {DRE} from "../../../helpers/misc-utils";
 
 const adHoc = async () => {
   console.time("ad-hoc");
+  console.log(await DRE.ethers.provider.getNetwork());
+
   // Your main logic
   console.timeEnd("ad-hoc");
 };
