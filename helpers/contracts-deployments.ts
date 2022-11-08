@@ -1524,12 +1524,12 @@ export const deployParaSpaceFallbackOracle = async (
   args: [string, string, string, string, string],
   verify?: boolean
 ) => {
-  const omnoFallBackOracle = await new ParaSpaceFallbackOracle__factory(
+  const fallBackOracle = await new ParaSpaceFallbackOracle__factory(
     await getFirstSigner()
   ).deploy(...args);
 
   return withSaveAndVerify(
-    omnoFallBackOracle,
+    fallBackOracle,
     eContractid.PriceOracle,
     [...args],
     verify
