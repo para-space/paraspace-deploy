@@ -59,9 +59,7 @@ export const deployAllAggregators = async (
     }
     if (tokenSymbol === ERC721TokenContractId.UniswapV3) {
       const univ3Factory = await getUniswapV3Factory();
-      console.log(univ3Factory.address);
       const univ3Token = await tokens[ERC721TokenContractId.UniswapV3];
-      console.log(univ3Token.address);
       aggregators[tokenSymbol] = await deployUniswapV3OracleWrapper(
         univ3Factory.address,
         univ3Token.address,

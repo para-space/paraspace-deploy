@@ -38,6 +38,12 @@ export const step_10 = async (verify = false) => {
       allAggregatorsAddresses
     );
 
+    console.log(addressesProvider.address);
+    console.log(JSON.stringify(tokens));
+    console.log(JSON.stringify(aggregators));
+    console.log(fallbackOracle.address);
+    console.log(allTokens.WETH.address);
+
     const paraspaceOracle = await deployParaSpaceOracle(
       [
         addressesProvider.address,
