@@ -35,8 +35,8 @@ export const getParaSpaceConfig = (): IParaSpaceConfiguration => {
 };
 
 export const isLocalTestnet = (): boolean => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return [HARDHAT_CHAINID, COVERAGE_CHAINID].includes(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     DRE.network.config.chainId!
   );
 };

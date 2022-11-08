@@ -772,20 +772,25 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
       | MockAToken;
   } = {};
 
-  const reservesConfig = getParaSpaceConfig().ReservesConfig;
+  const paraSpaceConfig = getParaSpaceConfig();
+  const reservesConfig = paraSpaceConfig.ReservesConfig;
+  const tokensConfig = paraSpaceConfig.Tokens;
 
-  for (const tokenSymbol of Object.keys(reservesConfig)) {
+  for (const tokenSymbol of Object.keys(ERC20TokenContractId)) {
     const db = getDb();
     const contractAddress = db
       .get(`${tokenSymbol}.${DRE.network.name}`)
       .value()?.address;
     const reserveConfig = reservesConfig[tokenSymbol];
+    if (!reserveConfig) {
+      continue;
+    }
 
     // if contract address is already in db, then skip to next tokenSymbol
     if (contractAddress) {
       console.log("contract address is already in db ", tokenSymbol);
       continue;
-    } else if (getParaSpaceConfig().Tokens[tokenSymbol]) {
+    } else if (tokensConfig[tokenSymbol]) {
       console.log("contract address is already onchain ", tokenSymbol);
       insertContractAddressInDb(
         tokenSymbol,
@@ -846,24 +851,25 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
   } = {};
   const paraSpaceConfig = getParaSpaceConfig();
   const reservesConfig = paraSpaceConfig.ReservesConfig;
+  const tokensConfig = paraSpaceConfig.Tokens;
 
-  for (const tokenSymbol of Object.keys(reservesConfig)) {
+  for (const tokenSymbol of Object.keys(ERC721TokenContractId)) {
     const db = getDb();
     const contractAddress = db
       .get(`${tokenSymbol}.${DRE.network.name}`)
       .value()?.address;
+    const reserveConfig = reservesConfig[tokenSymbol];
+    if (!reserveConfig) {
+      continue;
+    }
 
     // if contract address is already in db, then skip to next tokenSymbol
     if (contractAddress) {
       console.log("contract address is already in db ", tokenSymbol);
       continue;
-    } else if (paraSpaceConfig.Tokens[tokenSymbol]) {
+    } else if (tokensConfig[tokenSymbol]) {
       console.log("contract address is already onchain ", tokenSymbol);
-      insertContractAddressInDb(
-        tokenSymbol,
-        paraSpaceConfig.Tokens[tokenSymbol],
-        false
-      );
+      insertContractAddressInDb(tokenSymbol, tokensConfig[tokenSymbol], false);
       if (tokenSymbol === ERC721TokenContractId.UniswapV3) {
         insertContractAddressInDb(
           eContractid.UniswapV3Factory,
