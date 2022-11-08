@@ -7,7 +7,7 @@ import {
   tEthereumAddress,
 } from "./types";
 import {ProtocolDataProvider} from "../../types";
-import {chunk, waitForTx} from "./misc-utils";
+import {chunk, isLocalTestnet, isPublicTestnet, waitForTx} from "./misc-utils";
 import {
   getACLManager,
   getReservesSetupHelper,
@@ -306,25 +306,29 @@ export const initReservesByHelper = async (
       } else if (reserveSymbols[i] === ERC721TokenContractId.UniswapV3) {
         console.log("IS UniSwapV3");
         xTokenToUse = nTokenUniSwapV3ImplementationAddress;
-      } else if (reserveSymbols[i] === ERC721TokenContractId.BAYC) {
-        console.log("IS BAYC");
-        const apeCoinStaking = await getApeCoinStaking();
-        const nTokenBAYC = await deployBAYCNTokenImpl(
-          apeCoinStaking.address,
-          pool.address
-        );
-        xTokenToUse = nTokenBAYC.address;
-      } else if (reserveSymbols[i] === ERC721TokenContractId.MAYC) {
-        console.log("IS MAYC");
-        const apeCoinStaking = await getApeCoinStaking();
-        const nTokenMAYC = await deployMAYCNTokenImpl(
-          apeCoinStaking.address,
-          pool.address
-        );
-        xTokenToUse = nTokenMAYC.address;
       } else {
-        console.log("IS", reserveSymbols[i]);
-        xTokenToUse = nTokenImplementationAddress;
+        if (!isLocalTestnet() && !isPublicTestnet()) {
+          console.log("IS", reserveSymbols[i]);
+          xTokenToUse = nTokenImplementationAddress;
+        } else {
+          if (reserveSymbols[i] === ERC721TokenContractId.BAYC) {
+            console.log("IS BAYC");
+            const apeCoinStaking = await getApeCoinStaking();
+            const nTokenBAYC = await deployBAYCNTokenImpl(
+              apeCoinStaking.address,
+              pool.address
+            );
+            xTokenToUse = nTokenBAYC.address;
+          } else if (reserveSymbols[i] === ERC721TokenContractId.MAYC) {
+            console.log("IS MAYC");
+            const apeCoinStaking = await getApeCoinStaking();
+            const nTokenMAYC = await deployMAYCNTokenImpl(
+              apeCoinStaking.address,
+              pool.address
+            );
+            xTokenToUse = nTokenMAYC.address;
+          }
+        }
       }
     } else {
       xTokenToUse = delegationAwarePTokenImplementationAddress;
