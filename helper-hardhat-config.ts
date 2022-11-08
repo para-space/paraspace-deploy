@@ -3,7 +3,7 @@ import {eEthereumNetwork, iParamsPerNetwork} from "./helpers/types";
 import dotenv from "dotenv";
 import {
   COVERAGE_CHAINID,
-  FORK_MAINNET_CHAINID,
+  FORK_CHAINID,
   GOERLI_CHAINID,
   HARDHAT_CHAINID,
   MAINNET_CHAINID,
@@ -62,9 +62,7 @@ export const CHAIN_ID_TO_FORK: iParamsPerNetwork<number | undefined> = {
   [eEthereumNetwork.ropsten]: undefined,
   [eEthereumNetwork.goerli]: GOERLI_CHAINID,
   [eEthereumNetwork.coverage]: COVERAGE_CHAINID,
-  [eEthereumNetwork.hardhat]: process.env.FORK
-    ? FORK_MAINNET_CHAINID
-    : HARDHAT_CHAINID,
+  [eEthereumNetwork.hardhat]: process.env.FORK ? FORK_CHAINID : HARDHAT_CHAINID,
   [eEthereumNetwork.ganache]: undefined,
   [eEthereumNetwork.parallel]: undefined,
   [eEthereumNetwork.tenderlyMain]: undefined,
