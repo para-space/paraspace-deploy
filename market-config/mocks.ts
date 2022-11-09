@@ -39,15 +39,15 @@ export const MOCK_TOKEN_MINT_VALUE = {
   cWETH: 10,
   PUNK: 1000,
   // ERC721
-  BAYC: 2,
-  CRYPTO_PUNK: 2,
-  MAYC: 2,
-  DOODLE: 2,
-  MOONBIRD: 2,
-  MEEBITS: 2,
-  AZUKI: 2,
-  OTHR: 2,
-  CLONEX: 2,
+  BAYC: 1,
+  CRYPTO_PUNK: 1,
+  MAYC: 1,
+  DOODLE: 1,
+  MOONBIRD: 1,
+  MEEBITS: 1,
+  AZUKI: 1,
+  OTHR: 1,
+  CLONEX: 1,
 };
 
 export const MocksConfig: IMocksConfig = {
