@@ -6,6 +6,7 @@ import {
   getPoolAddressesProvider,
   getProtocolDataProvider,
 } from "../../../../helpers/contracts-getters";
+import {isLocalTestnet, isPublicTestnet} from "../../../../helpers/misc-utils";
 import {ERC721TokenContractId} from "../../../../helpers/types";
 
 export const step_18 = async (verify = false) => {
@@ -14,6 +15,9 @@ export const step_18 = async (verify = false) => {
     const poolAddress = await addressesProvider.getPool();
     await deployFlashClaimRegistry(poolAddress, verify);
 
+    if (!isLocalTestnet() && !isPublicTestnet()) {
+      return;
+    }
     const dataProvider = await getProtocolDataProvider();
     const reservesTokens = await dataProvider.getAllReservesTokens();
     const baycAddress = reservesTokens.find(

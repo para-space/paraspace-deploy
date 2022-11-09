@@ -7,7 +7,7 @@ import {
   tEthereumAddress,
 } from "./types";
 import {ProtocolDataProvider} from "../../types";
-import {chunk, waitForTx} from "./misc-utils";
+import {chunk, isLocalTestnet, isPublicTestnet, waitForTx} from "./misc-utils";
 import {
   getACLManager,
   getReservesSetupHelper,
@@ -153,7 +153,7 @@ export const initReservesByHelper = async (
   if (delegatedAwareReserves.length > 0) {
     if (delegationAwarePTokenImpl) {
       delegationAwarePTokenImplementationAddress = delegationAwarePTokenImpl;
-      insertContractAddressInDb(
+      await insertContractAddressInDb(
         eContractid.DelegationAwarePTokenImpl,
         delegationAwarePTokenImplementationAddress,
         false
@@ -232,7 +232,7 @@ export const initReservesByHelper = async (
       } else if (defaultReserveAuctionStrategyAddress) {
         auctionStrategyAddresses[auctionStrategy.name] =
           defaultReserveAuctionStrategyAddress;
-        insertContractAddressInDb(
+        await insertContractAddressInDb(
           auctionStrategy.name,
           auctionStrategyAddresses[auctionStrategy.name],
           false
@@ -308,20 +308,28 @@ export const initReservesByHelper = async (
         xTokenToUse = nTokenUniSwapV3ImplementationAddress;
       } else if (reserveSymbols[i] === ERC721TokenContractId.BAYC) {
         console.log("IS BAYC");
-        const apeCoinStaking = await getApeCoinStaking();
-        const nTokenBAYC = await deployBAYCNTokenImpl(
-          apeCoinStaking.address,
-          pool.address
-        );
-        xTokenToUse = nTokenBAYC.address;
+        if (!isLocalTestnet() && !isPublicTestnet()) {
+          xTokenToUse = nTokenImplementationAddress;
+        } else {
+          const apeCoinStaking = await getApeCoinStaking();
+          const nTokenBAYC = await deployBAYCNTokenImpl(
+            apeCoinStaking.address,
+            pool.address
+          );
+          xTokenToUse = nTokenBAYC.address;
+        }
       } else if (reserveSymbols[i] === ERC721TokenContractId.MAYC) {
         console.log("IS MAYC");
-        const apeCoinStaking = await getApeCoinStaking();
-        const nTokenMAYC = await deployMAYCNTokenImpl(
-          apeCoinStaking.address,
-          pool.address
-        );
-        xTokenToUse = nTokenMAYC.address;
+        if (!isLocalTestnet() && !isPublicTestnet()) {
+          xTokenToUse = nTokenImplementationAddress;
+        } else {
+          const apeCoinStaking = await getApeCoinStaking();
+          const nTokenMAYC = await deployMAYCNTokenImpl(
+            apeCoinStaking.address,
+            pool.address
+          );
+          xTokenToUse = nTokenMAYC.address;
+        }
       } else {
         console.log("IS", reserveSymbols[i]);
         xTokenToUse = nTokenImplementationAddress;

@@ -772,22 +772,27 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
       | MockAToken;
   } = {};
 
-  const protoConfigData = getParaSpaceConfig().ReservesConfig;
+  const paraSpaceConfig = getParaSpaceConfig();
+  const reservesConfig = paraSpaceConfig.ReservesConfig;
+  const tokensConfig = paraSpaceConfig.Tokens;
 
   for (const tokenSymbol of Object.keys(ERC20TokenContractId)) {
     const db = getDb();
     const contractAddress = db
       .get(`${tokenSymbol}.${DRE.network.name}`)
       .value()?.address;
-    const configData = protoConfigData[tokenSymbol];
+    const reserveConfig = reservesConfig[tokenSymbol];
+    if (!reserveConfig) {
+      continue;
+    }
 
     // if contract address is already in db, then skip to next tokenSymbol
     if (contractAddress) {
       console.log("contract address is already in db ", tokenSymbol);
       continue;
-    } else if (getParaSpaceConfig().Tokens[tokenSymbol]) {
+    } else if (tokensConfig[tokenSymbol]) {
       console.log("contract address is already onchain ", tokenSymbol);
-      insertContractAddressInDb(
+      await insertContractAddressInDb(
         tokenSymbol,
         getParaSpaceConfig().Tokens[tokenSymbol],
         false
@@ -802,7 +807,7 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
 
       if (tokenSymbol === ERC20TokenContractId.stETH) {
         tokens[tokenSymbol] = await deployStETH(
-          [tokenSymbol, tokenSymbol, configData.reserveDecimals],
+          [tokenSymbol, tokenSymbol, reserveConfig.reserveDecimals],
           verify
         );
         continue;
@@ -810,14 +815,14 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
 
       if (tokenSymbol === ERC20TokenContractId.aWETH) {
         tokens[tokenSymbol] = await deployMockAToken(
-          [tokenSymbol, tokenSymbol, configData.reserveDecimals],
+          [tokenSymbol, tokenSymbol, reserveConfig.reserveDecimals],
           verify
         );
         continue;
       }
 
       tokens[tokenSymbol] = await deployMintableERC20(
-        [tokenSymbol, tokenSymbol, configData.reserveDecimals],
+        [tokenSymbol, tokenSymbol, reserveConfig.reserveDecimals],
         verify
       );
     }
@@ -845,26 +850,32 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
       | Contract;
   } = {};
   const paraSpaceConfig = getParaSpaceConfig();
+  const reservesConfig = paraSpaceConfig.ReservesConfig;
+  const tokensConfig = paraSpaceConfig.Tokens;
 
   for (const tokenSymbol of Object.keys(ERC721TokenContractId)) {
     const db = getDb();
     const contractAddress = db
       .get(`${tokenSymbol}.${DRE.network.name}`)
       .value()?.address;
+    const reserveConfig = reservesConfig[tokenSymbol];
+    if (!reserveConfig) {
+      continue;
+    }
 
     // if contract address is already in db, then skip to next tokenSymbol
     if (contractAddress) {
       console.log("contract address is already in db ", tokenSymbol);
       continue;
-    } else if (paraSpaceConfig.Tokens[tokenSymbol]) {
+    } else if (tokensConfig[tokenSymbol]) {
       console.log("contract address is already onchain ", tokenSymbol);
-      insertContractAddressInDb(
+      await insertContractAddressInDb(
         tokenSymbol,
-        paraSpaceConfig.Tokens[tokenSymbol],
+        tokensConfig[tokenSymbol],
         false
       );
       if (tokenSymbol === ERC721TokenContractId.UniswapV3) {
-        insertContractAddressInDb(
+        await insertContractAddressInDb(
           eContractid.UniswapV3Factory,
           paraSpaceConfig.Uniswap.V3Factory!,
           false
@@ -1517,12 +1528,12 @@ export const deployParaSpaceFallbackOracle = async (
   args: [string, string, string, string, string],
   verify?: boolean
 ) => {
-  const omnoFallBackOracle = await new ParaSpaceFallbackOracle__factory(
+  const fallBackOracle = await new ParaSpaceFallbackOracle__factory(
     await getFirstSigner()
   ).deploy(...args);
 
   return withSaveAndVerify(
-    omnoFallBackOracle,
+    fallBackOracle,
     eContractid.PriceOracle,
     [...args],
     verify

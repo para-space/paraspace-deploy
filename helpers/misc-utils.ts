@@ -6,16 +6,21 @@ import {HardhatRuntimeEnvironment} from "hardhat/types";
 import low from "lowdb";
 import {getAdapter} from "./db-adapter";
 import {verifyEtherscanContract} from "./etherscan-verification";
-import {IParaSpaceConfiguration} from "../helpers/types";
+import {eEthereumNetwork, IParaSpaceConfiguration} from "../helpers/types";
 import {ParaSpaceConfigs} from "../market-config";
 import {
   COVERAGE_CHAINID,
-  FORK_MAINNET_CHAINID,
+  FORK_CHAINID,
   GOERLI_CHAINID,
   HARDHAT_CHAINID,
   MAINNET_CHAINID,
 } from "./hardhat-constants";
 import {ConstructorArgs, eContractid, tEthereumAddress} from "./types";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const FORK = process.env.FORK || "";
 
 export const getDb = () => low(getAdapter(process.env.DB_PATH ?? ":memory:"));
 
@@ -26,29 +31,35 @@ export const setDRE = (_DRE: HardhatRuntimeEnvironment) => {
 };
 
 export const getParaSpaceConfig = (): IParaSpaceConfiguration => {
-  return ParaSpaceConfigs[DRE.network.name];
+  return ParaSpaceConfigs[FORK || DRE.network.name];
 };
 
 export const isLocalTestnet = (): boolean => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return [HARDHAT_CHAINID, COVERAGE_CHAINID].includes(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     DRE.network.config.chainId!
   );
 };
 
 export const isPublicTestnet = (): boolean => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return [GOERLI_CHAINID].includes(DRE.network.config.chainId!);
+  return (
+    [GOERLI_CHAINID].includes(DRE.network.config.chainId!) ||
+    [eEthereumNetwork.goerli].includes(FORK as eEthereumNetwork)
+  );
 };
 
-export const isForkMainnet = (): boolean => {
+export const isFork = (): boolean => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return [FORK_MAINNET_CHAINID].includes(DRE.network.config.chainId!);
+  return [FORK_CHAINID].includes(DRE.network.config.chainId!);
 };
 
 export const isMainnet = (): boolean => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return [MAINNET_CHAINID].includes(DRE.network.config.chainId!);
+  return (
+    [MAINNET_CHAINID].includes(DRE.network.config.chainId!) ||
+    [eEthereumNetwork.mainnet].includes(FORK as eEthereumNetwork)
+  );
 };
 
 export const sleep = (milliseconds: number) => {

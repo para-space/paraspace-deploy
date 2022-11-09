@@ -13,13 +13,13 @@ export const step_13 = async (verify = false) => {
   const {gatewayAdmin} = await getParaSpaceAdmins();
 
   try {
-    const mockTokens = await getAllTokens();
+    const allTokens = await getAllTokens();
     const addressesProvider = await getPoolAddressesProvider();
     const poolAddress = await addressesProvider.getPool();
     const poolProxy = await getPoolProxy(poolAddress);
 
     const wethGateway = await deployWETHGateway(
-      mockTokens.WETH.address,
+      allTokens.WETH.address,
       poolProxy.address,
       verify
     );

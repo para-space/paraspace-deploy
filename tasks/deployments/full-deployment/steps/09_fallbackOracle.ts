@@ -2,13 +2,13 @@ import {ZERO_ADDRESS} from "../../../../helpers/constants";
 import {
   deployPriceOracle,
   deployNFTFloorPriceOracle,
+  deployParaSpaceFallbackOracle,
 } from "../../../../helpers/contracts-deployments";
 import {
   getAllERC20Tokens,
   getAllERC721Tokens,
   getCryptoPunksMarket,
 } from "../../../../helpers/contracts-getters";
-import {insertContractAddressInDb} from "../../../../helpers/contracts-helpers";
 import {
   getParaSpaceConfig,
   isLocalTestnet,
@@ -17,31 +17,44 @@ import {
 } from "../../../../helpers/misc-utils";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {setInitialAssetPricesInOracle} from "../../../../helpers/oracles-helpers";
-import {eContractid, ERC721TokenContractId} from "../../../../helpers/types";
+import {ERC721TokenContractId} from "../../../../helpers/types";
 
 export const step_09 = async (verify = false) => {
   try {
     const erc20Tokens = await getAllERC20Tokens();
     const erc721Tokens = await getAllERC721Tokens();
-    const punks = await getCryptoPunksMarket();
     const paraSpaceConfig = getParaSpaceConfig();
 
-    // UniswapV3 should use price from `UniswapV3OracleWrapper` instead of NFTFloorOracle
-    delete erc721Tokens[ERC721TokenContractId.UniswapV3];
-
     if (isMainnet()) {
+      // UniswapV3 should use price from `UniswapV3OracleWrapper` instead of NFTFloorOracle
+      delete erc721Tokens[ERC721TokenContractId.UniswapV3];
       await deployNFTFloorPriceOracle(
         Object.values(erc721Tokens).map((x) => x.address),
         verify
       );
-      await insertContractAddressInDb(
-        eContractid.PriceOracle,
-        ZERO_ADDRESS,
-        false
+      if (
+        !paraSpaceConfig.BendDAO.Oracle ||
+        !paraSpaceConfig.Uniswap.V2Factory ||
+        !paraSpaceConfig.Uniswap.V2Router ||
+        !paraSpaceConfig.Tokens.WETH ||
+        !paraSpaceConfig.Tokens.USDC
+      ) {
+        throw new Error("Missing BendDAO-Oracle/UniswapV2/WETH/USDC config");
+      }
+      await deployParaSpaceFallbackOracle(
+        [
+          paraSpaceConfig.BendDAO.Oracle,
+          paraSpaceConfig.Uniswap.V2Factory,
+          paraSpaceConfig.Uniswap.V2Router,
+          paraSpaceConfig.Tokens.WETH,
+          paraSpaceConfig.Tokens.USDC,
+        ],
+        verify
       );
     }
 
     if (isLocalTestnet() || isPublicTestnet()) {
+      const punks = await getCryptoPunksMarket();
       //for testnet we only deploy but still use mock price instead
       await deployNFTFloorPriceOracle([], verify);
       const fallbackOracle = await deployPriceOracle(verify);
