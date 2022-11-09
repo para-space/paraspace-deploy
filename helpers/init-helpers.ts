@@ -306,29 +306,33 @@ export const initReservesByHelper = async (
       } else if (reserveSymbols[i] === ERC721TokenContractId.UniswapV3) {
         console.log("IS UniSwapV3");
         xTokenToUse = nTokenUniSwapV3ImplementationAddress;
-      } else {
+      } else if (reserveSymbols[i] === ERC721TokenContractId.BAYC) {
+        console.log("IS BAYC");
         if (!isLocalTestnet() && !isPublicTestnet()) {
-          console.log("IS", reserveSymbols[i]);
           xTokenToUse = nTokenImplementationAddress;
         } else {
-          if (reserveSymbols[i] === ERC721TokenContractId.BAYC) {
-            console.log("IS BAYC");
-            const apeCoinStaking = await getApeCoinStaking();
-            const nTokenBAYC = await deployBAYCNTokenImpl(
-              apeCoinStaking.address,
-              pool.address
-            );
-            xTokenToUse = nTokenBAYC.address;
-          } else if (reserveSymbols[i] === ERC721TokenContractId.MAYC) {
-            console.log("IS MAYC");
-            const apeCoinStaking = await getApeCoinStaking();
-            const nTokenMAYC = await deployMAYCNTokenImpl(
-              apeCoinStaking.address,
-              pool.address
-            );
-            xTokenToUse = nTokenMAYC.address;
-          }
+          const apeCoinStaking = await getApeCoinStaking();
+          const nTokenBAYC = await deployBAYCNTokenImpl(
+            apeCoinStaking.address,
+            pool.address
+          );
+          xTokenToUse = nTokenBAYC.address;
         }
+      } else if (reserveSymbols[i] === ERC721TokenContractId.MAYC) {
+        console.log("IS MAYC");
+        if (!isLocalTestnet() && !isPublicTestnet()) {
+          xTokenToUse = nTokenImplementationAddress;
+        } else {
+          const apeCoinStaking = await getApeCoinStaking();
+          const nTokenMAYC = await deployMAYCNTokenImpl(
+            apeCoinStaking.address,
+            pool.address
+          );
+          xTokenToUse = nTokenMAYC.address;
+        }
+      } else {
+        console.log("IS", reserveSymbols[i]);
+        xTokenToUse = nTokenImplementationAddress;
       }
     } else {
       xTokenToUse = delegationAwarePTokenImplementationAddress;
