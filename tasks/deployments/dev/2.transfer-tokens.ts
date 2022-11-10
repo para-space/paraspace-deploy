@@ -13,9 +13,13 @@ import {
 } from "../../../helpers/contracts-helpers";
 import {BigNumber, utils} from "ethers";
 
+// eslint-disable-next-line
 enum AssetType {
+  // eslint-disable-next-line
   ERC20,
+  // eslint-disable-next-line
   ERC721,
+  // eslint-disable-next-line
   ERC721_MOONBIRD,
 }
 
