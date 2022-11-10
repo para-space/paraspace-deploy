@@ -9,19 +9,20 @@ import {verifyEtherscanContract} from "./etherscan-verification";
 import {eEthereumNetwork, IParaSpaceConfiguration} from "../helpers/types";
 import {ParaSpaceConfigs} from "../market-config";
 import {
+  DB_PATH,
+  FORK,
   FORK_CHAINID,
   GOERLI_CHAINID,
   HARDHAT_CHAINID,
   MAINNET_CHAINID,
+  TENDERLY,
 } from "./hardhat-constants";
 import {ConstructorArgs, eContractid, tEthereumAddress} from "./types";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const FORK = process.env.FORK || "";
-
-export const getDb = () => low(getAdapter(process.env.DB_PATH ?? ":memory:"));
+export const getDb = () => low(getAdapter(DB_PATH));
 
 export let DRE: HardhatRuntimeEnvironment;
 
@@ -188,7 +189,7 @@ export const notFalsyOrZeroAddress = (
 };
 
 export const impersonateAccountsHardhat = async (accounts: string[]) => {
-  if (process.env.TENDERLY === "true") {
+  if (TENDERLY) {
     return;
   }
   // eslint-disable-next-line no-restricted-syntax

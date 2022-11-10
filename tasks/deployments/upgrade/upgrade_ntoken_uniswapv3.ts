@@ -9,10 +9,9 @@ import {
 import {XTokenType} from "../../../helpers/types";
 
 import dotenv from "dotenv";
+import {ETHERSCAN_VERIFICATION} from "../../../helpers/hardhat-constants";
 
 dotenv.config();
-
-const verify = process.env.ETHERSCAN_VERIFICATION === "true" ? true : false;
 
 export const upgradeNTokenUniswapV3 = async () => {
   const addressesProvider = await getPoolAddressesProvider();
@@ -25,7 +24,7 @@ export const upgradeNTokenUniswapV3 = async () => {
 
   const nTokenImplementation = await deployUniswapV3NTokenImpl(
     poolAddress,
-    verify
+    ETHERSCAN_VERIFICATION
   );
 
   for (let i = 0; i < allTokens.length; i++) {

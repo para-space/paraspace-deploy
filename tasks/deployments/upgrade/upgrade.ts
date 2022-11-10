@@ -10,10 +10,9 @@ import {upgradePToken} from "./upgrade_ptoken";
 import {upgradeNToken} from "./upgrade_ntoken";
 import {upgradeNTokenUniswapV3} from "./upgrade_ntoken_uniswapv3";
 import {upgradeNTokenMoonBirds} from "./upgrade_ntoken_moonbirds";
+import {ETHERSCAN_VERIFICATION} from "../../../helpers/hardhat-constants";
 
 dotenv.config();
-
-const verify = process.env.ETHERSCAN_VERIFICATION === "true" ? true : false;
 
 export const upgradeAll = async () => {
   await upgradePool();
@@ -34,7 +33,10 @@ export const upgradePool = async () => {
     poolCoreSelectors,
     poolParametersSelectors,
     poolMarketplaceSelectors,
-  } = await deployPoolComponents(addressesProvider.address, verify);
+  } = await deployPoolComponents(
+    addressesProvider.address,
+    ETHERSCAN_VERIFICATION
+  );
 
   await waitForTx(
     await addressesProvider.updatePoolImpl(

@@ -2,6 +2,12 @@ import {task} from "hardhat/config";
 import {DRE, setDRE} from "../../helpers/misc-utils";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import {ethers} from "ethers";
+import {
+  FORK,
+  TENDERLY,
+  TENDERLY_FORK_ID,
+  TENDERLY_HEAD_ID,
+} from "../../helpers/hardhat-constants";
 
 task(
   `set-DRE`,
@@ -12,15 +18,15 @@ task(
   }
   if (
     (_DRE as HardhatRuntimeEnvironment).network.name.includes("tenderly") ||
-    process.env.TENDERLY === "true"
+    TENDERLY
   ) {
     console.log("- Setting up Tenderly provider");
     const net = _DRE.tenderly.network();
 
-    if (process.env.TENDERLY_FORK_ID && process.env.TENDERLY_HEAD_ID) {
+    if (TENDERLY_FORK_ID && TENDERLY_HEAD_ID) {
       console.log("- Connecting to a Tenderly Fork");
-      await net.setFork(process.env.TENDERLY_FORK_ID);
-      await net.setHead(process.env.TENDERLY_HEAD_ID);
+      await net.setFork(TENDERLY_FORK_ID);
+      await net.setHead(TENDERLY_HEAD_ID);
     } else {
       console.log("- Creating a new Tenderly Fork");
       await net.initializeFork();
@@ -28,8 +34,8 @@ task(
     const provider = new _DRE.ethers.providers.Web3Provider(net);
     //adjust fee https://github.com/NomicFoundation/hardhat/issues/3298
     const FEE_DATA = {
-      maxFeePerGas:         ethers.utils.parseUnits('50', 'gwei'),
-      maxPriorityFeePerGas: ethers.utils.parseUnits('2',   'gwei'),
+      maxFeePerGas: ethers.utils.parseUnits("50", "gwei"),
+      maxPriorityFeePerGas: ethers.utils.parseUnits("2", "gwei"),
       gasPrice: null,
       lastBaseFeePerGas: null,
     };
@@ -43,8 +49,8 @@ task(
   }
 
   console.log("- Environment");
-  if (process.env.FORK) {
-    console.log("  - Fork Mode activated at network: ", process.env.FORK);
+  if (FORK) {
+    console.log("  - Fork Mode activated at network: ", FORK);
     if (_DRE?.config?.networks?.hardhat?.forking?.url) {
       console.log(
         "  - Provider URL:",

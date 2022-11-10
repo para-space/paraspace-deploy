@@ -4,14 +4,19 @@ import {
 } from "defender-relay-client/lib/ethers";
 import {Signer, utils} from "ethers";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
+import {
+  DEFENDER,
+  DEFENDER_API_KEY,
+  DEFENDER_SECRET_KEY,
+  FORK,
+} from "./hardhat-constants";
 import {DRE, impersonateAccountsHardhat} from "./misc-utils";
 import {usingTenderly} from "./tenderly-utils";
 import {eEthereumNetwork} from "./types";
 
-export const usingDefender = () => process.env.DEFENDER === "true";
+export const usingDefender = () => DEFENDER;
 
 export const getDefenderRelaySigner = async () => {
-  const {DEFENDER_API_KEY, DEFENDER_SECRET_KEY} = process.env;
   let defenderSigner: Signer;
 
   if (!DEFENDER_API_KEY || !DEFENDER_SECRET_KEY) {
@@ -35,7 +40,7 @@ export const getDefenderRelaySigner = async () => {
   console.log("  - Using Defender Relay: ", defenderAddress);
 
   // Replace signer if FORK=main is active
-  if (process.env.FORK === eEthereumNetwork.mainnet) {
+  if (FORK === eEthereumNetwork.mainnet) {
     console.log("  - Impersonating Defender Relay");
     await impersonateAccountsHardhat([defenderAddress]);
     defenderSigner = await (DRE as HardhatRuntimeEnvironment).ethers.getSigner(

@@ -10,6 +10,7 @@ import {
   impersonateAccountsHardhat,
   isLocalTestnet,
   getParaSpaceConfig,
+  isFork,
 } from "./misc-utils";
 import {
   iFunctionSignature,
@@ -60,10 +61,9 @@ export const registerContractInDb = async (
   signatures?: iFunctionSignature[]
 ) => {
   const currentNetwork = DRE.network.name;
-  const FORK = process.env.FORK;
   const key = `${id}.${DRE.network.name}`;
 
-  if (FORK || !isLocalTestnet()) {
+  if (isFork() || !isLocalTestnet()) {
     console.log(`*** ${id} ***\n`);
     console.log(`Network: ${currentNetwork}`);
     console.log(`tx: ${instance.deployTransaction?.hash}`);

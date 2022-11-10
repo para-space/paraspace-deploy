@@ -1,5 +1,6 @@
 import {ethers} from "ethers";
 import dotenv from "dotenv";
+import {DEPLOYER_MNEMONIC} from "./helpers/hardhat-constants";
 
 dotenv.config();
 
@@ -46,15 +47,11 @@ export const accounts = [
       "0xa2e0097c961c67ec197b6865d7ecea6caffc68ebeb00e6050368c8f67fc9c588",
     balance,
   },
-];
-
-if (process.env.DEPLOYER_MNEMONIC) {
-  accounts.push({
-    secretKey: ethers.Wallet.fromMnemonic(process.env.DEPLOYER_MNEMONIC)
-      .privateKey,
+  {
+    secretKey: ethers.Wallet.fromMnemonic(DEPLOYER_MNEMONIC).privateKey,
     balance,
-  });
-}
+  },
+];
 
 export default {
   accounts,

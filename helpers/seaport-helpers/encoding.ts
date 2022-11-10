@@ -13,13 +13,12 @@ import type {
   OrderComponents,
 } from "./types";
 import type {BigNumberish, ContractTransaction} from "ethers";
+import {REPORT_GAS} from "../hardhat-constants";
 
 const SeededRNG = require("./seeded-rng");
 
-const GAS_REPORT_MODE = process.env.REPORT_GAS;
-
 let randomBytes: (n: number) => string;
-if (GAS_REPORT_MODE) {
+if (REPORT_GAS) {
   const srng = SeededRNG.create("gas-report");
   randomBytes = srng.randomBytes;
 } else {
