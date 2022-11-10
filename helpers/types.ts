@@ -383,10 +383,10 @@ export enum ERC20TokenContractId {
 }
 
 export enum ERC721TokenContractId {
+  DOODLE = "DOODLE",
   WPUNKS = "WPUNKS",
   BAYC = "BAYC",
   MAYC = "MAYC",
-  DOODLE = "DOODLE",
   AZUKI = "AZUKI",
   CLONEX = "CLONEX",
   MOONBIRD = "MOONBIRD",
