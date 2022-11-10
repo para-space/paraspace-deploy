@@ -32,16 +32,6 @@ task(
       await net.initializeFork();
     }
     const provider = new _DRE.ethers.providers.Web3Provider(net);
-    //adjust fee https://github.com/NomicFoundation/hardhat/issues/3298
-    const FEE_DATA = {
-      maxFeePerGas: ethers.utils.parseUnits("50", "gwei"),
-      maxPriorityFeePerGas: ethers.utils.parseUnits("2", "gwei"),
-      gasPrice: null,
-      lastBaseFeePerGas: null,
-    };
-    provider.getFeeData = async () => {
-      return FEE_DATA;
-    };
     _DRE.ethers.provider = provider;
     console.log("- Initialized Tenderly fork:");
     console.log("  - Fork: ", net.getFork());
@@ -64,6 +54,16 @@ task(
   }
   console.log("  - Network :", _DRE.network.name);
 
+  //adjust fee https://github.com/NomicFoundation/hardhat/issues/3298
+  const FEE_DATA = {
+    maxFeePerGas: ethers.utils.parseUnits("50", "gwei"),
+    maxPriorityFeePerGas: ethers.utils.parseUnits("2", "gwei"),
+    gasPrice: null,
+    lastBaseFeePerGas: null,
+  };
+  _DRE.ethers.provider.getFeeData = async () => {
+    return FEE_DATA;
+  };
   setDRE(_DRE);
   return _DRE;
 });
