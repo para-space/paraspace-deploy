@@ -7,6 +7,7 @@ import {
   ERC721TokenContractId,
 } from "./types";
 import {
+  ATokenDebtToken__factory,
   AuctionLogic__factory,
   MintableERC20,
   MintableERC721,
@@ -14,6 +15,7 @@ import {
   MockReserveAuctionStrategy__factory,
   NFTFloorOracle__factory,
   ParaProxy__factory,
+  StETHDebtToken__factory,
   X2Y2Adapter__factory,
 } from "../../types";
 import {StETH, MockAToken} from "../../types";
@@ -1994,5 +1996,31 @@ export const deployMAYCNTokenImpl = async (
     ),
     eContractid.NTokenMAYCImpl,
     [poolAddress, apeCoinStaking],
+    verify
+  );
+
+export const deployATokenDebtToken = async (
+  poolAddress: tEthereumAddress,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    await new ATokenDebtToken__factory(await getFirstSigner()).deploy(
+      poolAddress
+    ),
+    eContractid.ATokenDebtToken,
+    [poolAddress],
+    verify
+  );
+
+export const deployStETHDebtToken = async (
+  poolAddress: tEthereumAddress,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    await new StETHDebtToken__factory(await getFirstSigner()).deploy(
+      poolAddress
+    ),
+    eContractid.StETHDebtToken,
+    [poolAddress],
     verify
   );
