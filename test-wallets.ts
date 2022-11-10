@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const balance = "1000000000000000000000000";
+const balance = "1000000000000000000000000"; // 1000000000000000000000000/1e18 = 1000,000 ETH
 
 export const accounts = [
   {
@@ -46,9 +46,16 @@ export const accounts = [
       "0xa2e0097c961c67ec197b6865d7ecea6caffc68ebeb00e6050368c8f67fc9c588",
     balance,
   },
-  {
-    secretKey: ethers.Wallet.fromMnemonic(process.env.DEPLOYER_MNEMONIC || "")
+];
+
+if (process.env.DEPLOYER_MNEMONIC) {
+  accounts.push({
+    secretKey: ethers.Wallet.fromMnemonic(process.env.DEPLOYER_MNEMONIC)
       .privateKey,
     balance,
-  },
-];
+  });
+}
+
+export default {
+  accounts,
+};

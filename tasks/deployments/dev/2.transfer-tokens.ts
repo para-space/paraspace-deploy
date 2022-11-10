@@ -16,7 +16,8 @@ const transferTokens = async () => {
 
   const paraSpaceConfig = getParaSpaceConfig();
   const tokens = paraSpaceConfig.Tokens;
-  const receiver = await (await getFirstSigner()).getAddress();
+  const signer = await getFirstSigner();
+  const receiver = await signer.getAddress();
 
   const configs = [
     {
@@ -120,66 +121,80 @@ const transferTokens = async () => {
   ];
 
   for (let i = 0; i < configs.length; i += 1) {
-    const {name, type, whale: whaleAddress, address, amount} = configs[i];
-    const whale = await impersonateAddress(whaleAddress);
+    try {
+      const {name, type, whale: whaleAddress, address, amount} = configs[i];
+      const whale = await impersonateAddress(whaleAddress);
+      // send some gas fee to whale
+      await signer.sendTransaction({
+        to: whaleAddress,
+        value: utils.parseEther("5"),
+        gasLimit: 50000,
+      });
 
-    if (type.startsWith("ERC20")) {
-      const token = await ERC20__factory.connect(address, whale.signer);
-      const amountWithUnits = BigNumber.from("10").pow(await token.decimals());
-      const balance = await token.balanceOf(whaleAddress);
-      console.log(`whale ${name} balance: ${balance.toString()}`);
-      if (balance.gt(amountWithUnits)) {
-        console.log(
-          `transfer ${amount} ${name} from ${whaleAddress} to ${receiver}`
+      if (type.startsWith("ERC20")) {
+        const token = await ERC20__factory.connect(address, whale.signer);
+        const amountWithUnits = BigNumber.from("10").pow(
+          await token.decimals()
         );
-        await token.transfer(receiver, amountWithUnits.toString());
-      } else {
-        console.log(`insufficient ${name} balance on ${whaleAddress}`);
-      }
-    } else if (type.startsWith("ERC721")) {
-      const token = await ERC721Enumerable__factory.connect(
-        address,
-        whale.signer
-      );
-      const balance = await token.balanceOf(whaleAddress);
-      console.log(`whale ${name} balance: ${balance.toString()}`);
-      if (!type.endsWith("NonEnumerable")) {
-        for (let i = 0; i < Math.min(+amount, balance.toNumber()); i += 1) {
-          const tokenId = await token.tokenOfOwnerByIndex(whaleAddress, i);
+        const balance = await token.balanceOf(whaleAddress);
+        console.log(`whale ${name} balance: ${balance.toString()}`);
+        if (balance.gt(amountWithUnits)) {
           console.log(
-            `transfer ${name}#${tokenId} from ${whaleAddress} to ${receiver}`
+            `transfer ${amount} ${name} from ${whaleAddress} to ${receiver}`
           );
-          await token.transferFrom(whaleAddress, receiver, tokenId);
+          await token.transfer(receiver, amountWithUnits.toString());
+        } else {
+          console.log(`insufficient ${name} balance on ${whaleAddress}`);
         }
-      } else {
-        let transferred = 0;
-        for (let i = 0; i < 10000 && transferred <= amount; i += 1) {
-          if ((await token.ownerOf(i)) === whaleAddress) {
+      } else if (type.startsWith("ERC721")) {
+        const token = await ERC721Enumerable__factory.connect(
+          address,
+          whale.signer
+        );
+        const balance = await token.balanceOf(whaleAddress);
+        console.log(`whale ${name} balance: ${balance.toString()}`);
+        if (!type.endsWith("NonEnumerable")) {
+          for (let i = 0; i < Math.min(+amount, balance.toNumber()); i += 1) {
+            const tokenId = await token.tokenOfOwnerByIndex(whaleAddress, i);
             console.log(
-              `transfer ${name}#${i} from ${whaleAddress} to ${receiver}`
+              `transfer ${name}#${tokenId} from ${whaleAddress} to ${receiver}`
             );
-            await token.transferFrom(whaleAddress, receiver, i);
-            await sleep(2000);
-            transferred += 1;
+            await token.transferFrom(whaleAddress, receiver, tokenId);
+          }
+        } else {
+          let transferred = 0;
+          for (let i = 0; i < 10000 && transferred <= amount; i += 1) {
+            if ((await token.ownerOf(i)) === whaleAddress) {
+              console.log(
+                `transfer ${name}#${i} from ${whaleAddress} to ${receiver}`
+              );
+              await token.transferFrom(whaleAddress, receiver, i);
+              await sleep(2000);
+              transferred += 1;
+            }
           }
         }
-      }
-    } else {
-      const balance = await DRE.ethers.provider.getBalance(whaleAddress);
-      const amountWithUnits = utils.parseEther(amount.toString());
-
-      console.log(`whale ETH balance: ${balance.toString()}`);
-      if (balance.gt(amountWithUnits)) {
-        console.log(
-          `transfer ${amount} ETH from ${whaleAddress} to ${receiver}`
-        );
-        await whale.signer.sendTransaction({
-          to: receiver,
-          value: amountWithUnits,
-        });
       } else {
-        console.log(`insufficient ETH balance on ${whaleAddress}`);
+        const balance = await DRE.ethers.provider.getBalance(whaleAddress);
+        const amountWithUnits = utils.parseEther(amount.toString());
+
+        console.log(`whale ETH balance: ${balance.toString()}`);
+        if (balance.gt(amountWithUnits)) {
+          console.log(
+            `transfer ${amount} ETH from ${whaleAddress} to ${receiver}`
+          );
+          await whale.signer.sendTransaction({
+            to: receiver,
+            value: amountWithUnits,
+            gasLimit: 50000,
+          });
+        } else {
+          console.log(`insufficient ETH balance on ${whaleAddress}`);
+        }
       }
+    } catch (err) {
+      console.error(err);
+      process.exit(0);
     }
   }
 
