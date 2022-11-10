@@ -1,5 +1,10 @@
 import rawBRE from "hardhat";
-import {getParaSpaceConfig, sleep} from "../../../helpers/misc-utils";
+import {
+  getParaSpaceConfig,
+  isFork,
+  isMainnet,
+  sleep,
+} from "../../../helpers/misc-utils";
 import {
   ERC20TokenContractId,
   ERC721TokenContractId,
@@ -24,6 +29,10 @@ enum AssetType {
 }
 
 const transferTokens = async () => {
+  if (!isFork() || !isMainnet()) {
+    return;
+  }
+
   console.time("transfer-tokens");
 
   const paraSpaceConfig = getParaSpaceConfig();
