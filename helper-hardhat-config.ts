@@ -2,21 +2,18 @@ import {HardhatNetworkForkingUserConfig} from "hardhat/types";
 import {eEthereumNetwork, iParamsPerNetwork} from "./helpers/types";
 import dotenv from "dotenv";
 import {
+  ALCHEMY_KEY,
+  FORK,
+  FORK_BLOCK_NUMBER,
   FORK_CHAINID,
   GOERLI_CHAINID,
   HARDHAT_CHAINID,
+  INFURA_KEY,
   MAINNET_CHAINID,
+  TENDERLY_FORK_ID,
 } from "./helpers/hardhat-constants";
 
 dotenv.config();
-
-const INFURA_KEY = process.env.INFURA_KEY || "";
-const ALCHEMY_KEY = process.env.ALCHEMY_KEY || "";
-const TENDERLY_FORK_ID = process.env.TENDERLY_FORK_ID || "";
-const FORK = process.env.FORK || "";
-const FORK_BLOCK_NUMBER = process.env.FORK_BLOCK_NUMBER
-  ? parseInt(process.env.FORK_BLOCK_NUMBER)
-  : 0;
 
 // const GWEI = 1000 * 1000 * 1000;
 
@@ -59,7 +56,7 @@ export const CHAIN_ID_TO_FORK: iParamsPerNetwork<number | undefined> = {
   [eEthereumNetwork.kovan]: undefined,
   [eEthereumNetwork.ropsten]: undefined,
   [eEthereumNetwork.goerli]: GOERLI_CHAINID,
-  [eEthereumNetwork.hardhat]: process.env.FORK ? FORK_CHAINID : HARDHAT_CHAINID,
+  [eEthereumNetwork.hardhat]: FORK ? FORK_CHAINID : HARDHAT_CHAINID,
   [eEthereumNetwork.ganache]: undefined,
   [eEthereumNetwork.parallel]: undefined,
   [eEthereumNetwork.tenderlyMain]: undefined,

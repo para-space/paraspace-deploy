@@ -1,9 +1,7 @@
 import fs from "fs";
-
-// define path to delete
-const dbPath = process.env.DB_PATH ?? "./deployed-contracts.json";
+import {DB_PATH} from "../../../../helpers/hardhat-constants";
 
 // eslint-disable-next-line
 export const step_00 = async (_: boolean) => {
-  if (fs.existsSync(dbPath)) fs.unlinkSync(dbPath);
+  if (fs.existsSync(DB_PATH)) fs.unlinkSync(DB_PATH);
 };

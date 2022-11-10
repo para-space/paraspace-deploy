@@ -3,6 +3,11 @@ import {ConstructorArgs, LibraryAddresses, tEthereumAddress} from "./types";
 import axios from "axios";
 import minimatch from "minimatch";
 import {isFork, isLocalTestnet} from "./misc-utils";
+import {
+  ETHERSCAN_KEY,
+  ETHERSCAN_VERIFICATION_CONTRACTS,
+  ETHERSCAN_VERIFICATION_MAX_RETRIES,
+} from "./hardhat-constants";
 
 const ALREADY_VERIFIED = "Already Verified";
 
@@ -91,10 +96,10 @@ export const verifyEtherscanContract = async (
   libraries?: LibraryAddresses
 ) => {
   const currentNetwork = DRE.network.name;
-  const verifyContracts =
-    process.env.ETHERSCAN_VERIFICATION_CONTRACTS?.trim().split(/\s?,\s?/);
 
-  if (verifyContracts?.every((p) => !minimatch(contractId, p))) {
+  if (
+    ETHERSCAN_VERIFICATION_CONTRACTS?.every((p) => !minimatch(contractId, p))
+  ) {
     return;
   }
 
@@ -116,8 +121,8 @@ export const verifyEtherscanContract = async (
     );
   }
 
-  if (!process.env.ETHERSCAN_KEY) {
-    throw Error("Missing process.env.ETHERSCAN_KEY.");
+  if (!ETHERSCAN_KEY) {
+    throw Error("Missing ETHERSCAN_KEY.");
   }
 
   try {
@@ -125,9 +130,7 @@ export const verifyEtherscanContract = async (
       "[ETHERSCAN][WARNING] Delaying Etherscan verification due their API can not find newly deployed contracts"
     );
     const msDelay = 3000;
-    const times = parseInt(
-      process.env.ETHERSCAN_VERIFICATION_MAX_RETRIES ?? "3"
-    );
+    const times = ETHERSCAN_VERIFICATION_MAX_RETRIES;
     // Write a temporal file to host complex parameters for buidler-etherscan https://github.com/nomiclabs/buidler/tree/development/packages/buidler-etherscan#complex-arguments
 
     const params: VerificationArgs = {
@@ -208,7 +211,7 @@ const hasVerifiedSourceCode = async (
 ): Promise<boolean> => {
   try {
     const {data} = await axios.get(
-      `https://${ETHERSCAN_APIS[network]}/api?module=contract&action=getsourcecode&address=${address}&apikey=${process.env.ETHERSCAN_KEY}`
+      `https://${ETHERSCAN_APIS[network]}/api?module=contract&action=getsourcecode&address=${address}&apikey=${ETHERSCAN_KEY}`
     );
     return (
       data.status === "1" &&
@@ -230,7 +233,7 @@ const verifyProxyContract = async (
       "Content-Type": "application/x-www-form-urlencoded",
     };
     const {data} = await axios.post(
-      `https://${ETHERSCAN_APIS[network]}/api?module=contract&action=verifyproxycontract&apikey=${process.env.ETHERSCAN_KEY}`,
+      `https://${ETHERSCAN_APIS[network]}/api?module=contract&action=verifyproxycontract&apikey=${ETHERSCAN_KEY}`,
       `address=${address}`,
       {
         headers,
