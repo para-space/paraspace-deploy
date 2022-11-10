@@ -1,5 +1,5 @@
 import rawBRE from "hardhat";
-import {getParaSpaceConfig} from "../../../helpers/misc-utils";
+import {getParaSpaceConfig, sleep} from "../../../helpers/misc-utils";
 import {
   ERC20TokenContractId,
   ERC721TokenContractId,
@@ -127,6 +127,7 @@ const transferTokens = async () => {
   ];
 
   for (let i = 0; i < configs.length; i += 1) {
+    await sleep(3000);
     try {
       const {name, type, whale: whaleAddress, address, amount} = configs[i];
       const whale = await impersonateAddress(whaleAddress);
