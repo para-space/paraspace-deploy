@@ -1,121 +1,123 @@
 import rawBRE from "hardhat";
-import {DRE, getParaSpaceConfig, sleep} from "../../../helpers/misc-utils";
+import {getParaSpaceConfig} from "../../../helpers/misc-utils";
 import {
   ERC20TokenContractId,
   ERC721TokenContractId,
 } from "../../../helpers/types";
 import {ERC20__factory} from "../../../../types";
 import {ERC721Enumerable__factory} from "../../../../types";
-import {getFirstSigner} from "../../../helpers/contracts-getters";
-import {ZERO_ADDRESS} from "../../../helpers/constants";
-import {impersonateAddress} from "../../../helpers/contracts-helpers";
+import {Moonbirds__factory} from "../../../../types";
+import {
+  getEthersSigners,
+  impersonateAddress,
+} from "../../../helpers/contracts-helpers";
 import {BigNumber, utils} from "ethers";
+
+enum AssetType {
+  ERC20,
+  ERC721,
+  ERC721_MOONBIRD,
+}
 
 const transferTokens = async () => {
   console.time("transfer-tokens");
 
   const paraSpaceConfig = getParaSpaceConfig();
   const tokens = paraSpaceConfig.Tokens;
-  const signer = await getFirstSigner();
-  const receiver = await signer.getAddress();
+  const signers = await getEthersSigners();
+  const lastSigner = signers[signers.length - 1];
+  const receiver = await lastSigner.getAddress();
 
   const configs = [
     {
       name: ERC20TokenContractId.USDT,
       whale: "0x5754284f345afc66a98fbb0a0afe71e0f007b949",
       address: tokens[ERC20TokenContractId.USDT],
-      type: "ERC20",
+      type: AssetType.ERC20,
       amount: "10000", // 10,000 USDT
     },
     {
       name: ERC20TokenContractId.USDC,
       whale: "0x55fe002aeff02f77364de339a1292923a15844b8",
       address: tokens[ERC20TokenContractId.USDC],
-      type: "ERC20",
+      type: AssetType.ERC20,
       amount: "10000", // 10,000 USDC
     },
     {
       name: ERC20TokenContractId.DAI,
       whale: "0xf977814e90da44bfa03b6295a0616a897441acec",
       address: tokens[ERC20TokenContractId.DAI],
-      type: "ERC20",
+      type: AssetType.ERC20,
       amount: "10000", // 10,000 DAI
     },
     {
       name: ERC20TokenContractId.WBTC,
       whale: "0x28c6c06298d514db089934071355e5743bf21d60",
       address: tokens[ERC20TokenContractId.WBTC],
-      type: "ERC20",
+      type: AssetType.ERC20,
       amount: "10000", // 10 WBTC
     },
     {
       name: ERC20TokenContractId.APE,
       whale: "0xf977814e90da44bfa03b6295a0616a897441acec",
       address: tokens[ERC20TokenContractId.APE],
-      type: "ERC20",
+      type: AssetType.ERC20,
       amount: "10000", // 10,000 APE
     },
     {
-      name: "ETH",
-      whale: "0xf977814e90da44bfa03b6295a0616a897441acec",
-      address: ZERO_ADDRESS,
-      type: "NATIVE",
-      amount: "10000", // 10,000 ETH
-    },
-    {
       name: ERC721TokenContractId.BAYC,
-      whale: "0xdbfd76af2157dc15ee4e57f3f942bb45ba84af24",
+      whale: "0x54be3a794282c030b15e43ae2bb182e14c409c5e",
       address: tokens[ERC721TokenContractId.BAYC],
-      type: "ERC721/Enumerable",
+      type: AssetType.ERC721,
       amount: 5,
     },
     {
       name: ERC721TokenContractId.MAYC,
-      whale: "0x69f37e419bd1457d2a25ed3f5d418169caae8d1f",
+      whale: "0x54be3a794282c030b15e43ae2bb182e14c409c5e",
       address: tokens[ERC721TokenContractId.MAYC],
-      type: "ERC721/Enumerable",
+      type: AssetType.ERC721,
       amount: 5,
     },
     {
       name: ERC721TokenContractId.DOODLE,
-      whale: "0x620b70123fb810f6c653da7644b5dd0b6312e4d8",
+      whale: "0xc35f3f92a9f27a157b309a9656cfea30e5c9cce3",
       address: tokens[ERC721TokenContractId.DOODLE],
-      type: "ERC721/Enumerable",
+      type: AssetType.ERC721,
       amount: 5,
     },
     {
       name: ERC721TokenContractId.MOONBIRD,
-      whale: "0x7b557aa52d0055d84b1e3f5487d9018f318372c1",
+      whale: "0x7b557aA52d0055d84b1E3f5487D9018f318372C1",
       address: tokens[ERC721TokenContractId.MOONBIRD],
-      type: "ERC721/NonEnumerable",
-      amount: 5,
+      type: AssetType.ERC721_MOONBIRD,
+      amount: 3,
     },
     {
       name: ERC721TokenContractId.MEEBITS,
-      whale: "0xa858ddc0445d8131dac4d1de01f834ffcba52ef1",
+      whale: "0xa25803ab86a327786bb59395fc0164d826b98298",
       address: tokens[ERC721TokenContractId.MEEBITS],
-      type: "ERC721/Enumerable",
+      type: AssetType.ERC721,
       amount: 5,
     },
     {
       name: ERC721TokenContractId.AZUKI,
-      whale: "0xd46c8648f2ac4ce1a1aace620460fbd24f640853",
+      whale: "0xff3879b8a363aed92a6eaba8f61f1a96a9ec3c1e",
       address: tokens[ERC721TokenContractId.AZUKI],
-      type: "ERC721/Enumerable",
+      type: AssetType.ERC721,
       amount: 5,
     },
     {
       name: ERC721TokenContractId.OTHR,
-      whale: "0xa858ddc0445d8131dac4d1de01f834ffcba52ef1",
+      whale: "0xdfd143ae8592e8e3c13aa3e401f72e1ca7deaed0",
       address: tokens[ERC721TokenContractId.OTHR],
-      type: "ERC721/Enumerable",
+      type: AssetType.ERC721,
       amount: 5,
     },
     {
       name: ERC721TokenContractId.CLONEX,
-      whale: "0x5d7aaa862681920ea4f350a670816b0977c80b37",
+      whale: "0xb5ac414c576bd2f4291b6c51e167db752c2c4e62",
       address: tokens[ERC721TokenContractId.CLONEX],
-      type: "ERC721/Enumerable",
+      type: AssetType.ERC721,
       amount: 5,
     },
   ];
@@ -125,13 +127,17 @@ const transferTokens = async () => {
       const {name, type, whale: whaleAddress, address, amount} = configs[i];
       const whale = await impersonateAddress(whaleAddress);
       // send some gas fee to whale
-      await signer.sendTransaction({
-        to: whaleAddress,
-        value: utils.parseEther("5"),
-        gasLimit: 50000,
-      });
+      try {
+        await lastSigner.sendTransaction({
+          to: whaleAddress,
+          value: utils.parseEther("5"),
+          gasLimit: 50000,
+        });
+      } catch (e) {
+        console.error(e);
+      }
 
-      if (type.startsWith("ERC20")) {
+      if (type === AssetType.ERC20) {
         const token = await ERC20__factory.connect(address, whale.signer);
         const amountWithUnits = BigNumber.from("10").pow(
           await token.decimals()
@@ -146,50 +152,43 @@ const transferTokens = async () => {
         } else {
           console.log(`insufficient ${name} balance on ${whaleAddress}`);
         }
-      } else if (type.startsWith("ERC721")) {
+      } else if (type === AssetType.ERC721) {
         const token = await ERC721Enumerable__factory.connect(
           address,
           whale.signer
         );
         const balance = await token.balanceOf(whaleAddress);
         console.log(`whale ${name} balance: ${balance.toString()}`);
-        if (!type.endsWith("NonEnumerable")) {
-          for (let i = 0; i < Math.min(+amount, balance.toNumber()); i += 1) {
-            const tokenId = await token.tokenOfOwnerByIndex(whaleAddress, i);
-            console.log(
-              `transfer ${name}#${tokenId} from ${whaleAddress} to ${receiver}`
-            );
-            await token.transferFrom(whaleAddress, receiver, tokenId);
-          }
-        } else {
-          let transferred = 0;
-          for (let i = 0; i < 10000 && transferred <= amount; i += 1) {
-            if ((await token.ownerOf(i)) === whaleAddress) {
-              console.log(
-                `transfer ${name}#${i} from ${whaleAddress} to ${receiver}`
-              );
-              await token.transferFrom(whaleAddress, receiver, i);
-              await sleep(2000);
-              transferred += 1;
-            }
-          }
-        }
-      } else {
-        const balance = await DRE.ethers.provider.getBalance(whaleAddress);
-        const amountWithUnits = utils.parseEther(amount.toString());
-
-        console.log(`whale ETH balance: ${balance.toString()}`);
-        if (balance.gt(amountWithUnits)) {
+        for (let i = 0; i < Math.min(+amount, balance.toNumber()); i += 1) {
+          const tokenId = await token.tokenOfOwnerByIndex(whaleAddress, i);
           console.log(
-            `transfer ${amount} ETH from ${whaleAddress} to ${receiver}`
+            `transfer ${name}#${tokenId} from ${whaleAddress} to ${receiver}`
           );
-          await whale.signer.sendTransaction({
-            to: receiver,
-            value: amountWithUnits,
-            gasLimit: 50000,
-          });
-        } else {
-          console.log(`insufficient ETH balance on ${whaleAddress}`);
+          await token.transferFrom(whaleAddress, receiver, tokenId);
+        }
+      } else if (type === AssetType.ERC721_MOONBIRD) {
+        const moonbirds = await Moonbirds__factory.connect(
+          address,
+          whale.signer
+        );
+        let transferred = 0;
+        for (
+          let tokenId = 9999;
+          tokenId >= 1 && transferred <= amount;
+          tokenId -= 1
+        ) {
+          if ((await moonbirds.ownerOf(tokenId)) !== whaleAddress) {
+            continue;
+          }
+          console.log(
+            `transfer ${name}#${tokenId} from ${whaleAddress} to ${receiver}`
+          );
+          await moonbirds.safeTransferWhileNesting(
+            whaleAddress,
+            receiver,
+            tokenId
+          );
+          transferred += 1;
         }
       }
     } catch (err) {
