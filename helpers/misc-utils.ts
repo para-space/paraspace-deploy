@@ -9,7 +9,6 @@ import {verifyEtherscanContract} from "./etherscan-verification";
 import {eEthereumNetwork, IParaSpaceConfiguration} from "../helpers/types";
 import {ParaSpaceConfigs} from "../market-config";
 import {
-  COVERAGE_CHAINID,
   FORK_CHAINID,
   GOERLI_CHAINID,
   HARDHAT_CHAINID,
@@ -36,9 +35,7 @@ export const getParaSpaceConfig = (): IParaSpaceConfiguration => {
 
 export const isLocalTestnet = (): boolean => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return [HARDHAT_CHAINID, COVERAGE_CHAINID].includes(
-    DRE.network.config.chainId!
-  );
+  return [HARDHAT_CHAINID].includes(DRE.network.config.chainId!);
 };
 
 export const isPublicTestnet = (): boolean => {
