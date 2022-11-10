@@ -916,7 +916,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
             erc20Tokens.APE.address,
             tokens.BAYC.address,
             tokens.MAYC.address,
-            ZERO_ADDRESS,
+            tokens.DOODLE.address, // this is just a placeholder. not actually using DOODLE
           ],
           verify
         );
@@ -926,6 +926,13 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
         );
 
         await apeCoinStaking.addTimeRange(
+          0,
+          amount,
+          "1666771200",
+          "1761465600",
+          amount
+        );
+        await apeCoinStaking.addTimeRange(
           1,
           amount,
           "1666771200",
@@ -934,6 +941,13 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
         );
         await apeCoinStaking.addTimeRange(
           2,
+          amount,
+          "1666771200",
+          "1761465600",
+          amount
+        );
+        await apeCoinStaking.addTimeRange(
+          3,
           amount,
           "1666771200",
           "1761465600",
