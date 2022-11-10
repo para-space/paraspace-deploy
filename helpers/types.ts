@@ -463,7 +463,6 @@ export type iParamsPerNetwork<T> = iEthereumParamsPerNetwork<T>;
 export type iParamsPerNetworkAll<T> = iEthereumParamsPerNetwork<T>;
 
 export interface iEthereumParamsPerNetwork<T> {
-  [eEthereumNetwork.coverage]: T;
   [eEthereumNetwork.kovan]: T;
   [eEthereumNetwork.ropsten]: T;
   [eEthereumNetwork.goerli]: T;
