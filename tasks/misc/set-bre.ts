@@ -1,7 +1,6 @@
 import {task} from "hardhat/config";
 import {DRE, setDRE} from "../../helpers/misc-utils";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
-import {ethers} from "ethers";
 import {
   FORK,
   TENDERLY,
@@ -32,16 +31,6 @@ task(
       await net.initializeFork();
     }
     const provider = new _DRE.ethers.providers.Web3Provider(net);
-    //adjust fee https://github.com/NomicFoundation/hardhat/issues/3298
-    const FEE_DATA = {
-      maxFeePerGas: ethers.utils.parseUnits("50", "gwei"),
-      maxPriorityFeePerGas: ethers.utils.parseUnits("2", "gwei"),
-      gasPrice: null,
-      lastBaseFeePerGas: null,
-    };
-    provider.getFeeData = async () => {
-      return FEE_DATA;
-    };
     _DRE.ethers.provider = provider;
     console.log("- Initialized Tenderly fork:");
     console.log("  - Fork: ", net.getFork());
