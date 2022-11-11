@@ -8,7 +8,9 @@ import {
   getDb,
   waitForTx,
   impersonateAccountsHardhat,
+  isLocalTestnet,
   getParaSpaceConfig,
+  isFork,
 } from "./misc-utils";
 import {
   iFunctionSignature,
@@ -61,15 +63,17 @@ export const registerContractInDb = async (
   const currentNetwork = DRE.network.name;
   const key = `${id}.${DRE.network.name}`;
 
-  console.log(`*** ${id} ***\n`);
-  console.log(`Network: ${currentNetwork}`);
-  console.log(`tx: ${instance.deployTransaction?.hash}`);
-  console.log(`contract address: ${instance.address}`);
-  console.log(`deployer address: ${instance.deployTransaction?.from}`);
-  console.log(`gas price: ${instance.deployTransaction?.gasPrice}`);
-  console.log(`gas used: ${instance.deployTransaction?.gasLimit}`);
-  console.log(`\n******`);
-  console.log();
+  if (isFork() || !isLocalTestnet()) {
+    console.log(`*** ${id} ***\n`);
+    console.log(`Network: ${currentNetwork}`);
+    console.log(`tx: ${instance.deployTransaction?.hash}`);
+    console.log(`contract address: ${instance.address}`);
+    console.log(`deployer address: ${instance.deployTransaction?.from}`);
+    console.log(`gas price: ${instance.deployTransaction?.gasPrice}`);
+    console.log(`gas used: ${instance.deployTransaction?.gasLimit}`);
+    console.log(`\n******`);
+    console.log();
+  }
 
   const value = {
     address: instance.address,
