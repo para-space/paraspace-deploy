@@ -1,5 +1,5 @@
 import {waitForTx} from "../../../helpers/misc-utils";
-import {deployGenericNTokenImpl} from "../../../helpers/contracts-deployments";
+import {deployGenericNTokenImplMockV2} from "../../../helpers/contracts-deployments";
 import {
   getPoolAddressesProvider,
   getPoolConfiguratorProxy,
@@ -22,7 +22,7 @@ export const upgradeNToken = async () => {
   const protocolDataProvider = await getProtocolDataProvider();
   const allTokens = await protocolDataProvider.getAllXTokens();
 
-  const nTokenImplementation = await deployGenericNTokenImpl(
+  const nTokenImplementation = await deployGenericNTokenImplMockV2(
     poolAddress,
     false,
     ETHERSCAN_VERIFICATION
@@ -53,5 +53,5 @@ export const upgradeNToken = async () => {
     }
   }
 
-  console.log("upgrade all ptoken implementation finished.");
+  console.log("upgrade all ntoken implementation finished.");
 };

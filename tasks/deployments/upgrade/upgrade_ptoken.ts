@@ -1,5 +1,5 @@
 import {waitForTx} from "../../../helpers/misc-utils";
-import {deployGenericPTokenImpl} from "../../../helpers/contracts-deployments";
+import {deployGenericPTokenImplMockV2} from "../../../helpers/contracts-deployments";
 import {
   getPoolAddressesProvider,
   getPoolConfiguratorProxy,
@@ -22,7 +22,7 @@ export const upgradePToken = async () => {
   const protocolDataProvider = await getProtocolDataProvider();
   const allTokens = await protocolDataProvider.getAllXTokens();
 
-  const pTokenImplementation = await deployGenericPTokenImpl(
+  const pTokenImplementation = await deployGenericPTokenImplMockV2(
     poolAddress,
     ETHERSCAN_VERIFICATION
   );
