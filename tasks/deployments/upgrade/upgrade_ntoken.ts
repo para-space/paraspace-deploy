@@ -53,5 +53,5 @@ export const upgradeNToken = async () => {
     }
   }
 
-  console.log("upgrade all ptoken implementation finished.");
+  console.log("upgrade all ntoken implementation finished.");
 };
