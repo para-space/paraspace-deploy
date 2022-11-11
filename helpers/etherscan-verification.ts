@@ -2,7 +2,6 @@ import {DRE, getDb} from "./misc-utils";
 import {ConstructorArgs, LibraryAddresses, tEthereumAddress} from "./types";
 import axios from "axios";
 import minimatch from "minimatch";
-import {isFork, isLocalTestnet} from "./misc-utils";
 import {
   ETHERSCAN_KEY,
   ETHERSCAN_VERIFICATION_CONTRACTS,
