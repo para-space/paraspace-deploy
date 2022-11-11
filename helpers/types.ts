@@ -85,6 +85,8 @@ export enum eContractid {
   NTokenImpl = "NTokenImpl",
   NTokenMoonBirdsImpl = "NTokenMoonBirdsImpl",
   NTokenUniswapV3Impl = "NTokenUniswapV3Impl",
+  NTokenBAYCImpl = "NTokenBAYCImpl",
+  NTokenMAYCImpl = "NTOkenMAYCImpl",
   DelegationAwarePTokenImpl = "DelegationAwarePTokenImpl",
   VariableDebtTokenImpl = "VariableDebtTokenImpl",
   MockVariableDebtToken = "MockVariableDebtToken",
@@ -170,8 +172,6 @@ export enum eContractid {
   ApeCoinStaking = "ApeCoinStaking",
   ATokenDebtToken = "ATokenDebtToken",
   StETHDebtToken = "StETHDebtToken",
-  NTokenBAYCImpl = "NTokenBAYCImpl",
-  NTokenMAYCImpl = "NTOkenMAYCImpl",
 }
 
 /*
