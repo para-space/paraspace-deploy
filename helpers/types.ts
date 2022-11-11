@@ -45,7 +45,6 @@ export enum eEthereumNetwork {
   ropsten = "ropsten",
   goerli = "goerli",
   mainnet = "mainnet",
-  coverage = "coverage",
   hardhat = "hardhat",
   tenderlyMain = "tenderlyMain",
   ganache = "ganache",
