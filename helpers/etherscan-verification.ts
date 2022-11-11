@@ -38,6 +38,7 @@ export const SUPPORTED_ETHERSCAN_NETWORKS = [
   "mumbai",
   "rinkeby",
   "goerli",
+  "localhost",
 ];
 
 export const ETHERSCAN_APIS = {
@@ -105,10 +106,6 @@ export const verifyEtherscanContract = async (
 
   let isVerified = await getIsVerified(contractId, address, currentNetwork);
   if (isVerified) {
-    return;
-  }
-
-  if (isLocalTestnet() || isFork()) {
     return;
   }
 
