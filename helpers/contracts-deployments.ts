@@ -669,17 +669,6 @@ export const deployGenericPTokenImpl = async (
     verify
   );
 
-export const deployGenericPTokenImplMockV2 = async (
-  poolAddress: tEthereumAddress,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new MockPToken__factory(await getFirstSigner()).deploy(poolAddress),
-    eContractid.MockPToken,
-    [poolAddress],
-    verify
-  );
-
 export const deployGenericNTokenImpl = async (
   poolAddress: tEthereumAddress,
   atomicPricing: boolean,
@@ -695,17 +684,6 @@ export const deployGenericNTokenImpl = async (
     verify
   );
 
-export const deployGenericNTokenImplMockV2 = async (
-  poolAddress: tEthereumAddress,
-  atomicPricing: boolean,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new MockNToken__factory(await getFirstSigner()).deploy(poolAddress),
-    eContractid.MockNToken,
-    [poolAddress, atomicPricing],
-    verify
-  );
 export const deployUniswapV3NTokenImpl = async (
   poolAddress: tEthereumAddress,
   verify?: boolean
