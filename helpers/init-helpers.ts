@@ -174,6 +174,8 @@ export const initReservesByHelper = async (
       xTokenImpl === eContractid.DelegationAwarePTokenImpl ||
       xTokenImpl === eContractid.PTokenImpl ||
       xTokenImpl === eContractid.NTokenImpl ||
+      xTokenImpl === eContractid.NTokenBAYCImpl ||
+      xTokenImpl === eContractid.NTokenMAYCImpl ||
       xTokenImpl === eContractid.NTokenMoonBirdsImpl ||
       xTokenImpl === eContractid.NTokenUniswapV3Impl ||
       xTokenImpl === eContractid.PTokenStETHImpl ||
@@ -280,6 +282,8 @@ export const initReservesByHelper = async (
         eContractid.NTokenImpl,
         eContractid.NTokenMoonBirdsImpl,
         eContractid.NTokenUniswapV3Impl,
+        eContractid.NTokenBAYCImpl,
+        eContractid.NTokenMAYCImpl,
       ].includes(xTokenImpl)
     ) {
       xTokenType[symbol] = "nft";

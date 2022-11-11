@@ -1,13 +1,14 @@
+import {ZERO_ADDRESS} from "../../../../helpers/constants";
 import {
   deployPriceOracle,
   deployNFTFloorPriceOracle,
-  deployParaSpaceFallbackOracle,
 } from "../../../../helpers/contracts-deployments";
 import {
   getAllERC20Tokens,
   getAllERC721Tokens,
   getCryptoPunksMarket,
 } from "../../../../helpers/contracts-getters";
+import {insertContractAddressInDb} from "../../../../helpers/contracts-helpers";
 import {
   getParaSpaceConfig,
   isLocalTestnet,
@@ -16,7 +17,7 @@ import {
 } from "../../../../helpers/misc-utils";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {setInitialAssetPricesInOracle} from "../../../../helpers/oracles-helpers";
-import {ERC721TokenContractId} from "../../../../helpers/types";
+import {eContractid, ERC721TokenContractId} from "../../../../helpers/types";
 
 export const step_09 = async (verify = false) => {
   try {
@@ -31,25 +32,7 @@ export const step_09 = async (verify = false) => {
         Object.values(erc721Tokens).map((x) => x.address),
         verify
       );
-      if (
-        !paraSpaceConfig.BendDAO.Oracle ||
-        !paraSpaceConfig.Uniswap.V2Factory ||
-        !paraSpaceConfig.Uniswap.V2Router ||
-        !paraSpaceConfig.Tokens.WETH ||
-        !paraSpaceConfig.Tokens.USDC
-      ) {
-        throw new Error("Missing BendDAO-Oracle/UniswapV2/WETH/USDC config");
-      }
-      await deployParaSpaceFallbackOracle(
-        [
-          paraSpaceConfig.BendDAO.Oracle,
-          paraSpaceConfig.Uniswap.V2Factory,
-          paraSpaceConfig.Uniswap.V2Router,
-          paraSpaceConfig.Tokens.WETH,
-          paraSpaceConfig.Tokens.USDC,
-        ],
-        verify
-      );
+      insertContractAddressInDb(eContractid.PriceOracle, ZERO_ADDRESS, false);
     }
 
     if (isLocalTestnet() || isPublicTestnet()) {

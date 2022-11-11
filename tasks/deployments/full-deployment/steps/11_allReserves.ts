@@ -84,7 +84,6 @@ export const step_11 = async (verify = false) => {
       undefined,
       undefined,
       undefined,
-      undefined,
       auctionStrategy
     );
 
