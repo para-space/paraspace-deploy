@@ -2,7 +2,6 @@ import {DRE, getDb} from "./misc-utils";
 import {ConstructorArgs, LibraryAddresses, tEthereumAddress} from "./types";
 import axios from "axios";
 import minimatch from "minimatch";
-import {isFork, isLocalTestnet} from "./misc-utils";
 import {
   ETHERSCAN_KEY,
   ETHERSCAN_VERIFICATION_CONTRACTS,
@@ -38,6 +37,7 @@ export const SUPPORTED_ETHERSCAN_NETWORKS = [
   "mumbai",
   "rinkeby",
   "goerli",
+  "localhost",
 ];
 
 export const ETHERSCAN_APIS = {
@@ -105,10 +105,6 @@ export const verifyEtherscanContract = async (
 
   let isVerified = await getIsVerified(contractId, address, currentNetwork);
   if (isVerified) {
-    return;
-  }
-
-  if (isLocalTestnet() || isFork()) {
     return;
   }
 
