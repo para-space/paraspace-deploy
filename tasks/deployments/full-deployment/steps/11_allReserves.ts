@@ -25,9 +25,8 @@ import {auctionStrategyLinear} from "../../../../market-config/auctionStrategies
 export const step_11 = async (verify = false) => {
   try {
     const allTokens = await getAllTokens();
-    const {paraSpaceAdmin} = await getParaSpaceAdmins();
+    const {paraSpaceAdminAddress} = await getParaSpaceAdmins();
     const reservesParams = getParaSpaceConfig().ReservesConfig;
-    const admin = await paraSpaceAdmin.getAddress();
     const protocolDataProvider = await getProtocolDataProvider();
 
     const allTokenAddresses = getContractAddresses(allTokens);
@@ -76,7 +75,7 @@ export const step_11 = async (verify = false) => {
       PTokenNamePrefix,
       VariableDebtTokenNamePrefix,
       SymbolPrefix,
-      admin,
+      paraSpaceAdminAddress,
       treasuryAddress,
       incentivesController,
       verify,
@@ -91,7 +90,7 @@ export const step_11 = async (verify = false) => {
       reservesParams,
       allTokenAddresses,
       protocolDataProvider,
-      admin
+      paraSpaceAdminAddress
     );
   } catch (error) {
     console.error(error);

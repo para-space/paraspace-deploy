@@ -13,7 +13,7 @@ import {getParaSpaceConfig} from "../../../../helpers/misc-utils";
 import {ERC721TokenContractId} from "../../../../helpers/types";
 
 export const step_14 = async (verify = false) => {
-  const {gatewayAdmin} = await getParaSpaceAdmins();
+  const {gatewayAdminAddress} = await getParaSpaceAdmins();
   const paraSpaceConfig = getParaSpaceConfig();
 
   try {
@@ -36,7 +36,7 @@ export const step_14 = async (verify = false) => {
       punkGateway.interface.encodeFunctionData("initialize");
 
     await deployPunkGatewayProxy(
-      await gatewayAdmin.getAddress(),
+      gatewayAdminAddress,
       punkGateway.address,
       punkGatewayEncodedInitialize,
       verify

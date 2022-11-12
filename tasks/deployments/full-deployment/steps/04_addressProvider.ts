@@ -6,8 +6,7 @@ import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 import {getParaSpaceConfig, waitForTx} from "../../../../helpers/misc-utils";
 
 export const step_04 = async (verify = false) => {
-  const {paraSpaceAdmin} = await getParaSpaceAdmins();
-  const paraSpaceAdminAddress = await paraSpaceAdmin.getAddress();
+  const {paraSpaceAdminAddress} = await getParaSpaceAdmins();
 
   try {
     const addressesProviderRegistry = await deployPoolAddressesProviderRegistry(

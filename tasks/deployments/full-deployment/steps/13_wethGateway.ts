@@ -10,7 +10,7 @@ import {
 import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 
 export const step_13 = async (verify = false) => {
-  const {gatewayAdmin} = await getParaSpaceAdmins();
+  const {gatewayAdminAddress} = await getParaSpaceAdmins();
 
   try {
     const allTokens = await getAllTokens();
@@ -28,7 +28,7 @@ export const step_13 = async (verify = false) => {
       wethGateway.interface.encodeFunctionData("initialize");
 
     await deployWETHGatewayProxy(
-      await gatewayAdmin.getAddress(),
+      gatewayAdminAddress,
       wethGateway.address,
       wethGatewayEncodedInitialize,
       verify

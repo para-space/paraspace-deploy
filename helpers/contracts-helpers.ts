@@ -403,25 +403,26 @@ export const createConduit = async (
   owner: Signer,
   conduitKey?: string
 ) => {
+  const ownerAddress = await owner.getAddress();
   const assignedConduitKey =
-    conduitKey ?? (await owner.getAddress()) + randomHex(12).slice(2);
+    conduitKey ?? ownerAddress + randomHex(12).slice(2);
 
-  const {conduit: tempConduitAddress} = await conduitController.getConduit(
+  const {conduit: conduitAddress} = await conduitController.getConduit(
     assignedConduitKey
   );
 
   await conduitController
     .connect(owner)
-    .createConduit(assignedConduitKey, await owner.getAddress());
+    .createConduit(assignedConduitKey, ownerAddress);
 
-  return tempConduitAddress;
+  return conduitAddress;
 };
 
 export const getParaSpaceAdmins = async (): Promise<{
-  paraSpaceAdmin: Signer;
-  emergencyAdmin: Signer;
-  riskAdmin: Signer;
-  gatewayAdmin: Signer;
+  paraSpaceAdminAddress: tEthereumAddress;
+  emergencyAdminAddress: tEthereumAddress;
+  riskAdminAddress: tEthereumAddress;
+  gatewayAdminAddress: tEthereumAddress;
 }> => {
   const signers = await getEthersSigners();
   const {
@@ -431,10 +432,10 @@ export const getParaSpaceAdmins = async (): Promise<{
     GatewayAdminIndex,
   } = getParaSpaceConfig();
   return {
-    paraSpaceAdmin: signers[ParaSpaceAdminIndex],
-    emergencyAdmin: signers[EmergencyAdminIndex],
-    riskAdmin: signers[RiskAdminIndex],
-    gatewayAdmin: signers[GatewayAdminIndex],
+    paraSpaceAdminAddress: await signers[ParaSpaceAdminIndex].getAddress(),
+    emergencyAdminAddress: await signers[EmergencyAdminIndex].getAddress(),
+    riskAdminAddress: await signers[RiskAdminIndex].getAddress(),
+    gatewayAdminAddress: await signers[GatewayAdminIndex].getAddress(),
   };
 };
 
