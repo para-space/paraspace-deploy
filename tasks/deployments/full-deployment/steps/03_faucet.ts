@@ -1,7 +1,4 @@
-import {
-  getAllTokens,
-  getCryptoPunksMarket,
-} from "../../../../helpers/contracts-getters";
+import {getAllTokens, getPunks} from "../../../../helpers/contracts-getters";
 import {deployFaucet} from "../token_faucet";
 import {isLocalTestnet, isPublicTestnet} from "../../../../helpers/misc-utils";
 
@@ -12,7 +9,7 @@ export const step_03 = async (verify = false) => {
     }
 
     const mockTokens = await getAllTokens();
-    const punks = await getCryptoPunksMarket();
+    const punks = await getPunks();
 
     await deployFaucet(
       {
@@ -24,7 +21,7 @@ export const step_03 = async (verify = false) => {
         WBTC: mockTokens.WBTC.address,
         APE: mockTokens.APE.address,
         stETH: mockTokens.stETH.address,
-        CRYPTO_PUNK: punks.address,
+        PUNKS: punks.address,
         aWETH: mockTokens.aWETH.address,
         cWETH: mockTokens.cETH.address,
         PUNK: mockTokens.PUNK.address,

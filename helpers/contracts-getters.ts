@@ -409,13 +409,11 @@ export const getWETH = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-export const getCryptoPunksMarket = async (address?: tEthereumAddress) =>
+export const getPunks = async (address?: tEthereumAddress) =>
   await CryptoPunksMarket__factory.connect(
     address ||
       (
-        await getDb()
-          .get(`${eContractid.CryptoPunksMarket}.${DRE.network.name}`)
-          .value()
+        await getDb().get(`${eContractid.PUNKS}.${DRE.network.name}`).value()
       ).address,
     await getFirstSigner()
   );
