@@ -51,14 +51,14 @@ export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
   [eEthereumNetwork.parallel]: "http://localhost:29933",
 };
 
-export const CHAIN_ID_TO_FORK: iParamsPerNetwork<number | undefined> = {
+export const CHAINS_ID: iParamsPerNetwork<number | undefined> = {
   [eEthereumNetwork.mainnet]: MAINNET_CHAINID,
   [eEthereumNetwork.kovan]: undefined,
   [eEthereumNetwork.ropsten]: undefined,
   [eEthereumNetwork.goerli]: GOERLI_CHAINID,
   [eEthereumNetwork.hardhat]: FORK ? FORK_CHAINID : HARDHAT_CHAINID,
   [eEthereumNetwork.ganache]: undefined,
-  [eEthereumNetwork.parallel]: undefined,
+  [eEthereumNetwork.parallel]: 1592,
   [eEthereumNetwork.tenderlyMain]: undefined,
 };
 
