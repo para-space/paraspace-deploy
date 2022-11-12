@@ -28,7 +28,6 @@ export const step_03 = async (verify = false) => {
         aWETH: mockTokens.aWETH.address,
         cWETH: mockTokens.cETH.address,
         PUNK: mockTokens.PUNK.address,
-        // WPUNKS: mockTokens.WPUNKS.address,
         MAYC: mockTokens.MAYC.address,
         DOODLE: mockTokens.DOODLE.address,
         MOONBIRD: mockTokens.MOONBIRD.address,

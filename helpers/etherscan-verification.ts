@@ -1,4 +1,4 @@
-import {DRE, getDb} from "./misc-utils";
+import {DRE, getDb, sleep} from "./misc-utils";
 import {ConstructorArgs, LibraryAddresses, tEthereumAddress} from "./types";
 import axios from "axios";
 import minimatch from "minimatch";
@@ -29,7 +29,7 @@ type VerificationArgs = {
   libraries?: LibraryAddresses;
 };
 
-export const SUPPORTED_ETHERSCAN_NETWORKS = [
+export const ETHERSCAN_NETWORKS = [
   "mainnet",
   "ropsten",
   "kovan",
@@ -47,8 +47,6 @@ export const ETHERSCAN_APIS = {
   rinkeby: "api-rinkeby.etherscan.io",
   goerli: "api-goerli.etherscan.io",
 };
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const getIsVerified = async (
   contractId: string,
@@ -111,10 +109,8 @@ export const verifyEtherscanContract = async (
   console.log(`- Verifying ${contractId}`);
   console.log(`  - address: ${address}`);
 
-  if (!SUPPORTED_ETHERSCAN_NETWORKS.includes(currentNetwork)) {
-    throw Error(
-      `Current network ${currentNetwork} not supported. Please change to one of the next networks: ${SUPPORTED_ETHERSCAN_NETWORKS.toString()}`
-    );
+  if (!ETHERSCAN_NETWORKS.includes(currentNetwork)) {
+    return;
   }
 
   if (!ETHERSCAN_KEY) {
@@ -122,9 +118,6 @@ export const verifyEtherscanContract = async (
   }
 
   try {
-    console.log(
-      "[ETHERSCAN][WARNING] Delaying Etherscan verification due their API can not find newly deployed contracts"
-    );
     const msDelay = 3000;
     const times = ETHERSCAN_VERIFICATION_MAX_RETRIES;
     // Write a temporal file to host complex parameters for buidler-etherscan https://github.com/nomiclabs/buidler/tree/development/packages/buidler-etherscan#complex-arguments
@@ -154,7 +147,7 @@ export const runTaskWithRetry = async (
   msDelay: number
 ) => {
   let counter = times;
-  await delay(msDelay);
+  await sleep(msDelay);
 
   try {
     if (times > 1) {

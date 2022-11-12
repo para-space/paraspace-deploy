@@ -4,9 +4,11 @@ import {waitForTx} from "../../../../helpers/misc-utils";
 import {getPoolAddressesProvider} from "../../../../helpers/contracts-getters";
 
 export const step_05 = async (verify = false) => {
-  const {paraSpaceAdmin, emergencyAdmin} = await getParaSpaceAdmins();
-  const paraspaceAdmin = await paraSpaceAdmin.getAddress();
+  const {paraSpaceAdmin, emergencyAdmin, riskAdmin} =
+    await getParaSpaceAdmins();
+  const paraSpaceAdminAddress = await paraSpaceAdmin.getAddress();
   const emergencyAdminAddress = await emergencyAdmin.getAddress();
+  const riskAdminAddress = await riskAdmin.getAddress();
   const addressesProvider = await getPoolAddressesProvider();
 
   try {
@@ -16,9 +18,12 @@ export const step_05 = async (verify = false) => {
     );
     await waitForTx(await addressesProvider.setACLManager(aclManager.address));
 
-    await waitForTx(await aclManager.addPoolAdmin(paraspaceAdmin));
-    await waitForTx(await aclManager.addAssetListingAdmin(paraspaceAdmin));
+    await waitForTx(await aclManager.addPoolAdmin(paraSpaceAdminAddress));
+    await waitForTx(
+      await aclManager.addAssetListingAdmin(paraSpaceAdminAddress)
+    );
     await waitForTx(await aclManager.addEmergencyAdmin(emergencyAdminAddress));
+    await waitForTx(await aclManager.addRiskAdmin(riskAdminAddress));
   } catch (error) {
     console.error(error);
     process.exit(1);

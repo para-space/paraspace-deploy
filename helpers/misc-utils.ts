@@ -60,9 +60,8 @@ export const isMainnet = (): boolean => {
   );
 };
 
-export const sleep = (milliseconds: number) => {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
-};
+export const sleep = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
 
 export const createRandomAddress = () => Wallet.createRandom().address;
 
