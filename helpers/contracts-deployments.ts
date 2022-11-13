@@ -1943,7 +1943,7 @@ export const deployPTokenStETH = async (
     verify
   );
 
-export const deployFlashClaimRegistry = async (
+export const deployUserFlashClaimRegistry = async (
   poolAddress: tEthereumAddress,
   verify?: boolean
 ) =>

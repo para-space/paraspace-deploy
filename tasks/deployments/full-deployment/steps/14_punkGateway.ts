@@ -1,3 +1,4 @@
+import {ZERO_ADDRESS} from "../../../../helpers/constants";
 import {
   deployPunkGateway,
   deployPunkGatewayProxy,
@@ -8,12 +9,10 @@ import {
   getPoolAddressesProvider,
   getPunks,
 } from "../../../../helpers/contracts-getters";
-import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 import {getParaSpaceConfig} from "../../../../helpers/misc-utils";
 import {ERC721TokenContractId} from "../../../../helpers/types";
 
 export const step_14 = async (verify = false) => {
-  const {gatewayAdminAddress} = await getParaSpaceAdmins();
   const paraSpaceConfig = getParaSpaceConfig();
 
   try {
@@ -36,7 +35,7 @@ export const step_14 = async (verify = false) => {
       punkGateway.interface.encodeFunctionData("initialize");
 
     await deployPunkGatewayProxy(
-      gatewayAdminAddress,
+      ZERO_ADDRESS, // disable upgradeability
       punkGateway.address,
       punkGatewayEncodedInitialize,
       verify

@@ -53,10 +53,10 @@ export const CommonConfig: Pick<
   RiskAdmin: undefined,
   GatewayAdmin: undefined,
   // DONT CHANGE THIS!!!
-  ParaSpaceAdminIndex: 0, // ACL Admin, Pool Admin, Asset Listing Admin
-  EmergencyAdminIndex: 1, // Emergency Admin, >1 is a must to make tests pass
+  ParaSpaceAdminIndex: 4, // ACL Admin, Pool Admin, Asset Listing Admin
+  EmergencyAdminIndex: 3, // Emergency Admin, >1 is a must to make tests pass
   RiskAdminIndex: 2, // Risk Admin, >1 is a must to make tests pass
-  GatewayAdminIndex: 4, // Gateway Admin, for polkadot evm only 5 accounts initialized
+  GatewayAdminIndex: 1, // Gateway Admin, for polkadot evm only 5 accounts initialized
   // MOCKS
   Mocks: MocksConfig,
 };

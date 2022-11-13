@@ -2,20 +2,21 @@ import {
   deployPoolAddressesProvider,
   deployPoolAddressesProviderRegistry,
 } from "../../../../helpers/contracts-deployments";
-import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
+import {getFirstSigner} from "../../../../helpers/contracts-getters";
 import {getParaSpaceConfig, waitForTx} from "../../../../helpers/misc-utils";
 
 export const step_04 = async (verify = false) => {
-  const {paraSpaceAdminAddress} = await getParaSpaceAdmins();
+  const deployer = await getFirstSigner();
+  const deployerAddress = await deployer.getAddress();
 
   try {
     const addressesProviderRegistry = await deployPoolAddressesProviderRegistry(
-      paraSpaceAdminAddress,
+      deployerAddress,
       verify
     );
     const addressesProvider = await deployPoolAddressesProvider(
       getParaSpaceConfig().MarketId,
-      paraSpaceAdminAddress,
+      deployerAddress,
       verify
     );
     await waitForTx(
@@ -24,7 +25,7 @@ export const step_04 = async (verify = false) => {
         getParaSpaceConfig().ProviderId
       )
     );
-    await waitForTx(await addressesProvider.setACLAdmin(paraSpaceAdminAddress));
+    await waitForTx(await addressesProvider.setACLAdmin(deployerAddress));
   } catch (error) {
     console.error(error);
     process.exit(1);
