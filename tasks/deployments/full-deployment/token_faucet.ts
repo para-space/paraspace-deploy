@@ -95,9 +95,9 @@ export const deployFaucet = async (mockTokens, verify?: boolean) => {
   ];
 
   const punkConfig = {
-    name: "CRYPTO_PUNK",
-    addr: mockTokens.CRYPTO_PUNK,
-    mintValue: tokenFaucetMintValue.CRYPTO_PUNK,
+    name: "PUNKS",
+    addr: mockTokens.PUNKS,
+    mintValue: tokenFaucetMintValue.PUNKS,
   };
 
   const faucet = await deployMockTokenFaucet(

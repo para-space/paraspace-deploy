@@ -1,3 +1,4 @@
+import {ZERO_ADDRESS} from "../../../../helpers/constants";
 import {
   deployPunkGateway,
   deployPunkGatewayProxy,
@@ -6,14 +7,12 @@ import {
   getAllTokens,
   getPoolProxy,
   getPoolAddressesProvider,
-  getCryptoPunksMarket,
+  getPunks,
 } from "../../../../helpers/contracts-getters";
-import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 import {getParaSpaceConfig} from "../../../../helpers/misc-utils";
 import {ERC721TokenContractId} from "../../../../helpers/types";
 
 export const step_14 = async (verify = false) => {
-  const {gatewayAdmin} = await getParaSpaceAdmins();
   const paraSpaceConfig = getParaSpaceConfig();
 
   try {
@@ -22,7 +21,7 @@ export const step_14 = async (verify = false) => {
     }
 
     const allTokens = await getAllTokens();
-    const punks = await getCryptoPunksMarket();
+    const punks = await getPunks();
     const addressesProvider = await getPoolAddressesProvider();
     const poolAddress = await addressesProvider.getPool();
     const poolProxy = await getPoolProxy(poolAddress);
@@ -36,7 +35,7 @@ export const step_14 = async (verify = false) => {
       punkGateway.interface.encodeFunctionData("initialize");
 
     await deployPunkGatewayProxy(
-      await gatewayAdmin.getAddress(),
+      ZERO_ADDRESS, // disable upgradeability
       punkGateway.address,
       punkGatewayEncodedInitialize,
       verify

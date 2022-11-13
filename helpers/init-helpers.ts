@@ -29,8 +29,8 @@ import {
   deployReserveAuctionStrategy,
   deployPTokenStETH,
   deployPTokenAToken,
-  deployBAYCNTokenImpl,
-  deployMAYCNTokenImpl,
+  deployNTokenBAYCImpl,
+  deployNTokenMAYCImpl,
   deployATokenDebtToken,
   deployStETHDebtToken,
 } from "./contracts-deployments";
@@ -327,9 +327,10 @@ export const initReservesByHelper = async (
           xTokenToUse = nTokenImplementationAddress;
         } else {
           const apeCoinStaking = await getApeCoinStaking();
-          const nTokenBAYC = await deployBAYCNTokenImpl(
+          const nTokenBAYC = await deployNTokenBAYCImpl(
             apeCoinStaking.address,
-            pool.address
+            pool.address,
+            verify
           );
           xTokenToUse = nTokenBAYC.address;
         }
@@ -339,9 +340,10 @@ export const initReservesByHelper = async (
           xTokenToUse = nTokenImplementationAddress;
         } else {
           const apeCoinStaking = await getApeCoinStaking();
-          const nTokenMAYC = await deployMAYCNTokenImpl(
+          const nTokenMAYC = await deployNTokenMAYCImpl(
             apeCoinStaking.address,
-            pool.address
+            pool.address,
+            verify
           );
           xTokenToUse = nTokenMAYC.address;
         }

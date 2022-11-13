@@ -22,7 +22,7 @@ import {StETH, MockAToken} from "../../types";
 import {MockContract} from "ethereum-waffle";
 import {
   getAllERC20Tokens,
-  getCryptoPunksMarket,
+  getPunks,
   getFirstSigner,
   getWETH,
 } from "./contracts-getters";
@@ -889,12 +889,9 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
 
       // we are using hardhat, we want to use mock ERC721 contracts
       if (tokenSymbol === ERC721TokenContractId.WPUNKS) {
-        const cryptoPunksMarket = await deployCryptoPunksMarket([], verify);
-        tokens[eContractid.CryptoPunksMarket] = cryptoPunksMarket;
-        tokens[tokenSymbol] = await deployWrappedPunk(
-          [cryptoPunksMarket.address],
-          verify
-        );
+        const punks = await deployPunks([], verify);
+        tokens[eContractid.PUNKS] = punks;
+        tokens[tokenSymbol] = await deployWPunks([punks.address], verify);
         continue;
       }
 
@@ -972,7 +969,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
       }
 
       if (tokenSymbol === ERC721TokenContractId.MEEBITS) {
-        const punks = await getCryptoPunksMarket();
+        const punks = await getPunks();
         tokens[tokenSymbol] = await deployMeebits(
           [punks.address, ZERO_ADDRESS, paraSpaceConfig.ParaSpaceTeam],
           verify
@@ -1421,17 +1418,17 @@ export const deployERC721OracleWrapper = async (
     verify
   );
 
-export const deployCryptoPunksMarket = async (args: [], verify?: boolean) =>
+export const deployPunks = async (args: [], verify?: boolean) =>
   withSaveAndVerify(
     await new CryptoPunksMarket__factory(await getFirstSigner()).deploy(
       ...args
     ),
-    eContractid.CryptoPunksMarket,
+    eContractid.PUNKS,
     [...args],
     verify
   );
 
-export const deployWrappedPunk = async (
+export const deployWPunks = async (
   args: [tEthereumAddress],
   verify?: boolean
 ) =>
@@ -1946,7 +1943,7 @@ export const deployPTokenStETH = async (
     verify
   );
 
-export const deployFlashClaimRegistry = async (
+export const deployUserFlashClaimRegistry = async (
   poolAddress: tEthereumAddress,
   verify?: boolean
 ) =>
@@ -1983,7 +1980,7 @@ export const deployApeCoinStaking = async (
     verify
   );
 
-export const deployBAYCNTokenImpl = async (
+export const deployNTokenBAYCImpl = async (
   apeCoinStaking: tEthereumAddress,
   poolAddress: tEthereumAddress,
   verify?: boolean
@@ -1998,7 +1995,7 @@ export const deployBAYCNTokenImpl = async (
     verify
   );
 
-export const deployMAYCNTokenImpl = async (
+export const deployNTokenMAYCImpl = async (
   apeCoinStaking: tEthereumAddress,
   poolAddress: tEthereumAddress,
   verify?: boolean

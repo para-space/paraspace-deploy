@@ -1,3 +1,4 @@
+import {ZERO_ADDRESS} from "../../../../helpers/constants";
 import {
   deployWETHGateway,
   deployWETHGatewayProxy,
@@ -7,11 +8,8 @@ import {
   getPoolProxy,
   getPoolAddressesProvider,
 } from "../../../../helpers/contracts-getters";
-import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 
 export const step_13 = async (verify = false) => {
-  const {gatewayAdmin} = await getParaSpaceAdmins();
-
   try {
     const allTokens = await getAllTokens();
     const addressesProvider = await getPoolAddressesProvider();
@@ -28,7 +26,7 @@ export const step_13 = async (verify = false) => {
       wethGateway.interface.encodeFunctionData("initialize");
 
     await deployWETHGatewayProxy(
-      await gatewayAdmin.getAddress(),
+      ZERO_ADDRESS, // disable upgradeability
       wethGateway.address,
       wethGatewayEncodedInitialize,
       verify

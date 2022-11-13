@@ -1,15 +1,17 @@
 import {deployACLManager} from "../../../../helpers/contracts-deployments";
 import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 import {waitForTx} from "../../../../helpers/misc-utils";
-import {getPoolAddressesProvider} from "../../../../helpers/contracts-getters";
+import {
+  getFirstSigner,
+  getPoolAddressesProvider,
+} from "../../../../helpers/contracts-getters";
 
 export const step_05 = async (verify = false) => {
-  const {paraSpaceAdmin, emergencyAdmin, riskAdmin} =
+  const {paraSpaceAdminAddress, emergencyAdminAddress, riskAdminAddress} =
     await getParaSpaceAdmins();
-  const paraSpaceAdminAddress = await paraSpaceAdmin.getAddress();
-  const emergencyAdminAddress = await emergencyAdmin.getAddress();
-  const riskAdminAddress = await riskAdmin.getAddress();
   const addressesProvider = await getPoolAddressesProvider();
+  const deployer = await getFirstSigner();
+  const deployerAddress = await deployer.getAddress();
 
   try {
     const aclManager = await deployACLManager(
@@ -18,7 +20,7 @@ export const step_05 = async (verify = false) => {
     );
     await waitForTx(await addressesProvider.setACLManager(aclManager.address));
 
-    await waitForTx(await aclManager.addPoolAdmin(paraSpaceAdminAddress));
+    await waitForTx(await aclManager.addPoolAdmin(deployerAddress));
     await waitForTx(
       await aclManager.addAssetListingAdmin(paraSpaceAdminAddress)
     );

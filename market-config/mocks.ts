@@ -40,7 +40,7 @@ export const MOCK_TOKEN_MINT_VALUE = {
   PUNK: 1000,
   // ERC721
   BAYC: 1,
-  CRYPTO_PUNK: 1,
+  PUNKS: 1,
   MAYC: 1,
   DOODLE: 1,
   MOONBIRD: 1,
