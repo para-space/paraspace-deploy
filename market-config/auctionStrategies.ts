@@ -10,7 +10,17 @@ export const auctionStrategyBAYC: IAuctionStrategyParams = {
   minExpPriceMultiplier: utils.parseUnits("1.2", 18).toString(),
   minPriceMultiplier: utils.parseUnits("0.8", 18).toString(),
   stepLinear: utils.parseUnits("0.08", 18).toString(),
-  stepExp: utils.parseUnits("0.147", 18).toString(),
+  stepExp: utils.parseUnits("0.02", 18).toString(),
+  tickLength: "900",
+};
+
+export const auctionStrategyWPunks: IAuctionStrategyParams = {
+  name: "auctionStrategyWPunks",
+  maxPriceMultiplier: utils.parseUnits("5", 18).toString(),
+  minExpPriceMultiplier: utils.parseUnits("1.2", 18).toString(),
+  minPriceMultiplier: utils.parseUnits("0.8", 18).toString(),
+  stepLinear: utils.parseUnits("0.011", 18).toString(),
+  stepExp: utils.parseUnits("0.041", 18).toString(),
   tickLength: "900",
 };
 
@@ -84,23 +94,13 @@ export const auctionStrategyAzuki: IAuctionStrategyParams = {
   tickLength: "900",
 };
 
-export const auctionStrategyWPunks: IAuctionStrategyParams = {
-  name: "auctionStrategyWPunks",
-  maxPriceMultiplier: utils.parseUnits("5", 18).toString(),
-  minExpPriceMultiplier: utils.parseUnits("1.2", 18).toString(),
-  minPriceMultiplier: utils.parseUnits("0.8", 18).toString(),
-  stepLinear: utils.parseUnits("0.011", 18).toString(),
-  stepExp: utils.parseUnits("0.041", 18).toString(),
-  tickLength: "900",
-};
-
 export const auctionStrategyUniswapV3: IAuctionStrategyParams = {
   name: "auctionStrategyUniswapV3",
-  maxPriceMultiplier: utils.parseUnits("5", 18).toString(),
+  maxPriceMultiplier: utils.parseUnits("3", 18).toString(),
   minExpPriceMultiplier: utils.parseUnits("1.2", 18).toString(),
-  minPriceMultiplier: utils.parseUnits("0.8", 18).toString(),
-  stepLinear: utils.parseUnits("0.011", 18).toString(),
-  stepExp: utils.parseUnits("0.041", 18).toString(),
+  minPriceMultiplier: utils.parseUnits("0.9", 18).toString(),
+  stepLinear: utils.parseUnits("0.01", 18).toString(),
+  stepExp: utils.parseUnits("0.01", 18).toString(),
   tickLength: "900",
 };
 

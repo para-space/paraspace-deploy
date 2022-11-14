@@ -106,12 +106,12 @@ export const verifyEtherscanContract = async (
     return;
   }
 
-  console.log(`- Verifying ${contractId}`);
-  console.log(`  - address: ${address}`);
-
   if (!ETHERSCAN_NETWORKS.includes(currentNetwork)) {
     return;
   }
+
+  console.log(`- Verifying ${contractId}`);
+  console.log(`  - address: ${address}`);
 
   if (!ETHERSCAN_KEY) {
     throw Error("Missing ETHERSCAN_KEY.");

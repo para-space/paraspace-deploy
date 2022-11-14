@@ -12,11 +12,9 @@ import {
 import {ERC20__factory} from "../../../../types";
 import {ERC721Enumerable__factory} from "../../../../types";
 import {Moonbirds__factory} from "../../../../types";
-import {
-  getEthersSigners,
-  impersonateAddress,
-} from "../../../helpers/contracts-helpers";
+import {impersonateAddress} from "../../../helpers/contracts-helpers";
 import {BigNumber, utils} from "ethers";
+import {getLastSigner} from "../../../helpers/contracts-getters";
 
 // eslint-disable-next-line
 enum AssetType {
@@ -37,9 +35,8 @@ const transferTokens = async () => {
 
   const paraSpaceConfig = getParaSpaceConfig();
   const tokens = paraSpaceConfig.Tokens;
-  const signers = await getEthersSigners();
-  const lastSigner = signers[signers.length - 1];
-  const receiver = await lastSigner.getAddress();
+  const signer = await getLastSigner();
+  const receiver = await signer.getAddress();
 
   const configs = [
     {
@@ -142,7 +139,7 @@ const transferTokens = async () => {
       const whale = await impersonateAddress(whaleAddress);
       // send some gas fee to whale
       try {
-        await lastSigner.sendTransaction({
+        await signer.sendTransaction({
           to: whaleAddress,
           value: utils.parseEther("5"),
           gasLimit: 50000,

@@ -7,6 +7,7 @@ import {
 import {
   getAllTokens,
   getConduit,
+  getFirstSigner,
   getPoolAddressesProvider,
   getProtocolDataProvider,
 } from "../../../../helpers/contracts-getters";
@@ -19,26 +20,26 @@ import {
   createZone,
   insertContractAddressInDb,
   createConduit,
-  getParaSpaceAdmins,
 } from "../../../../helpers/contracts-helpers";
 import {eContractid} from "../../../../helpers/types";
 
 export const step_15 = async (verify = false) => {
   try {
-    const {paraSpaceAdmin} = await getParaSpaceAdmins();
+    const deployer = await getFirstSigner();
+    const deployerAddress = await deployer.getAddress();
     const paraSpaceConfig = getParaSpaceConfig();
     const allTokens = await getAllTokens();
     const addressesProvider = await getPoolAddressesProvider();
     const protocolDataProvider = await getProtocolDataProvider();
     const conduitController = await deployConduitController(verify);
     const pausableZoneController = await deployPausableZoneController(
-      await paraSpaceAdmin.getAddress(),
+      deployerAddress,
       verify
     );
-    const conduitKey = `${await paraSpaceAdmin.getAddress()}000000000000000000000000`;
+    const conduitKey = `${deployerAddress}000000000000000000000000`;
     const conduit = await createConduit(
       conduitController,
-      paraSpaceAdmin,
+      deployer,
       conduitKey
     );
     const conduitInstance = await getConduit(conduit);
@@ -47,7 +48,7 @@ export const step_15 = async (verify = false) => {
         gasLimit: 1000000,
       })
     );
-    const zone = await createZone(pausableZoneController, paraSpaceAdmin);
+    const zone = await createZone(pausableZoneController, deployer);
     const seaport = await deploySeaport(conduitController.address, verify);
     const seaportAdapter = await deploySeaportAdapter(verify);
     await waitForTx(

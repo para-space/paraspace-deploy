@@ -322,9 +322,9 @@ export const createRunput = async (
 
 export const findPrivateKey = (address: string): string | undefined => {
   return accounts.find((a) => {
-    const wallet = new Wallet(a.secretKey);
+    const wallet = new Wallet(a.privateKey);
     return wallet.address === address;
-  })?.secretKey;
+  })?.privateKey;
 };
 
 export const hashRuninput = (input: RunInput): string => {

@@ -74,7 +74,7 @@ import {
   tEthereumAddress,
   ERC20TokenContractId,
 } from "./types";
-
+import {first, last} from "lodash";
 import {
   INonfungiblePositionManager__factory,
   ISwapRouter__factory,
@@ -86,6 +86,7 @@ const readArtifact = async (id: string) => {
   return (DRE as HardhatRuntimeEnvironment).artifacts.readArtifact(id);
 };
 export const getFirstSigner = async () => (await getEthersSigners())[0];
+export const getLastSigner = async () => last(await getEthersSigners())!;
 
 export const getPoolAddressesProvider = async (address?: tEthereumAddress) => {
   return await PoolAddressesProvider__factory.connect(
@@ -412,13 +413,11 @@ export const getWETH = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-export const getCryptoPunksMarket = async (address?: tEthereumAddress) =>
+export const getPunks = async (address?: tEthereumAddress) =>
   await CryptoPunksMarket__factory.connect(
     address ||
       (
-        await getDb()
-          .get(`${eContractid.CryptoPunksMarket}.${DRE.network.name}`)
-          .value()
+        await getDb().get(`${eContractid.PUNKS}.${DRE.network.name}`).value()
       ).address,
     await getFirstSigner()
   );

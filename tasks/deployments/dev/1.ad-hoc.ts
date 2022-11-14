@@ -1,9 +1,21 @@
 import rawBRE from "hardhat";
+import {getFirstSigner} from "../../../helpers/contracts-getters";
+import {
+  getEthersSigners,
+  getParaSpaceAdmins,
+} from "../../../helpers/contracts-helpers";
 import {DRE} from "../../../helpers/misc-utils";
+import * as envs from "../../../helpers/hardhat-constants";
 
 const adHoc = async () => {
   console.time("ad-hoc");
   console.log(await DRE.ethers.provider.getNetwork());
+  console.log(await (await getFirstSigner()).getAddress());
+  console.log(await getParaSpaceAdmins());
+  console.log(
+    await Promise.all((await getEthersSigners()).map((x) => x.getAddress()))
+  );
+  console.log(envs);
 
   // Your main logic
   console.timeEnd("ad-hoc");

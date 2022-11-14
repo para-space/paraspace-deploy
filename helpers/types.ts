@@ -114,7 +114,7 @@ export enum eContractid {
   WETHGatewayImpl = "WETHGatewayImpl",
   WETHGatewayProxy = "WETHGatewayProxy",
   ERC721OracleWrapper = "ERC721OracleWrapper",
-  CryptoPunksMarket = "CryptoPunksMarket",
+  PUNKS = "PUNKS",
   WPunk = "WPUNKS",
   WPunkGatewayImpl = "WPunkGatewayImpl",
   WPunkGatewayProxy = "WPunkGatewayProxy",

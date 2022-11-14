@@ -53,10 +53,10 @@ export const CommonConfig: Pick<
   RiskAdmin: undefined,
   GatewayAdmin: undefined,
   // DONT CHANGE THIS!!!
-  ParaSpaceAdminIndex: 0, // ACL Admin, Pool Admin, Asset Listing Admin
-  EmergencyAdminIndex: 1, // Emergency Admin, >1 is a must to make tests pass
+  ParaSpaceAdminIndex: 4, // ACL Admin, Pool Admin, Asset Listing Admin
+  EmergencyAdminIndex: 3, // Emergency Admin, >1 is a must to make tests pass
   RiskAdminIndex: 2, // Risk Admin, >1 is a must to make tests pass
-  GatewayAdminIndex: 4, // Gateway Admin, for polkadot evm only 5 accounts initialized
+  GatewayAdminIndex: 1, // Gateway Admin, for polkadot evm only 5 accounts initialized
   // MOCKS
   Mocks: MocksConfig,
 };
@@ -146,8 +146,12 @@ export const GoerliParaSpaceConfig: IParaSpaceConfiguration = {
 export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
   // BASIC INFO
   ...CommonConfig,
-  ParaSpaceTeam: "0x69C33aB569816F1D564a420490AbB894a44071Fb",
-  Treasury: "0x03D10cda221C2faA9F5CA22087654011ceE1802D",
+  ParaSpaceAdmin: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
+  EmergencyAdmin: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
+  RiskAdmin: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
+  GatewayAdmin: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
+  ParaSpaceTeam: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
+  Treasury: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
   Tokens: {
     WETH: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -157,13 +161,14 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     APE: "0x4d224452801ACEd8B2F0aebE155379bb5D594381",
     BAYC: "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D",
     MAYC: "0x60E4d786628Fea6478F785A6d7e704777c86a7c6",
+    WPUNKS: "0xb7F7F6C52F2e2fdb1963Eab30438024864c313F6",
     DOODLE: "0x8a90CAb2b38dba80c64b7734e58Ee1dB38B8992e",
     MOONBIRD: "0x23581767a106ae21c074b2276d25e5c3e136a68b",
     MEEBITS: "0x7bd29408f11d2bfc23c34f18275bbf23bb716bc7",
     AZUKI: "0xed5af388653567af2f388e6224dc7c4b3241c544",
     OTHR: "0x34d85c9cdeb23fa97cb08333b511ac86e1c4e258",
     CLONEX: "0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b",
-    UniswapV3: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+    // UniswapV3: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
   },
   BendDAO: {
     Oracle: "0x7c2a19e54e48718f6c60908a9cff3396e4ea1eba",
@@ -195,11 +200,13 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     DOODLE: strategyDoodles,
     BAYC: strategyBAYC,
     MAYC: strategyMAYC,
+    WPUNKS: strategyWPunks,
     MOONBIRD: strategyMoonbird,
     MEEBITS: strategyMeebits,
     AZUKI: strategyAzuki,
     OTHR: strategyOthr,
     CLONEX: strategyClonex,
+    // UniswapV3: strategyUniswapV3,
   },
   Mocks: undefined,
 };
