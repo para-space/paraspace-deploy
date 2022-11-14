@@ -82,6 +82,9 @@ import {
 
 declare let hre: HardhatRuntimeEnvironment;
 
+const readArtifact = async (id: string) => {
+  return (DRE as HardhatRuntimeEnvironment).artifacts.readArtifact(id);
+};
 export const getFirstSigner = async () => (await getEthersSigners())[0];
 
 export const getPoolAddressesProvider = async (address?: tEthereumAddress) => {
@@ -923,3 +926,21 @@ export const getApeCoinStaking = async (address?: tEthereumAddress) =>
       ).address,
     await getFirstSigner()
   );
+
+export const getApeStakingLogic = async (address?: tEthereumAddress) => {
+  const apeStakingLogicArtifact = await readArtifact(
+    eContractid.ApeStakingLogic
+  );
+
+  const apeStakingLogicFactory = await DRE.ethers.getContractFactory(
+    apeStakingLogicArtifact.abi,
+    apeStakingLogicArtifact.bytecode
+  );
+  const db = await getDb()
+    .get(`${eContractid.ApeStakingLogic}.${DRE.network.name}`)
+    .value();
+
+  return address || db
+    ? await apeStakingLogicFactory.attach(address || db.address)
+    : undefined;
+};

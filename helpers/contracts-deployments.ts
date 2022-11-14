@@ -22,6 +22,7 @@ import {StETH, MockAToken} from "../../types";
 import {MockContract} from "ethereum-waffle";
 import {
   getAllERC20Tokens,
+  getApeStakingLogic,
   getCryptoPunksMarket,
   getFirstSigner,
   getWETH,
@@ -144,6 +145,7 @@ import {MarketplaceLogicLibraryAddresses} from "../../types/factories/protocol/l
 import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/PoolCore__factory";
 import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
 import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
+
 import {pick} from "lodash";
 import {ZERO_ADDRESS} from "./constants";
 
@@ -1985,13 +1987,46 @@ export const deployApeCoinStaking = async (
     verify
   );
 
+export const deployApeStakingLogic = async (verify?: boolean) => {
+  const apeStakingLogicArtifact = await readArtifact(
+    eContractid.ApeStakingLogic
+  );
+
+  const apeStakingLogicFactory = await DRE.ethers.getContractFactory(
+    apeStakingLogicArtifact.abi,
+    apeStakingLogicArtifact.bytecode
+  );
+  const apeStakingLogic = await (
+    await apeStakingLogicFactory.connect(await getFirstSigner()).deploy()
+  ).deployed();
+
+  return withSaveAndVerify(
+    apeStakingLogic,
+    eContractid.ApeStakingLogic,
+    [],
+    verify
+  );
+};
+
 export const deployBAYCNTokenImpl = async (
   apeCoinStaking: tEthereumAddress,
   poolAddress: tEthereumAddress,
   verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new NTokenBAYC__factory(await getFirstSigner()).deploy(
+) => {
+  let apeStakingLogic;
+  apeStakingLogic = await getApeStakingLogic();
+
+  if (!apeStakingLogic) {
+    apeStakingLogic = await deployApeStakingLogic();
+  }
+
+  const libraries = {
+    ["contracts/protocol/tokenization/libraries/ApeStakingLogic.sol:ApeStakingLogic"]:
+      apeStakingLogic.address,
+  };
+
+  return withSaveAndVerify(
+    await new NTokenBAYC__factory(libraries, await getFirstSigner()).deploy(
       poolAddress,
       apeCoinStaking
     ),
@@ -1999,14 +2034,26 @@ export const deployBAYCNTokenImpl = async (
     [poolAddress, apeCoinStaking],
     verify
   );
+};
 
 export const deployMAYCNTokenImpl = async (
   apeCoinStaking: tEthereumAddress,
   poolAddress: tEthereumAddress,
   verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new NTokenMAYC__factory(await getFirstSigner()).deploy(
+) => {
+  let apeStakingLogic;
+  apeStakingLogic = await getApeStakingLogic();
+
+  if (!apeStakingLogic) {
+    apeStakingLogic = await deployApeStakingLogic();
+  }
+
+  const libraries = {
+    ["contracts/protocol/tokenization/libraries/ApeStakingLogic.sol:ApeStakingLogic"]:
+      apeStakingLogic.address,
+  };
+  return withSaveAndVerify(
+    await new NTokenMAYC__factory(libraries, await getFirstSigner()).deploy(
       poolAddress,
       apeCoinStaking
     ),
@@ -2014,7 +2061,7 @@ export const deployMAYCNTokenImpl = async (
     [poolAddress, apeCoinStaking],
     verify
   );
-
+};
 export const deployATokenDebtToken = async (
   poolAddress: tEthereumAddress,
   verify?: boolean

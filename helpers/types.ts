@@ -172,6 +172,7 @@ export enum eContractid {
   ApeCoinStaking = "ApeCoinStaking",
   ATokenDebtToken = "ATokenDebtToken",
   StETHDebtToken = "StETHDebtToken",
+  ApeStakingLogic = "ApeStakingLogic",
 }
 
 /*
