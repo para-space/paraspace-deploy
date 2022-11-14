@@ -47,9 +47,9 @@ export const rateStrategyWBTC: IInterestRateStrategyParams = {
 export const rateStrategyAPE: IInterestRateStrategyParams = {
   name: "rateStrategyAPE",
   optimalUsageRatio: utils.parseUnits("0.45", 27).toString(),
-  baseVariableBorrowRate: utils.parseUnits("0.025", 27).toString(),
+  baseVariableBorrowRate: utils.parseUnits("0.05", 27).toString(),
   variableRateSlope1: utils.parseUnits("0.07", 27).toString(),
-  variableRateSlope2: utils.parseUnits("3", 27).toString(),
+  variableRateSlope2: utils.parseUnits("1", 27).toString(),
 };
 
 export const rateStrategyNFT: IInterestRateStrategyParams = {

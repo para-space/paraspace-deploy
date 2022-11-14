@@ -426,16 +426,23 @@ export const getParaSpaceAdmins = async (): Promise<{
 }> => {
   const signers = await getEthersSigners();
   const {
+    ParaSpaceAdmin,
+    EmergencyAdmin,
+    RiskAdmin,
+    GatewayAdmin,
     ParaSpaceAdminIndex,
     EmergencyAdminIndex,
     RiskAdminIndex,
     GatewayAdminIndex,
   } = getParaSpaceConfig();
   return {
-    paraSpaceAdminAddress: await signers[ParaSpaceAdminIndex].getAddress(),
-    emergencyAdminAddress: await signers[EmergencyAdminIndex].getAddress(),
-    riskAdminAddress: await signers[RiskAdminIndex].getAddress(),
-    gatewayAdminAddress: await signers[GatewayAdminIndex].getAddress(),
+    paraSpaceAdminAddress:
+      ParaSpaceAdmin || (await signers[ParaSpaceAdminIndex].getAddress()),
+    emergencyAdminAddress:
+      EmergencyAdmin || (await signers[EmergencyAdminIndex].getAddress()),
+    riskAdminAddress: RiskAdmin || (await signers[RiskAdminIndex].getAddress()),
+    gatewayAdminAddress:
+      GatewayAdmin || (await signers[GatewayAdminIndex].getAddress()),
   };
 };
 

@@ -237,7 +237,6 @@ export const strategyAzuki: IReserveParams = {
 };
 
 export const strategyWPunks: IReserveParams = {
-  // address: "0xb7F7F6C52F2e2fdb1963Eab30438024864c313F6",
   strategy: rateStrategyNFT,
   auctionStrategy: auctionStrategyWPunks,
   baseLTVAsCollateral: "3500",
@@ -253,7 +252,6 @@ export const strategyWPunks: IReserveParams = {
 };
 
 export const strategyUniswapV3: IReserveParams = {
-  // address: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
   strategy: rateStrategyNFT,
   auctionStrategy: auctionStrategyUniswapV3,
   baseLTVAsCollateral: "3000",
