@@ -911,12 +911,14 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
           [tokenSymbol, tokenSymbol, ZERO_ADDRESS, ZERO_ADDRESS],
           verify
         );
+        const bakc = await deployMintableERC721(["BAKC", "BAKC", ""]);
+
         const apeCoinStaking = await deployApeCoinStaking(
           [
             erc20Tokens.APE.address,
             tokens.BAYC.address,
             tokens.MAYC.address,
-            tokens.DOODLE.address, // this is just a placeholder. not actually using DOODLE
+            bakc.address,
           ],
           verify
         );
