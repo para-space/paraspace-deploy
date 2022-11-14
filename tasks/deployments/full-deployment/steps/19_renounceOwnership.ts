@@ -33,6 +33,10 @@ export const step_19 = async (_verify = false) => {
     const punkGatewayProxy = await getWPunkGatewayProxy();
     const nftFloorOracle = await getNFTFloorOracle();
 
+    if (deployerAddress === paraSpaceAdminAddress) {
+      return;
+    }
+
     await waitForTx(
       await addressesProviderRegistry.transferOwnership(paraSpaceAdminAddress)
     );
@@ -41,8 +45,8 @@ export const step_19 = async (_verify = false) => {
       await addressesProvider.transferOwnership(paraSpaceAdminAddress)
     );
 
-    await waitForTx(await aclManager.removePoolAdmin(deployerAddress));
     await waitForTx(await aclManager.addPoolAdmin(paraSpaceAdminAddress));
+    await waitForTx(await aclManager.removePoolAdmin(deployerAddress));
     await waitForTx(
       await aclManager.grantRole(
         await aclManager.DEFAULT_ADMIN_ROLE(),
