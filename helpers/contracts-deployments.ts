@@ -22,12 +22,9 @@ import {StETH, MockAToken} from "../../types";
 import {MockContract} from "ethereum-waffle";
 import {
   getAllERC20Tokens,
-<<<<<<< HEAD
   getApeStakingLogic,
   getCryptoPunksMarket,
-=======
   getPunks,
->>>>>>> origin/main
   getFirstSigner,
   getWETH,
 } from "./contracts-getters";
