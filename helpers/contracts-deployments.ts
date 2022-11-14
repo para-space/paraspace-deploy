@@ -23,7 +23,6 @@ import {MockContract} from "ethereum-waffle";
 import {
   getAllERC20Tokens,
   getApeStakingLogic,
-  getCryptoPunksMarket,
   getPunks,
   getFirstSigner,
   getWETH,
