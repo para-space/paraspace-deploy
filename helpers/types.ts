@@ -354,6 +354,7 @@ export type iParaSpacePoolAssets<T> = Pick<
   | "stETH"
   | "APE"
   | "BAYC"
+  | "PUNKS"
   | "WPUNKS"
   | "MAYC"
   | "DOODLE"
