@@ -943,3 +943,21 @@ export const getApeStakingLogic = async (address?: tEthereumAddress) => {
     ? await apeStakingLogicFactory.attach(address || db.address)
     : undefined;
 };
+
+export const getMintableERC721Logic = async (address?: tEthereumAddress) => {
+  const mintableERC721LogicArtifact = await readArtifact(
+    eContractid.MintableERC721Logic
+  );
+
+  const mintableERC721LogicFactory = await DRE.ethers.getContractFactory(
+    mintableERC721LogicArtifact.abi,
+    mintableERC721LogicArtifact.bytecode
+  );
+  const db = await getDb()
+    .get(`${eContractid.MintableERC721Logic}.${DRE.network.name}`)
+    .value();
+
+  return address || db
+    ? await mintableERC721LogicFactory.attach(address || db.address)
+    : undefined;
+};
