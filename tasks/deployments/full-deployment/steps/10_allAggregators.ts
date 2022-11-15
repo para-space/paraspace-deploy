@@ -27,9 +27,9 @@ const deployNftOracle = async (verify = false) => {
   const erc721Tokens = await getAllERC721Tokens();
   // UniswapV3 should use price from `UniswapV3OracleWrapper` instead of NFTFloorOracle
   delete erc721Tokens[ERC721TokenContractId.UniswapV3];
-  const [deployer, user1, user2] = await getEthersSignersAddresses();
-  //at launch phase we will only use 2 feeders for nft oracle in mainnet
-  const feeders = [user1, user2];
+  const [deployer, user1, user2, user3] = await getEthersSignersAddresses();
+  //at launch phase we will only use 3 feeders for nft oracle in mainnet
+  const feeders = [user1, user2, user3];
   const projects = Object.values(erc721Tokens).map((x) => x.address);
   const nftFloorOracle = await deployNFTFloorPriceOracle(verify);
   await waitForTx(await nftFloorOracle.initialize(deployer, feeders, projects));
