@@ -867,10 +867,23 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
         tokensConfig[tokenSymbol],
         false
       );
-      if (tokenSymbol === ERC721TokenContractId.UniswapV3) {
+      if (
+        tokenSymbol === ERC721TokenContractId.UniswapV3 &&
+        paraSpaceConfig.Uniswap.V3Factory
+      ) {
         await insertContractAddressInDb(
           eContractid.UniswapV3Factory,
-          paraSpaceConfig.Uniswap.V3Factory!,
+          paraSpaceConfig.Uniswap.V3Factory,
+          false
+        );
+      }
+      if (
+        tokenSymbol === ERC721TokenContractId.WPUNKS &&
+        paraSpaceConfig.Tokens.PUNKS
+      ) {
+        await insertContractAddressInDb(
+          eContractid.PUNKS,
+          paraSpaceConfig.Tokens.PUNKS,
           false
         );
       }
