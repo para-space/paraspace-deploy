@@ -74,7 +74,7 @@ import {
   tEthereumAddress,
   ERC20TokenContractId,
 } from "./types";
-import {first, last} from "lodash";
+import {last} from "lodash";
 import {
   INonfungiblePositionManager__factory,
   ISwapRouter__factory,
