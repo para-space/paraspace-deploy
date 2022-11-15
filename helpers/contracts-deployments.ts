@@ -1,4 +1,5 @@
 import {DRE, getDb, getParaSpaceConfig} from "./misc-utils";
+import type {BigNumberish} from "ethers";
 import {
   tEthereumAddress,
   eContractid,
@@ -28,7 +29,6 @@ import {
 } from "./contracts-getters";
 import {
   convertToCurrencyDecimals,
-  getEthersSignersAddresses,
   getFunctionSignatures,
 } from "./contracts-helpers";
 import {
@@ -498,22 +498,13 @@ export const deployParaSpaceOracle = async (
     verify
   );
 
-export const deployNFTFloorPriceOracle = async (
-  projects: tEthereumAddress[],
-  verify?: boolean
-) => {
-  const deployer = await (await getFirstSigner()).getAddress();
-  const feeders = await getEthersSignersAddresses();
-
+export const deployNFTFloorPriceOracle = async (verify?: boolean) => {
   const nftFloorOracle = await withSaveAndVerify(
     await new NFTFloorOracle__factory(await getFirstSigner()).deploy(),
     eContractid.NFTFloorOracle,
     [],
     verify
   );
-
-  await nftFloorOracle.initialize(deployer, feeders, projects);
-
   return nftFloorOracle;
 };
 
@@ -1405,13 +1396,15 @@ export const deployERC721OracleWrapper = async (
   oracleAddress: string,
   asset: string,
   symbol: string,
+  expirationPeriod: BigNumberish,
   verify?: boolean
 ) =>
   withSaveAndVerify(
     await new ERC721OracleWrapper__factory(await getFirstSigner()).deploy(
       addressesProvider,
       oracleAddress,
-      asset
+      asset,
+      expirationPeriod
     ),
     eContractid.Aggregator.concat(`.${symbol}`),
     [addressesProvider, oracleAddress, asset],
