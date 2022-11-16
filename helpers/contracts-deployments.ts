@@ -1,5 +1,4 @@
 import {DRE, getDb, getParaSpaceConfig} from "./misc-utils";
-import type {BigNumberish} from "ethers";
 import {
   tEthereumAddress,
   eContractid,
@@ -671,7 +670,7 @@ export const deployGenericNTokenImpl = async (
   let mintableERC721Logic;
   mintableERC721Logic = await getMintableERC721Logic();
   if (!mintableERC721Logic) {
-    mintableERC721Logic = await deployMintableERC721Logic();
+    mintableERC721Logic = await deployMintableERC721Logic(verify);
   }
 
   const libraries = {
@@ -950,7 +949,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
           [tokenSymbol, tokenSymbol, ZERO_ADDRESS, ZERO_ADDRESS],
           verify
         );
-        const bakc = await deployMintableERC721(["BAKC", "BAKC", ""]);
+        const bakc = await deployMintableERC721(["BAKC", "BAKC", ""], false);
 
         const apeCoinStaking = await deployApeCoinStaking(
           [
@@ -1462,15 +1461,13 @@ export const deployERC721OracleWrapper = async (
   oracleAddress: string,
   asset: string,
   symbol: string,
-  expirationPeriod: BigNumberish,
   verify?: boolean
 ) =>
   withSaveAndVerify(
     await new ERC721OracleWrapper__factory(await getFirstSigner()).deploy(
       addressesProvider,
       oracleAddress,
-      asset,
-      expirationPeriod
+      asset
     ),
     eContractid.Aggregator.concat(`.${symbol}`),
     [addressesProvider, oracleAddress, asset],
@@ -2068,7 +2065,7 @@ export const deployNTokenBAYCImpl = async (
   let apeStakingLogic;
   apeStakingLogic = await getApeStakingLogic();
   if (!apeStakingLogic) {
-    apeStakingLogic = await deployApeStakingLogic();
+    apeStakingLogic = await deployApeStakingLogic(verify);
   }
   let mintableERC721Logic;
   mintableERC721Logic = await getMintableERC721Logic();

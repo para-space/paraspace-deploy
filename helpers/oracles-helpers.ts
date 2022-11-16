@@ -81,14 +81,11 @@ export const deployAllAggregators = async (
       );
       aggregators[tokenSymbol] = await getAggregator(undefined, tokenSymbol);
     } else if (!initialPrices) {
-      const nft_oracle_price_expiration =
-        getParaSpaceConfig().Oracle.ExpirationPeriod;
       aggregators[tokenSymbol] = await deployERC721OracleWrapper(
         addressesProvider.address,
         nftFloorOracle,
         tokens[tokenSymbol].address,
         tokenSymbol,
-        nft_oracle_price_expiration,
         verify
       );
     } else if (initialPrices[tokenSymbol]) {
