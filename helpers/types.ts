@@ -172,6 +172,8 @@ export enum eContractid {
   ApeCoinStaking = "ApeCoinStaking",
   ATokenDebtToken = "ATokenDebtToken",
   StETHDebtToken = "StETHDebtToken",
+  ApeStakingLogic = "ApeStakingLogic",
+  MintableERC721Logic = "MintableERC721Logic",
 }
 
 /*
@@ -393,6 +395,7 @@ export enum ERC721TokenContractId {
   MEEBITS = "MEEBITS",
   OTHR = "OTHR",
   UniswapV3 = "UniswapV3",
+  BAKC = "BAKC",
 }
 
 export enum NTokenContractId {
