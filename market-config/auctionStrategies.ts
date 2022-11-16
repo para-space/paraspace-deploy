@@ -9,8 +9,8 @@ export const auctionStrategyBAYC: IAuctionStrategyParams = {
   maxPriceMultiplier: utils.parseUnits("2.5", 18).toString(),
   minExpPriceMultiplier: utils.parseUnits("1.2", 18).toString(),
   minPriceMultiplier: utils.parseUnits("0.8", 18).toString(),
-  stepLinear: utils.parseUnits("0.08", 18).toString(),
-  stepExp: utils.parseUnits("0.02", 18).toString(),
+  stepLinear: utils.parseUnits("0.01102276665", 18).toString(),
+  stepExp: utils.parseUnits("0.02022592736", 18).toString(),
   tickLength: "900",
 };
 
@@ -19,8 +19,8 @@ export const auctionStrategyWPunks: IAuctionStrategyParams = {
   maxPriceMultiplier: utils.parseUnits("5", 18).toString(),
   minExpPriceMultiplier: utils.parseUnits("1.2", 18).toString(),
   minPriceMultiplier: utils.parseUnits("0.8", 18).toString(),
-  stepLinear: utils.parseUnits("0.011", 18).toString(),
-  stepExp: utils.parseUnits("0.041", 18).toString(),
+  stepLinear: utils.parseUnits("0.01149268155", 18).toString(),
+  stepExp: utils.parseUnits("0.04100348452", 18).toString(),
   tickLength: "900",
 };
 
@@ -29,8 +29,8 @@ export const auctionStrategyMAYC: IAuctionStrategyParams = {
   maxPriceMultiplier: utils.parseUnits("2", 18).toString(),
   minExpPriceMultiplier: utils.parseUnits("1.2", 18).toString(),
   minPriceMultiplier: utils.parseUnits("0.8", 18).toString(),
-  stepLinear: utils.parseUnits("0.012", 18).toString(),
-  stepExp: utils.parseUnits("0.015", 18).toString(),
+  stepLinear: utils.parseUnits("0.01830333903", 18).toString(),
+  stepExp: utils.parseUnits("0.02337453645", 18).toString(),
   tickLength: "900",
 };
 
@@ -39,18 +39,18 @@ export const auctionStrategyDoodles: IAuctionStrategyParams = {
   maxPriceMultiplier: utils.parseUnits("3.5", 18).toString(),
   minExpPriceMultiplier: utils.parseUnits("1.2", 18).toString(),
   minPriceMultiplier: utils.parseUnits("0.7", 18).toString(),
-  stepLinear: utils.parseUnits("0.014", 18).toString(),
-  stepExp: utils.parseUnits("0.03", 18).toString(),
+  stepLinear: utils.parseUnits("0.02106053073", 18).toString(),
+  stepExp: utils.parseUnits("0.04508812849", 18).toString(),
   tickLength: "900",
 };
 
 export const auctionStrategyOthr: IAuctionStrategyParams = {
   name: "auctionStrategyOthr",
   maxPriceMultiplier: utils.parseUnits("11", 18).toString(),
-  minExpPriceMultiplier: utils.parseUnits("1.2", 18).toString(),
+  minExpPriceMultiplier: utils.parseUnits("1.9", 18).toString(),
   minPriceMultiplier: utils.parseUnits("0.8", 18).toString(),
-  stepLinear: utils.parseUnits("0.025", 18).toString(),
-  stepExp: utils.parseUnits("0.11", 18).toString(),
+  stepLinear: utils.parseUnits("0.1375", 18).toString(),
+  stepExp: utils.parseUnits("0.2195051733", 18).toString(),
   tickLength: "900",
 };
 
@@ -59,8 +59,8 @@ export const auctionStrategyCloneX: IAuctionStrategyParams = {
   maxPriceMultiplier: utils.parseUnits("3", 18).toString(),
   minExpPriceMultiplier: utils.parseUnits("1.5", 18).toString(),
   minPriceMultiplier: utils.parseUnits("0.8", 18).toString(),
-  stepLinear: utils.parseUnits("0.025", 18).toString(),
-  stepExp: utils.parseUnits("0.025", 18).toString(),
+  stepLinear: utils.parseUnits("0.02584044038", 18).toString(),
+  stepExp: utils.parseUnits("0.02558746914", 18).toString(),
   tickLength: "900",
 };
 
@@ -69,18 +69,18 @@ export const auctionStrategyMoonbird: IAuctionStrategyParams = {
   maxPriceMultiplier: utils.parseUnits("2", 18).toString(),
   minExpPriceMultiplier: utils.parseUnits("1.1", 18).toString(),
   minPriceMultiplier: utils.parseUnits("0.8", 18).toString(),
-  stepLinear: utils.parseUnits("0.011", 18).toString(),
-  stepExp: utils.parseUnits("0.023", 18).toString(),
+  stepLinear: utils.parseUnits("0.01136311018", 18).toString(),
+  stepExp: utils.parseUnits("0.02264429236", 18).toString(),
   tickLength: "900",
 };
 
 export const auctionStrategyMeebits: IAuctionStrategyParams = {
   name: "auctionStrategyMeebits",
-  maxPriceMultiplier: utils.parseUnits("3.5", 18).toString(),
+  maxPriceMultiplier: utils.parseUnits("5", 18).toString(),
   minExpPriceMultiplier: utils.parseUnits("1.2", 18).toString(),
-  minPriceMultiplier: utils.parseUnits("0.7", 18).toString(),
-  stepLinear: utils.parseUnits("0.014", 18).toString(),
-  stepExp: utils.parseUnits("0.03", 18).toString(),
+  minPriceMultiplier: utils.parseUnits("0.8", 18).toString(),
+  stepLinear: utils.parseUnits("0.0114491225", 18).toString(),
+  stepExp: utils.parseUnits("0.04084807493", 18).toString(),
   tickLength: "900",
 };
 
@@ -89,15 +89,15 @@ export const auctionStrategyAzuki: IAuctionStrategyParams = {
   maxPriceMultiplier: utils.parseUnits("3", 18).toString(),
   minExpPriceMultiplier: utils.parseUnits("1.2", 18).toString(),
   minPriceMultiplier: utils.parseUnits("0.7", 18).toString(),
-  stepLinear: utils.parseUnits("0.020", 18).toString(),
-  stepExp: utils.parseUnits("0.036", 18).toString(),
+  stepLinear: utils.parseUnits("0.02957356117", 18).toString(),
+  stepExp: utils.parseUnits("0.05419596001", 18).toString(),
   tickLength: "900",
 };
 
 export const auctionStrategyUniswapV3: IAuctionStrategyParams = {
   name: "auctionStrategyUniswapV3",
-  maxPriceMultiplier: utils.parseUnits("3", 18).toString(),
-  minExpPriceMultiplier: utils.parseUnits("1.2", 18).toString(),
+  maxPriceMultiplier: utils.parseUnits("1", 18).toString(),
+  minExpPriceMultiplier: utils.parseUnits("0.9", 18).toString(),
   minPriceMultiplier: utils.parseUnits("0.9", 18).toString(),
   stepLinear: utils.parseUnits("0.01", 18).toString(),
   stepExp: utils.parseUnits("0.01", 18).toString(),
