@@ -36,20 +36,6 @@ export const buildForkConfig = ():
   return forkMode;
 };
 
-export const buildMiningConfig = (): HardhatNetworkMiningConfig | undefined => {
-  let miningConfig: HardhatNetworkMiningConfig | undefined;
-  if (FORK) {
-    miningConfig = {
-      auto: false,
-      interval: 3000,
-      mempool: {
-        order: "priority",
-      },
-    };
-  }
-  return miningConfig;
-};
-
 export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
   [eEthereumNetwork.kovan]: ALCHEMY_KEY
     ? `https://eth-kovan.alchemyapi.io/v2/${ALCHEMY_KEY}`
