@@ -949,7 +949,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
           [tokenSymbol, tokenSymbol, ZERO_ADDRESS, ZERO_ADDRESS],
           verify
         );
-        const bakc = await deployMintableERC721(["BAKC", "BAKC", ""], false);
+        const bakc = await deployMintableERC721(["BAKC", "BAKC", ""], verify);
 
         const apeCoinStaking = await deployApeCoinStaking(
           [
