@@ -10,6 +10,7 @@ import {
   HARDHAT_CHAINID,
   INFURA_KEY,
   MAINNET_CHAINID,
+  PARALLEL_CHAINID,
   TENDERLY_FORK_ID,
 } from "./helpers/hardhat-constants";
 
@@ -58,7 +59,7 @@ export const CHAINS_ID: iParamsPerNetwork<number | undefined> = {
   [eEthereumNetwork.goerli]: GOERLI_CHAINID,
   [eEthereumNetwork.hardhat]: FORK ? FORK_CHAINID : HARDHAT_CHAINID,
   [eEthereumNetwork.ganache]: undefined,
-  [eEthereumNetwork.parallel]: 1592,
+  [eEthereumNetwork.parallel]: PARALLEL_CHAINID,
   [eEthereumNetwork.tenderlyMain]: undefined,
 };
 

@@ -680,7 +680,7 @@ export const deployGenericNTokenImpl = async (
   let mintableERC721Logic;
   mintableERC721Logic = await getMintableERC721Logic();
   if (!mintableERC721Logic) {
-    mintableERC721Logic = await deployMintableERC721Logic();
+    mintableERC721Logic = await deployMintableERC721Logic(verify);
   }
 
   const libraries = {
@@ -705,7 +705,7 @@ export const deployUniswapV3NTokenImpl = async (
   let mintableERC721Logic;
   mintableERC721Logic = await getMintableERC721Logic();
   if (!mintableERC721Logic) {
-    mintableERC721Logic = await deployMintableERC721Logic();
+    mintableERC721Logic = await deployMintableERC721Logic(verify);
   }
 
   const libraries = {
@@ -730,7 +730,7 @@ export const deployGenericMoonbirdNTokenImpl = async (
   let mintableERC721Logic;
   mintableERC721Logic = await getMintableERC721Logic();
   if (!mintableERC721Logic) {
-    mintableERC721Logic = await deployMintableERC721Logic();
+    mintableERC721Logic = await deployMintableERC721Logic(verify);
   }
 
   const libraries = {
@@ -1183,7 +1183,7 @@ export const deployMockNToken = async (
   let mintableERC721Logic;
   mintableERC721Logic = await getMintableERC721Logic();
   if (!mintableERC721Logic) {
-    mintableERC721Logic = await deployMintableERC721Logic();
+    mintableERC721Logic = await deployMintableERC721Logic(verify);
   }
 
   const libraries = {
@@ -2080,7 +2080,7 @@ export const deployNTokenBAYCImpl = async (
   let mintableERC721Logic;
   mintableERC721Logic = await getMintableERC721Logic();
   if (!mintableERC721Logic) {
-    mintableERC721Logic = await deployMintableERC721Logic();
+    mintableERC721Logic = await deployMintableERC721Logic(verify);
   }
 
   const libraries = {
@@ -2114,7 +2114,7 @@ export const deployNTokenMAYCImpl = async (
   let mintableERC721Logic;
   mintableERC721Logic = await getMintableERC721Logic();
   if (!mintableERC721Logic) {
-    mintableERC721Logic = await deployMintableERC721Logic();
+    mintableERC721Logic = await deployMintableERC721Logic(verify);
   }
 
   const libraries = {
