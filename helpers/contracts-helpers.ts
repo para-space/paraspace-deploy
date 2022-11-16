@@ -39,7 +39,7 @@ import {
   PausableZoneController,
   Seaport,
 } from "../../types";
-import {HardhatRuntimeEnvironment} from "hardhat/types";
+import {HardhatRuntimeEnvironment, HttpNetworkConfig} from "hardhat/types";
 import {getIErc20Detailed} from "./contracts-getters";
 import {getDefenderRelaySigner, usingDefender} from "./defender-utils";
 import {usingTenderly, verifyAtTenderly} from "./tenderly-utils";
@@ -49,6 +49,7 @@ import {InitializableImmutableAdminUpgradeabilityProxy} from "../../types";
 import {decodeEvents} from "./seaport-helpers/events";
 import {expect} from "chai";
 import {ABI} from "hardhat-deploy/dist/types";
+import {ethers} from "ethers";
 
 export type ERC20TokenMap = {[symbol: string]: ERC20};
 export type ERC721TokenMap = {[symbol: string]: ERC721};
@@ -299,13 +300,18 @@ export const getProxyImplementation = async (
 export const impersonateAddress = async (
   address: tEthereumAddress
 ): Promise<SignerWithAddress> => {
+  const forkednetProvider = new ethers.providers.JsonRpcProvider(
+    (DRE.network.config as HttpNetworkConfig).url
+  );
+
   if (!usingTenderly()) {
     await (DRE as HardhatRuntimeEnvironment).network.provider.request({
       method: "hardhat_impersonateAccount",
       params: [address],
     });
   }
-  const signer = await DRE.ethers.provider.getSigner(address);
+
+  const signer = forkednetProvider.getSigner(address);
 
   return {
     signer,
