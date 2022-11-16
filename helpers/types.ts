@@ -522,6 +522,7 @@ export interface IOracleConfig {
   ExpirationPeriod: number;
   //percent
   DeviationRate: number;
+  Nodes: tEthereumAddress[];
 }
 
 export interface IMocksConfig {
