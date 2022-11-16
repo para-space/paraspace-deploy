@@ -1,7 +1,4 @@
-import {
-  HardhatNetworkForkingUserConfig,
-  HardhatNetworkMiningConfig,
-} from "hardhat/types";
+import {HardhatNetworkForkingUserConfig} from "hardhat/types";
 import {eEthereumNetwork, iParamsPerNetwork} from "./helpers/types";
 import dotenv from "dotenv";
 import {
