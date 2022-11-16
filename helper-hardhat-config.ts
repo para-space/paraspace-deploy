@@ -1,4 +1,7 @@
-import {HardhatNetworkForkingUserConfig} from "hardhat/types";
+import {
+  HardhatNetworkForkingUserConfig,
+  HardhatNetworkMiningConfig,
+} from "hardhat/types";
 import {eEthereumNetwork, iParamsPerNetwork} from "./helpers/types";
 import dotenv from "dotenv";
 import {
@@ -31,6 +34,20 @@ export const buildForkConfig = ():
     }
   }
   return forkMode;
+};
+
+export const buildMiningConfig = (): HardhatNetworkMiningConfig | undefined => {
+  let miningConfig: HardhatNetworkMiningConfig | undefined;
+  if (FORK) {
+    miningConfig = {
+      auto: false,
+      interval: 3000,
+      mempool: {
+        order: "priority",
+      },
+    };
+  }
+  return miningConfig;
 };
 
 export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
