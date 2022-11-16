@@ -30,7 +30,6 @@ import {
 } from "./contracts-getters";
 import {
   convertToCurrencyDecimals,
-  getEthersSignersAddresses,
   getFunctionSignatures,
 } from "./contracts-helpers";
 import {
@@ -501,22 +500,13 @@ export const deployParaSpaceOracle = async (
     verify
   );
 
-export const deployNFTFloorPriceOracle = async (
-  projects: tEthereumAddress[],
-  verify?: boolean
-) => {
-  const deployer = await (await getFirstSigner()).getAddress();
-  const feeders = await getEthersSignersAddresses();
-
+export const deployNFTFloorPriceOracle = async (verify?: boolean) => {
   const nftFloorOracle = await withSaveAndVerify(
     await new NFTFloorOracle__factory(await getFirstSigner()).deploy(),
     eContractid.NFTFloorOracle,
     [],
     verify
   );
-
-  await nftFloorOracle.initialize(deployer, feeders, projects);
-
   return nftFloorOracle;
 };
 
@@ -680,7 +670,7 @@ export const deployGenericNTokenImpl = async (
   let mintableERC721Logic;
   mintableERC721Logic = await getMintableERC721Logic();
   if (!mintableERC721Logic) {
-    mintableERC721Logic = await deployMintableERC721Logic();
+    mintableERC721Logic = await deployMintableERC721Logic(verify);
   }
 
   const libraries = {
@@ -959,7 +949,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
           [tokenSymbol, tokenSymbol, ZERO_ADDRESS, ZERO_ADDRESS],
           verify
         );
-        const bakc = await deployMintableERC721(["BAKC", "BAKC", ""]);
+        const bakc = await deployMintableERC721(["BAKC", "BAKC", ""], verify);
 
         const apeCoinStaking = await deployApeCoinStaking(
           [
@@ -2075,7 +2065,7 @@ export const deployNTokenBAYCImpl = async (
   let apeStakingLogic;
   apeStakingLogic = await getApeStakingLogic();
   if (!apeStakingLogic) {
-    apeStakingLogic = await deployApeStakingLogic();
+    apeStakingLogic = await deployApeStakingLogic(verify);
   }
   let mintableERC721Logic;
   mintableERC721Logic = await getMintableERC721Logic();

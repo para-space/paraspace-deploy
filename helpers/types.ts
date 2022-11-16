@@ -517,6 +517,13 @@ export interface IUniswapConfig {
   V3NFTPositionManager?: tEthereumAddress;
 }
 
+export interface IOracleConfig {
+  //blocks
+  ExpirationPeriod: number;
+  //percent
+  DeviationRate: number;
+}
+
 export interface IMocksConfig {
   USDPriceInWEI: string;
   AllAssetsInitialPrices: iAssetBase<string>;
@@ -553,6 +560,7 @@ export interface ICommonConfiguration {
   Chainlink: IChainlinkConfig;
   ReservesConfig: iMultiPoolsAssets<IReserveParams>;
   Treasury: tEthereumAddress;
+  Oracle: IOracleConfig;
 }
 
 export interface IParaSpaceConfiguration extends ICommonConfiguration {
