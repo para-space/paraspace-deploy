@@ -1,8 +1,5 @@
 import {ZERO_ADDRESS} from "../../../../helpers/constants";
-import {
-  deployPriceOracle,
-  deployNFTFloorPriceOracle,
-} from "../../../../helpers/contracts-deployments";
+import {deployPriceOracle} from "../../../../helpers/contracts-deployments";
 import {
   getAllERC20Tokens,
   getAllERC721Tokens,
@@ -17,7 +14,7 @@ import {
 } from "../../../../helpers/misc-utils";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {setInitialAssetPricesInOracle} from "../../../../helpers/oracles-helpers";
-import {eContractid, ERC721TokenContractId} from "../../../../helpers/types";
+import {eContractid} from "../../../../helpers/types";
 
 export const step_09 = async (verify = false) => {
   try {
@@ -26,19 +23,11 @@ export const step_09 = async (verify = false) => {
     const paraSpaceConfig = getParaSpaceConfig();
 
     if (isMainnet()) {
-      // UniswapV3 should use price from `UniswapV3OracleWrapper` instead of NFTFloorOracle
-      delete erc721Tokens[ERC721TokenContractId.UniswapV3];
-      await deployNFTFloorPriceOracle(
-        Object.values(erc721Tokens).map((x) => x.address),
-        verify
-      );
       insertContractAddressInDb(eContractid.PriceOracle, ZERO_ADDRESS, false);
     }
 
     if (isLocalTestnet() || isPublicTestnet()) {
       const punks = await getPunks();
-      //for testnet we only deploy but still use mock price instead
-      await deployNFTFloorPriceOracle([], verify);
       const fallbackOracle = await deployPriceOracle(verify);
       await waitForTx(
         await fallbackOracle.setEthUsdPrice(

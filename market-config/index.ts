@@ -1,5 +1,6 @@
 import {eEthereumNetwork, IParaSpaceConfiguration} from "../helpers/types";
 import {MocksConfig} from "./mocks";
+import {MainetOracleConfig, TestnetOracleConfig} from "./oracle";
 import {
   strategyDAI,
   strategyUSDC,
@@ -40,6 +41,7 @@ export const CommonConfig: Pick<
   | "RiskAdminIndex"
   | "GatewayAdminIndex"
   | "Mocks"
+  | "Oracle"
 > = {
   MarketId: "ParaSpaceMM",
   PTokenNamePrefix: "ParaSpace Derivative Token",
@@ -59,6 +61,8 @@ export const CommonConfig: Pick<
   GatewayAdminIndex: 1, // Gateway Admin, for polkadot evm only 5 accounts initialized
   // MOCKS
   Mocks: MocksConfig,
+  // Oracle
+  Oracle: TestnetOracleConfig,
 };
 
 export const HardhatParaSpaceConfig: IParaSpaceConfiguration = {
@@ -210,6 +214,7 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     // UniswapV3: strategyUniswapV3,
   },
   Mocks: undefined,
+  Oracle: MainetOracleConfig,
 };
 
 export const ParaSpaceConfigs: Partial<
