@@ -1,6 +1,6 @@
 import {eEthereumNetwork, IParaSpaceConfiguration} from "../helpers/types";
 import {MocksConfig} from "./mocks";
-import {MainetOracleConfig, TestnetOracleConfig} from "./oracle";
+import {MainnetOracleConfig, TestnetOracleConfig} from "./oracle";
 import {
   strategyDAI,
   strategyUSDC,
@@ -214,7 +214,7 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     // UniswapV3: strategyUniswapV3,
   },
   Mocks: undefined,
-  Oracle: MainetOracleConfig,
+  Oracle: MainnetOracleConfig,
 };
 
 export const ParaSpaceConfigs: Partial<
