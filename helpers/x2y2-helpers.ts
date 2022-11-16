@@ -11,7 +11,7 @@ import {latest} from "./contracts-helpers";
 import {DRE} from "./misc-utils";
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
 import {convertSignatureToEIP2098} from "./seaport-helpers/encoding";
-import {accounts} from "../test-wallets";
+import {accounts} from "../wallets";
 
 var INTENT_SELL = 1;
 var INTENT_AUCTION = 2;
