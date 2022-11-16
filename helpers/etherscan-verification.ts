@@ -95,10 +95,18 @@ export const verifyEtherscanContract = async (
 ) => {
   const currentNetwork = DRE.network.name;
 
+  if (!ETHERSCAN_NETWORKS.includes(currentNetwork)) {
+    return;
+  }
+
   if (
     ETHERSCAN_VERIFICATION_CONTRACTS?.every((p) => !minimatch(contractId, p))
   ) {
     return;
+  }
+
+  if (!ETHERSCAN_KEY) {
+    throw Error("Missing ETHERSCAN_KEY.");
   }
 
   let isVerified = await getIsVerified(contractId, address, currentNetwork);
@@ -106,16 +114,8 @@ export const verifyEtherscanContract = async (
     return;
   }
 
-  if (!ETHERSCAN_NETWORKS.includes(currentNetwork)) {
-    return;
-  }
-
   console.log(`- Verifying ${contractId}`);
   console.log(`  - address: ${address}`);
-
-  if (!ETHERSCAN_KEY) {
-    throw Error("Missing ETHERSCAN_KEY.");
-  }
 
   try {
     const msDelay = 3000;
