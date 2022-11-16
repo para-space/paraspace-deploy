@@ -23,9 +23,11 @@ import {StETH, MockAToken} from "../../types";
 import {MockContract} from "ethereum-waffle";
 import {
   getAllERC20Tokens,
+  getApeStakingLogic,
   getPunks,
   getFirstSigner,
   getWETH,
+  getMintableERC721Logic,
 } from "./contracts-getters";
 import {
   convertToCurrencyDecimals,
@@ -144,6 +146,7 @@ import {MarketplaceLogicLibraryAddresses} from "../../types/factories/protocol/l
 import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/PoolCore__factory";
 import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
 import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
+
 import {pick} from "lodash";
 import {ZERO_ADDRESS} from "./constants";
 
@@ -664,9 +667,19 @@ export const deployGenericNTokenImpl = async (
   poolAddress: tEthereumAddress,
   atomicPricing: boolean,
   verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new NToken__factory(await getFirstSigner()).deploy(
+) => {
+  let mintableERC721Logic;
+  mintableERC721Logic = await getMintableERC721Logic();
+  if (!mintableERC721Logic) {
+    mintableERC721Logic = await deployMintableERC721Logic();
+  }
+
+  const libraries = {
+    ["contracts/protocol/tokenization/libraries/MintableERC721Logic.sol:MintableERC721Logic"]:
+      mintableERC721Logic.address,
+  };
+  return withSaveAndVerify(
+    await new NToken__factory(libraries, await getFirstSigner()).deploy(
       poolAddress,
       atomicPricing
     ),
@@ -674,32 +687,57 @@ export const deployGenericNTokenImpl = async (
     [poolAddress, atomicPricing],
     verify
   );
+};
 
 export const deployUniswapV3NTokenImpl = async (
   poolAddress: tEthereumAddress,
   verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new NTokenUniswapV3__factory(await getFirstSigner()).deploy(
-      poolAddress
-    ),
+) => {
+  let mintableERC721Logic;
+  mintableERC721Logic = await getMintableERC721Logic();
+  if (!mintableERC721Logic) {
+    mintableERC721Logic = await deployMintableERC721Logic();
+  }
+
+  const libraries = {
+    ["contracts/protocol/tokenization/libraries/MintableERC721Logic.sol:MintableERC721Logic"]:
+      mintableERC721Logic.address,
+  };
+  return withSaveAndVerify(
+    await new NTokenUniswapV3__factory(
+      libraries,
+      await getFirstSigner()
+    ).deploy(poolAddress),
     eContractid.NTokenUniswapV3Impl,
     [poolAddress],
     verify
   );
+};
 
 export const deployGenericMoonbirdNTokenImpl = async (
   poolAddress: tEthereumAddress,
   verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new NTokenMoonBirds__factory(await getFirstSigner()).deploy(
-      poolAddress
-    ),
+) => {
+  let mintableERC721Logic;
+  mintableERC721Logic = await getMintableERC721Logic();
+  if (!mintableERC721Logic) {
+    mintableERC721Logic = await deployMintableERC721Logic();
+  }
+
+  const libraries = {
+    ["contracts/protocol/tokenization/libraries/MintableERC721Logic.sol:MintableERC721Logic"]:
+      mintableERC721Logic.address,
+  };
+  return withSaveAndVerify(
+    await new NTokenMoonBirds__factory(
+      libraries,
+      await getFirstSigner()
+    ).deploy(poolAddress),
     eContractid.NTokenMoonBirdsImpl,
     [poolAddress],
     verify
   );
+};
 
 export const deployDelegationAwarePToken = async (
   [
@@ -912,12 +950,14 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
           [tokenSymbol, tokenSymbol, ZERO_ADDRESS, ZERO_ADDRESS],
           verify
         );
+        const bakc = await deployMintableERC721(["BAKC", "BAKC", ""]);
+
         const apeCoinStaking = await deployApeCoinStaking(
           [
             erc20Tokens.APE.address,
             tokens.BAYC.address,
             tokens.MAYC.address,
-            tokens.DOODLE.address, // this is just a placeholder. not actually using DOODLE
+            bakc.address,
           ],
           verify
         );
@@ -1131,8 +1171,21 @@ export const deployMockNToken = async (
   ],
   verify?: boolean
 ) => {
+  let mintableERC721Logic;
+  mintableERC721Logic = await getMintableERC721Logic();
+  if (!mintableERC721Logic) {
+    mintableERC721Logic = await deployMintableERC721Logic();
+  }
+
+  const libraries = {
+    ["contracts/protocol/tokenization/libraries/MintableERC721Logic.sol:MintableERC721Logic"]:
+      mintableERC721Logic.address,
+  };
+
   const instance = await withSaveAndVerify(
-    await new MockNToken__factory(await getFirstSigner()).deploy(args[0]),
+    await new MockNToken__factory(libraries, await getFirstSigner()).deploy(
+      args[0]
+    ),
     eContractid.MockNToken,
     [args[0], false],
     verify
@@ -1986,13 +2039,52 @@ export const deployApeCoinStaking = async (
     verify
   );
 
+export const deployApeStakingLogic = async (verify?: boolean) => {
+  const apeStakingLogicArtifact = await readArtifact(
+    eContractid.ApeStakingLogic
+  );
+
+  const apeStakingLogicFactory = await DRE.ethers.getContractFactory(
+    apeStakingLogicArtifact.abi,
+    apeStakingLogicArtifact.bytecode
+  );
+  const apeStakingLogic = await (
+    await apeStakingLogicFactory.connect(await getFirstSigner()).deploy()
+  ).deployed();
+
+  return withSaveAndVerify(
+    apeStakingLogic,
+    eContractid.ApeStakingLogic,
+    [],
+    verify
+  );
+};
+
 export const deployNTokenBAYCImpl = async (
   apeCoinStaking: tEthereumAddress,
   poolAddress: tEthereumAddress,
   verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new NTokenBAYC__factory(await getFirstSigner()).deploy(
+) => {
+  let apeStakingLogic;
+  apeStakingLogic = await getApeStakingLogic();
+  if (!apeStakingLogic) {
+    apeStakingLogic = await deployApeStakingLogic();
+  }
+  let mintableERC721Logic;
+  mintableERC721Logic = await getMintableERC721Logic();
+  if (!mintableERC721Logic) {
+    mintableERC721Logic = await deployMintableERC721Logic();
+  }
+
+  const libraries = {
+    ["contracts/protocol/tokenization/libraries/ApeStakingLogic.sol:ApeStakingLogic"]:
+      apeStakingLogic.address,
+    ["contracts/protocol/tokenization/libraries/MintableERC721Logic.sol:MintableERC721Logic"]:
+      mintableERC721Logic.address,
+  };
+
+  return withSaveAndVerify(
+    await new NTokenBAYC__factory(libraries, await getFirstSigner()).deploy(
       poolAddress,
       apeCoinStaking
     ),
@@ -2000,14 +2092,32 @@ export const deployNTokenBAYCImpl = async (
     [poolAddress, apeCoinStaking],
     verify
   );
+};
 
 export const deployNTokenMAYCImpl = async (
   apeCoinStaking: tEthereumAddress,
   poolAddress: tEthereumAddress,
   verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new NTokenMAYC__factory(await getFirstSigner()).deploy(
+) => {
+  let apeStakingLogic;
+  apeStakingLogic = await getApeStakingLogic();
+  if (!apeStakingLogic) {
+    apeStakingLogic = await deployApeStakingLogic();
+  }
+  let mintableERC721Logic;
+  mintableERC721Logic = await getMintableERC721Logic();
+  if (!mintableERC721Logic) {
+    mintableERC721Logic = await deployMintableERC721Logic();
+  }
+
+  const libraries = {
+    ["contracts/protocol/tokenization/libraries/ApeStakingLogic.sol:ApeStakingLogic"]:
+      apeStakingLogic.address,
+    ["contracts/protocol/tokenization/libraries/MintableERC721Logic.sol:MintableERC721Logic"]:
+      mintableERC721Logic.address,
+  };
+  return withSaveAndVerify(
+    await new NTokenMAYC__factory(libraries, await getFirstSigner()).deploy(
       poolAddress,
       apeCoinStaking
     ),
@@ -2015,7 +2125,7 @@ export const deployNTokenMAYCImpl = async (
     [poolAddress, apeCoinStaking],
     verify
   );
-
+};
 export const deployATokenDebtToken = async (
   poolAddress: tEthereumAddress,
   verify?: boolean
@@ -2041,3 +2151,24 @@ export const deployStETHDebtToken = async (
     [poolAddress],
     verify
   );
+
+export const deployMintableERC721Logic = async (verify?: boolean) => {
+  const mintableERC721LogicArtifact = await readArtifact(
+    eContractid.MintableERC721Logic
+  );
+
+  const mintableERC721LogicFactory = await DRE.ethers.getContractFactory(
+    mintableERC721LogicArtifact.abi,
+    mintableERC721LogicArtifact.bytecode
+  );
+  const mintableERC721Logic = await (
+    await mintableERC721LogicFactory.connect(await getFirstSigner()).deploy()
+  ).deployed();
+
+  return withSaveAndVerify(
+    mintableERC721Logic,
+    eContractid.MintableERC721Logic,
+    [],
+    verify
+  );
+};

@@ -74,7 +74,7 @@ import {
   tEthereumAddress,
   ERC20TokenContractId,
 } from "./types";
-import {first, last} from "lodash";
+import {last} from "lodash";
 import {
   INonfungiblePositionManager__factory,
   ISwapRouter__factory,
@@ -82,8 +82,10 @@ import {
 
 declare let hre: HardhatRuntimeEnvironment;
 
-export const getFirstSigner = async () => first(await getEthersSigners())!;
-
+const readArtifact = async (id: string) => {
+  return (DRE as HardhatRuntimeEnvironment).artifacts.readArtifact(id);
+};
+export const getFirstSigner = async () => (await getEthersSigners())[0];
 export const getLastSigner = async () => last(await getEthersSigners())!;
 
 export const getPoolAddressesProvider = async (address?: tEthereumAddress) => {
@@ -923,3 +925,39 @@ export const getApeCoinStaking = async (address?: tEthereumAddress) =>
       ).address,
     await getFirstSigner()
   );
+
+export const getApeStakingLogic = async (address?: tEthereumAddress) => {
+  const apeStakingLogicArtifact = await readArtifact(
+    eContractid.ApeStakingLogic
+  );
+
+  const apeStakingLogicFactory = await DRE.ethers.getContractFactory(
+    apeStakingLogicArtifact.abi,
+    apeStakingLogicArtifact.bytecode
+  );
+  const db = await getDb()
+    .get(`${eContractid.ApeStakingLogic}.${DRE.network.name}`)
+    .value();
+
+  return address || db
+    ? await apeStakingLogicFactory.attach(address || db.address)
+    : undefined;
+};
+
+export const getMintableERC721Logic = async (address?: tEthereumAddress) => {
+  const mintableERC721LogicArtifact = await readArtifact(
+    eContractid.MintableERC721Logic
+  );
+
+  const mintableERC721LogicFactory = await DRE.ethers.getContractFactory(
+    mintableERC721LogicArtifact.abi,
+    mintableERC721LogicArtifact.bytecode
+  );
+  const db = await getDb()
+    .get(`${eContractid.MintableERC721Logic}.${DRE.network.name}`)
+    .value();
+
+  return address || db
+    ? await mintableERC721LogicFactory.attach(address || db.address)
+    : undefined;
+};
