@@ -74,7 +74,7 @@ import {
   tEthereumAddress,
   ERC20TokenContractId,
 } from "./types";
-import {last} from "lodash";
+import {first, last} from "lodash";
 import {
   INonfungiblePositionManager__factory,
   ISwapRouter__factory,
@@ -85,7 +85,8 @@ declare let hre: HardhatRuntimeEnvironment;
 const readArtifact = async (id: string) => {
   return (DRE as HardhatRuntimeEnvironment).artifacts.readArtifact(id);
 };
-export const getFirstSigner = async () => (await getEthersSigners())[0];
+
+export const getFirstSigner = async () => first(await getEthersSigners())!;
 export const getLastSigner = async () => last(await getEthersSigners())!;
 
 export const getPoolAddressesProvider = async (address?: tEthereumAddress) => {

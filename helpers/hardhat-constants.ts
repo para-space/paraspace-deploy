@@ -6,6 +6,7 @@ export const HARDHAT_CHAINID = 31337;
 export const GOERLI_CHAINID = 5;
 export const FORK_CHAINID = 522;
 export const MAINNET_CHAINID = 1;
+export const PARALLEL_CHAINID = 1592;
 
 export const INFURA_KEY = process.env.INFURA_KEY || "";
 export const ALCHEMY_KEY = process.env.ALCHEMY_KEY || "";

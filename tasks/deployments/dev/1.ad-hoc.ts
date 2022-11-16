@@ -8,6 +8,7 @@ import {DRE} from "../../../helpers/misc-utils";
 import * as envs from "../../../helpers/hardhat-constants";
 
 const adHoc = async () => {
+  await DRE.run("set-DRE");
   console.time("ad-hoc");
   console.log(await DRE.ethers.provider.getNetwork());
   console.log(await (await getFirstSigner()).getAddress());

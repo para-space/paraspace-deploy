@@ -7,6 +7,7 @@ import {
   TENDERLY_FORK_ID,
   TENDERLY_HEAD_ID,
 } from "../../helpers/hardhat-constants";
+import {upperFirst} from "lodash";
 
 task(
   `set-DRE`,
@@ -40,6 +41,7 @@ task(
   console.log("- Environment");
   if (FORK) {
     console.log("  - Fork Mode activated at network: ", FORK);
+    _DRE.network.name = `forked${upperFirst(FORK)}`;
     if (_DRE?.config?.networks?.hardhat?.forking?.url) {
       console.log(
         "  - Provider URL:",
