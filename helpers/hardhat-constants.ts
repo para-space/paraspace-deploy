@@ -52,3 +52,6 @@ export const DEPLOY_END = parseInt(process.env.DEPLOY_END ?? "20");
 export const DEPLOYER_MNEMONIC =
   process.env.DEPLOYER_MNEMONIC ||
   "bottom drive obey lake curtain smoke basket hold race lonely fit walk";
+
+export const BLOCKSCOUT_DISABLE_INDEXER =
+  process.env.BLOCKSCOUT_DISABLE_INDEXER == "false" ? false : true;
