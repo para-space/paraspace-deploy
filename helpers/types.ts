@@ -546,7 +546,7 @@ export interface ICommonConfiguration {
   Mocks?: IMocksConfig;
   ParaSpaceAdmin: tEthereumAddress | undefined;
   ParaSpaceAdminIndex: number;
-  EmergencyAdmin: tEthereumAddress | undefined;
+  EmergencyAdmins: tEthereumAddress[];
   EmergencyAdminIndex: number;
 
   RiskAdmin: tEthereumAddress | undefined;

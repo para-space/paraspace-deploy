@@ -7,7 +7,7 @@ import {
 } from "../../../../helpers/contracts-getters";
 
 export const step_05 = async (verify = false) => {
-  const {paraSpaceAdminAddress, emergencyAdminAddress, riskAdminAddress} =
+  const {paraSpaceAdminAddress, emergencyAdminAddresses, riskAdminAddress} =
     await getParaSpaceAdmins();
   const addressesProvider = await getPoolAddressesProvider();
   const deployer = await getFirstSigner();
@@ -24,7 +24,11 @@ export const step_05 = async (verify = false) => {
     await waitForTx(
       await aclManager.addAssetListingAdmin(paraSpaceAdminAddress)
     );
-    await waitForTx(await aclManager.addEmergencyAdmin(emergencyAdminAddress));
+    for (const emergencyAdminAddress of emergencyAdminAddresses) {
+      await waitForTx(
+        await aclManager.addEmergencyAdmin(emergencyAdminAddress)
+      );
+    }
     await waitForTx(await aclManager.addRiskAdmin(riskAdminAddress));
   } catch (error) {
     console.error(error);

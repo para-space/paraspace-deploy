@@ -33,7 +33,7 @@ export const CommonConfig: Pick<
   | "ProviderId"
   | "AuctionRecoveryHealthFactor"
   | "ParaSpaceAdmin"
-  | "EmergencyAdmin"
+  | "EmergencyAdmins"
   | "RiskAdmin"
   | "GatewayAdmin"
   | "ParaSpaceAdminIndex"
@@ -51,10 +51,9 @@ export const CommonConfig: Pick<
   AuctionRecoveryHealthFactor: "1500000000000000000",
   // ACL CONFIGURATION
   ParaSpaceAdmin: undefined,
-  EmergencyAdmin: undefined,
+  EmergencyAdmins: [],
   RiskAdmin: undefined,
   GatewayAdmin: undefined,
-  // DONT CHANGE THIS!!!
   ParaSpaceAdminIndex: 4, // ACL Admin, Pool Admin, Asset Listing Admin
   EmergencyAdminIndex: 3, // Emergency Admin, >1 is a must to make tests pass
   RiskAdminIndex: 2, // Risk Admin, >1 is a must to make tests pass
@@ -68,8 +67,8 @@ export const CommonConfig: Pick<
 export const HardhatParaSpaceConfig: IParaSpaceConfiguration = {
   // BASIC INFO
   ...CommonConfig,
-  ParaSpaceTeam: "0x03D10cda221C2faA9F5CA22087654011ceE1802D",
-  Treasury: "0x03D10cda221C2faA9F5CA22087654011ceE1802D",
+  ParaSpaceTeam: "0xc783df8a850f42e7F7e57013759C285caa701eB6",
+  Treasury: "0xc783df8a850f42e7F7e57013759C285caa701eB6",
   Tokens: {},
   BendDAO: {},
   Uniswap: {},
@@ -103,8 +102,12 @@ export const HardhatParaSpaceConfig: IParaSpaceConfiguration = {
 export const GoerliParaSpaceConfig: IParaSpaceConfiguration = {
   // BASIC INFO
   ...CommonConfig,
-  ParaSpaceTeam: "0x03D10cda221C2faA9F5CA22087654011ceE1802D",
-  Treasury: "0x03D10cda221C2faA9F5CA22087654011ceE1802D",
+  ParaSpaceTeam: "0x018281853eCC543Aa251732e8FDaa7323247eBeB",
+  Treasury: "0x018281853eCC543Aa251732e8FDaa7323247eBeB",
+  ParaSpaceAdmin: "0x018281853eCC543Aa251732e8FDaa7323247eBeB",
+  EmergencyAdmins: ["0x018281853eCC543Aa251732e8FDaa7323247eBeB"],
+  RiskAdmin: "0x018281853eCC543Aa251732e8FDaa7323247eBeB",
+  GatewayAdmin: "0x018281853eCC543Aa251732e8FDaa7323247eBeB",
   Tokens: {
     WETH: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
     UniswapV3: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
@@ -151,7 +154,15 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
   // BASIC INFO
   ...CommonConfig,
   ParaSpaceAdmin: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
-  EmergencyAdmin: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
+  EmergencyAdmins: [
+    "0x17816E9A858b161c3E37016D139cf618056CaCD4",
+    "0x69FAD68De47D5666Ad668C7D682dDb8FD6322949",
+    "0xD65Fee206a4ea89eBBcF4694E745C597AB6F8325",
+    "0x755C1bd877788739dD002B98B093c4852AbfA6c4",
+    "0x3A6c796edffc057d789F7d4ffAd438B1D48f3075",
+    "0x2f2d07d60ea7330DD2314f4413CCbB2dC25276EF",
+    "0x001e2bcC5c1BfC3131d33Ba074B12c2F1237FB04",
+  ],
   RiskAdmin: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
   GatewayAdmin: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
   ParaSpaceTeam: "0x17816E9A858b161c3E37016D139cf618056CaCD4",

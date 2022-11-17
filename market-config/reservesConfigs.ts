@@ -119,9 +119,9 @@ export const strategyAPE: IReserveParams = {
 export const strategyBAYC: IReserveParams = {
   strategy: rateStrategyNFT,
   auctionStrategy: auctionStrategyBAYC,
-  baseLTVAsCollateral: "3500",
+  baseLTVAsCollateral: "4000",
   liquidationProtocolFeePercentage: "0",
-  liquidationThreshold: "7000",
+  liquidationThreshold: "8000",
   liquidationBonus: "10500",
   borrowingEnabled: false,
   reserveDecimals: "0",
@@ -134,7 +134,7 @@ export const strategyBAYC: IReserveParams = {
 export const strategyMAYC: IReserveParams = {
   strategy: rateStrategyNFT,
   auctionStrategy: auctionStrategyMAYC,
-  baseLTVAsCollateral: "3000",
+  baseLTVAsCollateral: "3250",
   liquidationProtocolFeePercentage: "0",
   liquidationThreshold: "7000",
   liquidationBonus: "10500",

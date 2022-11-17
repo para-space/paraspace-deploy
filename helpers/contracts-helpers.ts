@@ -426,14 +426,14 @@ export const createConduit = async (
 
 export const getParaSpaceAdmins = async (): Promise<{
   paraSpaceAdminAddress: tEthereumAddress;
-  emergencyAdminAddress: tEthereumAddress;
+  emergencyAdminAddresses: tEthereumAddress[];
   riskAdminAddress: tEthereumAddress;
   gatewayAdminAddress: tEthereumAddress;
 }> => {
   const signers = await getEthersSigners();
   const {
     ParaSpaceAdmin,
-    EmergencyAdmin,
+    EmergencyAdmins,
     RiskAdmin,
     GatewayAdmin,
     ParaSpaceAdminIndex,
@@ -444,8 +444,10 @@ export const getParaSpaceAdmins = async (): Promise<{
   return {
     paraSpaceAdminAddress:
       ParaSpaceAdmin || (await signers[ParaSpaceAdminIndex].getAddress()),
-    emergencyAdminAddress:
-      EmergencyAdmin || (await signers[EmergencyAdminIndex].getAddress()),
+    emergencyAdminAddresses:
+      EmergencyAdmins.length > 0
+        ? EmergencyAdmins
+        : [await signers[EmergencyAdminIndex].getAddress()],
     riskAdminAddress: RiskAdmin || (await signers[RiskAdminIndex].getAddress()),
     gatewayAdminAddress:
       GatewayAdmin || (await signers[GatewayAdminIndex].getAddress()),
