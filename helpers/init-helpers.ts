@@ -33,6 +33,7 @@ import {
   deployNTokenMAYCImpl,
   deployATokenDebtToken,
   deployStETHDebtToken,
+  deployPTokenSApe,
 } from "./contracts-deployments";
 import {ZERO_ADDRESS} from "./constants";
 
@@ -179,7 +180,8 @@ export const initReservesByHelper = async (
       xTokenImpl === eContractid.NTokenMoonBirdsImpl ||
       xTokenImpl === eContractid.NTokenUniswapV3Impl ||
       xTokenImpl === eContractid.PTokenStETHImpl ||
-      xTokenImpl === eContractid.PTokenATokenImpl
+      xTokenImpl === eContractid.PTokenATokenImpl ||
+      xTokenImpl === eContractid.PTokenSApeImpl
   ) as [string, IReserveParams][];
 
   for (const [symbol, params] of reserves) {
@@ -309,6 +311,10 @@ export const initReservesByHelper = async (
         variableDebtTokenImplementationAddress = (
           await deployATokenDebtToken(pool.address, verify)
         ).address;
+      } else if (reserveSymbols[i] === ERC20TokenContractId.sAPE) {
+        xTokenToUse = (await deployPTokenSApe(pool.address, verify)).address;
+        variableDebtTokenImplementationAddress =
+          genericVariableDebtTokenAddress;
       } else {
         xTokenToUse = pTokenImplementationAddress;
         variableDebtTokenImplementationAddress =

@@ -69,7 +69,9 @@ export const HardhatParaSpaceConfig: IParaSpaceConfiguration = {
   ...CommonConfig,
   ParaSpaceTeam: "0xc783df8a850f42e7F7e57013759C285caa701eB6",
   Treasury: "0xc783df8a850f42e7F7e57013759C285caa701eB6",
-  Tokens: {},
+  Tokens: {
+    sAPE: "0x0000000000000000000000000000000000000001",
+  },
   BendDAO: {},
   Uniswap: {},
   Marketplace: {},
@@ -81,6 +83,7 @@ export const HardhatParaSpaceConfig: IParaSpaceConfiguration = {
     USDT: strategyUSDT,
     WETH: strategyWETH,
     APE: strategyAPE,
+    sAPE: strategyAPE,
     WBTC: strategyWBTC,
     stETH: strategySTETH,
     aWETH: strategyAWETH,
@@ -109,6 +112,7 @@ export const GoerliParaSpaceConfig: IParaSpaceConfiguration = {
   RiskAdmin: "0x018281853eCC543Aa251732e8FDaa7323247eBeB",
   GatewayAdmin: "0x018281853eCC543Aa251732e8FDaa7323247eBeB",
   Tokens: {
+    sAPE: "0x0000000000000000000000000000000000000001",
     WETH: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
     UniswapV3: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
   },
@@ -132,6 +136,7 @@ export const GoerliParaSpaceConfig: IParaSpaceConfiguration = {
     USDT: strategyUSDT,
     WETH: strategyWETH,
     APE: strategyAPE,
+    sAPE: strategyAPE,
     WBTC: strategyWBTC,
     stETH: strategySTETH,
     aWETH: strategyAWETH,
@@ -168,6 +173,7 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
   ParaSpaceTeam: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
   Treasury: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
   Tokens: {
+    sAPE: "0x0000000000000000000000000000000000000001",
     WETH: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     DAI: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -205,6 +211,7 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     USDT: "0xEe9F2375b4bdF6387aa8265dD4FB8F16512A1d46",
     WBTC: "0xdeb288F737066589598e9214E782fa5A8eD689e8",
     APE: "0xc7de7f4d4C9c991fF62a07D18b3E31e349833A18",
+    sAPE: "0xc7de7f4d4C9c991fF62a07D18b3E31e349833A18",
   },
   ReservesConfig: {
     DAI: strategyDAI,
@@ -212,6 +219,7 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     USDT: strategyUSDT,
     WETH: strategyWETH,
     APE: strategyAPE,
+    sAPE: strategyAPE,
     WBTC: strategyWBTC,
     DOODLE: strategyDoodles,
     BAYC: strategyBAYC,

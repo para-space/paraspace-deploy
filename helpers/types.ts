@@ -80,6 +80,7 @@ export enum eContractid {
   InitializableImmutableAdminUpgradeabilityProxy = "InitializableImmutableAdminUpgradeabilityProxy",
   MockFlashLoanReceiver = "MockFlashLoanReceiver",
   PTokenImpl = "PTokenImpl",
+  PTokenSApeImpl = "PTokenSApeImpl",
   PTokenATokenImpl = "PTokenATokenImpl",
   PTokenStETHImpl = "PTokenStETHImpl",
   NTokenImpl = "NTokenImpl",
@@ -379,6 +380,7 @@ export enum ERC20TokenContractId {
   WBTC = "WBTC",
   stETH = "stETH",
   APE = "APE",
+  sAPE = "sAPE",
   aWETH = "aWETH",
   cETH = "cETH",
   PUNK = "PUNK",
@@ -504,6 +506,7 @@ export interface IChainlinkConfig {
   WBTC?: tEthereumAddress;
   STETH?: tEthereumAddress;
   APE?: tEthereumAddress;
+  sAPE?: tEthereumAddress;
 }
 
 export interface IBendDAOConfig {

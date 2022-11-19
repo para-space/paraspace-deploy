@@ -15,6 +15,8 @@ import {
   MockReserveAuctionStrategy__factory,
   NFTFloorOracle__factory,
   ParaProxy__factory,
+  PoolApeStaking__factory,
+  PTokenSApe__factory,
   StETHDebtToken__factory,
   X2Y2Adapter__factory,
 } from "../../types";
@@ -378,6 +380,10 @@ const checkPoolSignatures = () => {
     PoolMarketplace__factory.abi
   );
 
+  const poolApeStakingSelectors = getFunctionSignatures(
+    PoolApeStaking__factory.abi
+  );
+
   const poolProxySelectors = getFunctionSignatures(ParaProxy__factory.abi);
 
   const allSelectors = {};
@@ -385,6 +391,7 @@ const checkPoolSignatures = () => {
     ...poolCoreSelectors,
     ...poolParametersSelectors,
     ...poolMarketplaceSelectors,
+    ...poolApeStakingSelectors,
     ...poolProxySelectors,
   ];
   for (const selector of poolSelectors) {
@@ -399,7 +406,12 @@ const checkPoolSignatures = () => {
     }
   }
 
-  return {poolCoreSelectors, poolParametersSelectors, poolMarketplaceSelectors};
+  return {
+    poolCoreSelectors,
+    poolParametersSelectors,
+    poolMarketplaceSelectors,
+    poolApeStakingSelectors,
+  };
 };
 
 export const deployPoolComponents = async (
@@ -428,8 +440,16 @@ export const deployPoolComponents = async (
     await getFirstSigner()
   ).deploy(provider);
 
-  const {poolCoreSelectors, poolParametersSelectors, poolMarketplaceSelectors} =
-    checkPoolSignatures();
+  const poolApeStaking = await new PoolApeStaking__factory(
+    await getFirstSigner()
+  ).deploy(provider);
+
+  const {
+    poolCoreSelectors,
+    poolParametersSelectors,
+    poolMarketplaceSelectors,
+    poolApeStakingSelectors,
+  } = checkPoolSignatures();
 
   return {
     poolCore: await withSaveAndVerify(
@@ -456,9 +476,18 @@ export const deployPoolComponents = async (
       marketplaceLibraries,
       poolMarketplaceSelectors
     ),
+    poolApeStaking: await withSaveAndVerify(
+      poolApeStaking,
+      eContractid.PoolMarketplaceImpl,
+      [provider],
+      verify,
+      undefined,
+      poolApeStakingSelectors
+    ),
     poolCoreSelectors: poolCoreSelectors.map((s) => s.signature),
     poolParametersSelectors: poolParametersSelectors.map((s) => s.signature),
     poolMarketplaceSelectors: poolMarketplaceSelectors.map((s) => s.signature),
+    poolApeStakingSelectors: poolApeStakingSelectors.map((s) => s.signature),
   };
 };
 
@@ -1995,6 +2024,17 @@ export const deployPTokenStETH = async (
   withSaveAndVerify(
     await new PTokenStETH__factory(await getFirstSigner()).deploy(poolAddress),
     eContractid.PTokenStETHImpl,
+    [poolAddress],
+    verify
+  );
+
+export const deployPTokenSApe = async (
+  poolAddress: tEthereumAddress,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    await new PTokenSApe__factory(await getFirstSigner()).deploy(poolAddress),
+    eContractid.PTokenSApeImpl,
     [poolAddress],
     verify
   );
