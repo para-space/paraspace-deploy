@@ -4,8 +4,11 @@ import {
   deployMockReserveAuctionStrategy,
 } from "../../../../helpers/contracts-deployments";
 import {
+  getAllERC721Tokens,
   getAllTokens,
+  getPoolProxy,
   getProtocolDataProvider,
+  getPTokenSApe,
 } from "../../../../helpers/contracts-getters";
 import {
   getContractAddresses,
@@ -91,6 +94,18 @@ export const step_11 = async (verify = false) => {
       allTokenAddresses,
       protocolDataProvider,
       paraSpaceAdminAddress
+    );
+
+    const sApe = await getPTokenSApe();
+    const pool = await getPoolProxy();
+    const erc721Tokens = await getAllERC721Tokens();
+    await sApe.setNToken(
+      (
+        await pool.getReserveData(erc721Tokens.BAYC.address)
+      ).xTokenAddress,
+      (
+        await pool.getReserveData(erc721Tokens.MAYC.address)
+      ).xTokenAddress
     );
   } catch (error) {
     console.error(error);
