@@ -22,6 +22,7 @@ import {
   strategyUniswapV3,
   strategyClonex,
   strategyMeebits,
+  strategySAPE,
 } from "./reservesConfigs";
 
 export const CommonConfig: Pick<
@@ -83,7 +84,7 @@ export const HardhatParaSpaceConfig: IParaSpaceConfiguration = {
     USDT: strategyUSDT,
     WETH: strategyWETH,
     APE: strategyAPE,
-    sAPE: strategyAPE,
+    sAPE: strategySAPE,
     WBTC: strategyWBTC,
     stETH: strategySTETH,
     aWETH: strategyAWETH,
@@ -136,7 +137,7 @@ export const GoerliParaSpaceConfig: IParaSpaceConfiguration = {
     USDT: strategyUSDT,
     WETH: strategyWETH,
     APE: strategyAPE,
-    sAPE: strategyAPE,
+    sAPE: strategySAPE,
     WBTC: strategyWBTC,
     stETH: strategySTETH,
     aWETH: strategyAWETH,
@@ -219,7 +220,7 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     USDT: strategyUSDT,
     WETH: strategyWETH,
     APE: strategyAPE,
-    sAPE: strategyAPE,
+    sAPE: strategySAPE,
     WBTC: strategyWBTC,
     DOODLE: strategyDoodles,
     BAYC: strategyBAYC,

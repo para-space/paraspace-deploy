@@ -61,6 +61,7 @@ import {
   NTokenBAYC__factory,
   NTokenMAYC__factory,
   ApeCoinStaking__factory,
+  PTokenSApe__factory,
 } from "../../types";
 import {
   getEthersSigners,
@@ -821,6 +822,17 @@ export const getPTokenStETH = async (address?: tEthereumAddress) =>
       (
         await getDb()
           .get(`${eContractid.PTokenStETHImpl}.${DRE.network.name}`)
+          .value()
+      ).address,
+    await getFirstSigner()
+  );
+
+export const getPTokenSApe = async (address?: tEthereumAddress) =>
+  await PTokenSApe__factory.connect(
+    address ||
+      (
+        await getDb()
+          .get(`${eContractid.PTokenSApeImpl}.${DRE.network.name}`)
           .value()
       ).address,
     await getFirstSigner()

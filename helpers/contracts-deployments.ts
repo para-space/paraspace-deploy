@@ -425,6 +425,10 @@ export const deployPoolComponents = async (
   );
   const parametersLibraries = await deployPoolParametersLibraries(verify);
 
+  const apeStakingLibraries = pick(coreLibraries, [
+    "contracts/protocol/libraries/logic/BorrowLogic.sol:BorrowLogic",
+  ]);
+
   const poolCore = await new PoolCore__factory(
     coreLibraries,
     await getFirstSigner()
@@ -441,6 +445,7 @@ export const deployPoolComponents = async (
   ).deploy(provider);
 
   const poolApeStaking = await new PoolApeStaking__factory(
+    apeStakingLibraries,
     await getFirstSigner()
   ).deploy(provider);
 

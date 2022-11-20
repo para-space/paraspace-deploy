@@ -334,6 +334,7 @@ export interface iAssetBase<T> {
   WBTC: T;
   stETH: T;
   APE: T;
+  sAPE: T;
   MAYC: T;
   DOODLE: T;
   MOONBIRD: T;
@@ -356,6 +357,7 @@ export type iParaSpacePoolAssets<T> = Pick<
   | "WBTC"
   | "stETH"
   | "APE"
+  | "sAPE"
   | "BAYC"
   | "PUNKS"
   | "WPUNKS"

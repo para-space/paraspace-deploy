@@ -119,7 +119,7 @@ export const strategyAPE: IReserveParams = {
 export const strategySAPE: IReserveParams = {
   strategy: rateStrategyAPE,
   auctionStrategy: auctionStrategyZero,
-  baseLTVAsCollateral: "2000",
+  baseLTVAsCollateral: "7000",
   liquidationProtocolFeePercentage: "0",
   liquidationThreshold: "7000",
   liquidationBonus: "10500",
