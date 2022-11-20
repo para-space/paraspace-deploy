@@ -28,7 +28,7 @@ export const FORK_BLOCK_NUMBER = process.env.FORK_BLOCK_NUMBER
 
 export const DEFAULT_BLOCK_GAS_LIMIT = 30000000;
 export const HARDFORK = "london";
-export const MOCHA_JOBS = parseInt(process.env.MOCHA_JOBS ?? "4");
+export const MOCHA_JOBS = parseInt(process.env.MOCHA_JOBS || "4");
 
 export const REPORT_GAS = process.env.REPORT_GAS == "true" ? true : false;
 
@@ -40,14 +40,14 @@ export const ETHERSCAN_VERIFICATION =
 export const ETHERSCAN_VERIFICATION_CONTRACTS =
   process.env.ETHERSCAN_VERIFICATION_CONTRACTS?.trim().split(/\s?,\s?/);
 export const ETHERSCAN_VERIFICATION_JOBS = parseInt(
-  process.env.ETHERSCAN_VERIFICATION_JOBS ?? "1"
+  process.env.ETHERSCAN_VERIFICATION_JOBS || "1"
 );
 export const ETHERSCAN_VERIFICATION_MAX_RETRIES = parseInt(
-  process.env.ETHERSCAN_VERIFICATION_MAX_RETRIES ?? "3"
+  process.env.ETHERSCAN_VERIFICATION_MAX_RETRIES || "3"
 );
 
-export const DEPLOY_START = parseInt(process.env.DEPLOY_START ?? "0");
-export const DEPLOY_END = parseInt(process.env.DEPLOY_END ?? "20");
+export const DEPLOY_START = parseInt(process.env.DEPLOY_START || "0");
+export const DEPLOY_END = parseInt(process.env.DEPLOY_END || "20");
 
 export const DEPLOYER_MNEMONIC =
   process.env.DEPLOYER_MNEMONIC ||

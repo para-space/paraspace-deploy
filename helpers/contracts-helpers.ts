@@ -43,7 +43,7 @@ import {HardhatRuntimeEnvironment, HttpNetworkConfig} from "hardhat/types";
 import {getIErc20Detailed} from "./contracts-getters";
 import {getDefenderRelaySigner, usingDefender} from "./defender-utils";
 import {usingTenderly, verifyAtTenderly} from "./tenderly-utils";
-import {SignerWithAddress} from "../../test-suites/helpers/make-suite";
+import {SignerWithAddress} from "../../test/helpers/make-suite";
 import {verifyEtherscanContract} from "./etherscan-verification";
 import {InitializableImmutableAdminUpgradeabilityProxy} from "../../types";
 import {decodeEvents} from "./seaport-helpers/events";
