@@ -1,6 +1,6 @@
 import {Overrides} from "@ethersproject/contracts";
 import dotenv from "dotenv";
-import {ethers} from "hardhat";
+import {ethers} from "ethers";
 
 dotenv.config();
 
