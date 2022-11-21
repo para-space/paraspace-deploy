@@ -1,3 +1,4 @@
+import {Overrides} from "@ethersproject/contracts";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -55,3 +56,8 @@ export const DEPLOYER_MNEMONIC =
 
 export const BLOCKSCOUT_DISABLE_INDEXER =
   process.env.BLOCKSCOUT_DISABLE_INDEXER == "false" ? false : true;
+
+export const GLOBAL_OVERRIDES: Overrides = {
+  maxFeePerGas: 30000000000,
+  maxPriorityFeePerGas: 15000000000,
+};

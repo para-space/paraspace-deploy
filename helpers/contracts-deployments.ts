@@ -150,6 +150,7 @@ import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/poo
 
 import {pick} from "lodash";
 import {ZERO_ADDRESS} from "./constants";
+import {GLOBAL_OVERRIDES} from "./hardhat-constants";
 
 const readArtifact = async (id: string) => {
   return (DRE as HardhatRuntimeEnvironment).artifacts.readArtifact(id);
@@ -177,7 +178,7 @@ export const deployPoolAddressesProviderRegistry = async (
   withSaveAndVerify(
     await new PoolAddressesProviderRegistry__factory(
       await getFirstSigner()
-    ).deploy(owner),
+    ).deploy(owner, GLOBAL_OVERRIDES),
     eContractid.PoolAddressesProviderRegistry,
     [owner],
     verify
@@ -188,7 +189,10 @@ export const deployACLManager = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new ACLManager__factory(await getFirstSigner()).deploy(provider),
+    await new ACLManager__factory(await getFirstSigner()).deploy(
+      provider,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.ACLManager,
     [provider],
     verify
@@ -196,7 +200,9 @@ export const deployACLManager = async (
 
 export const deployConfiguratorLogicLibrary = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new ConfiguratorLogic__factory(await getFirstSigner()).deploy(),
+    await new ConfiguratorLogic__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
     eContractid.ConfiguratorLogic,
     [],
     verify
@@ -211,7 +217,7 @@ export const deployPoolConfigurator = async (verify?: boolean) => {
   const poolConfiguratorImpl = await new PoolConfigurator__factory(
     libraries,
     await getFirstSigner()
-  ).deploy();
+  ).deploy(GLOBAL_OVERRIDES);
   return withSaveAndVerify(
     poolConfiguratorImpl,
     eContractid.PoolConfiguratorImpl,
@@ -229,7 +235,9 @@ export const deploySupplyLogic = async (verify?: boolean) => {
     supplyLogicArtifact.bytecode
   );
   const supplyLogic = await (
-    await supplyLogicFactory.connect(await getFirstSigner()).deploy()
+    await supplyLogicFactory
+      .connect(await getFirstSigner())
+      .deploy(GLOBAL_OVERRIDES)
   ).deployed();
 
   return withSaveAndVerify(supplyLogic, eContractid.SupplyLogic, [], verify);
@@ -243,7 +251,9 @@ export const deployFlashClaimLogic = async (verify?: boolean) => {
     supplyLogicArtifact.bytecode
   );
   const supplyLogic = await (
-    await supplyLogicFactory.connect(await getFirstSigner()).deploy()
+    await supplyLogicFactory
+      .connect(await getFirstSigner())
+      .deploy(GLOBAL_OVERRIDES)
   ).deployed();
 
   return withSaveAndVerify(
@@ -262,7 +272,9 @@ export const deployBorrowLogic = async (verify?: boolean) => {
     borrowLogicArtifact.bytecode
   );
   const borrowLogic = await (
-    await borrowLogicFactory.connect(await getFirstSigner()).deploy()
+    await borrowLogicFactory
+      .connect(await getFirstSigner())
+      .deploy(GLOBAL_OVERRIDES)
   ).deployed();
 
   return withSaveAndVerify(borrowLogic, eContractid.BorrowLogic, [], verify);
@@ -275,7 +287,7 @@ export const deployLiquidationLogic = async (
   const liquidationLibrary = await new LiquidationLogic__factory(
     libraries,
     await getFirstSigner()
-  ).deploy();
+  ).deploy(GLOBAL_OVERRIDES);
 
   return withSaveAndVerify(
     liquidationLibrary,
@@ -289,7 +301,7 @@ export const deployLiquidationLogic = async (
 export const deployAuctionLogic = async (verify?: boolean) => {
   const auctionLibrary = await new AuctionLogic__factory(
     await getFirstSigner()
-  ).deploy();
+  ).deploy(GLOBAL_OVERRIDES);
 
   return withSaveAndVerify(
     auctionLibrary,
@@ -307,7 +319,9 @@ export const deployPoolLogic = async (verify?: boolean) => {
     poolLogicArtifact.bytecode
   );
   const poolLogic = await (
-    await poolLogicFactory.connect(await getFirstSigner()).deploy()
+    await poolLogicFactory
+      .connect(await getFirstSigner())
+      .deploy(GLOBAL_OVERRIDES)
   ).deployed();
 
   return withSaveAndVerify(poolLogic, eContractid.PoolLogic, [], verify);
@@ -433,22 +447,22 @@ export const deployPoolComponents = async (
   const poolCore = await new PoolCore__factory(
     coreLibraries,
     await getFirstSigner()
-  ).deploy(provider);
+  ).deploy(provider, GLOBAL_OVERRIDES);
 
   const poolParameters = await new PoolParameters__factory(
     parametersLibraries,
     await getFirstSigner()
-  ).deploy(provider);
+  ).deploy(provider, GLOBAL_OVERRIDES);
 
   const poolMarketplace = await new PoolMarketplace__factory(
     marketplaceLibraries,
     await getFirstSigner()
-  ).deploy(provider);
+  ).deploy(provider, GLOBAL_OVERRIDES);
 
   const poolApeStaking = await new PoolApeStaking__factory(
     apeStakingLibraries,
     await getFirstSigner()
-  ).deploy(provider);
+  ).deploy(provider, GLOBAL_OVERRIDES);
 
   const {
     poolCoreSelectors,
@@ -499,7 +513,9 @@ export const deployPoolComponents = async (
 
 export const deployPriceOracle = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new PriceOracle__factory(await getFirstSigner()).deploy(),
+    await new PriceOracle__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
     eContractid.PriceOracle,
     [],
     verify
@@ -511,7 +527,10 @@ export const deployAggregator = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new MockAggregator__factory(await getFirstSigner()).deploy(price),
+    await new MockAggregator__factory(await getFirstSigner()).deploy(
+      price,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.Aggregator.concat(`.${symbol}`),
     [price],
     verify
@@ -529,7 +548,10 @@ export const deployParaSpaceOracle = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new ParaSpaceOracle__factory(await getFirstSigner()).deploy(...args),
+    await new ParaSpaceOracle__factory(await getFirstSigner()).deploy(
+      ...args,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.ParaSpaceOracle,
     [...args],
     verify
@@ -537,7 +559,9 @@ export const deployParaSpaceOracle = async (
 
 export const deployNFTFloorPriceOracle = async (verify?: boolean) => {
   const nftFloorOracle = await withSaveAndVerify(
-    await new NFTFloorOracle__factory(await getFirstSigner()).deploy(),
+    await new NFTFloorOracle__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
     eContractid.NFTFloorOracle,
     [],
     verify
@@ -563,7 +587,10 @@ export const deployMintableERC20 = async (
   verify?: boolean
 ): Promise<MintableERC20> =>
   withSaveAndVerify(
-    await new MintableERC20__factory(await getFirstSigner()).deploy(...args),
+    await new MintableERC20__factory(await getFirstSigner()).deploy(
+      ...args,
+      GLOBAL_OVERRIDES
+    ),
     args[1],
     [...args],
     verify
@@ -574,7 +601,10 @@ export const deployMintableERC721 = async (
   verify?: boolean
 ): Promise<MintableERC721> =>
   withSaveAndVerify(
-    await new MintableERC721__factory(await getFirstSigner()).deploy(...args),
+    await new MintableERC721__factory(await getFirstSigner()).deploy(
+      ...args,
+      GLOBAL_OVERRIDES
+    ),
     args[1],
     [...args],
     verify
@@ -600,7 +630,7 @@ export const deployMockReserveAuctionStrategy = async (
   withSaveAndVerify(
     await new MockReserveAuctionStrategy__factory(
       await getFirstSigner()
-    ).deploy(...args),
+    ).deploy(...args, GLOBAL_OVERRIDES),
     eContractid.MockReserveAuctionStrategy,
     [...args],
     verify
@@ -614,7 +644,7 @@ export const deployReserveAuctionStrategy = async (
   withSaveAndVerify(
     await new DefaultReserveAuctionStrategy__factory(
       await getFirstSigner()
-    ).deploy(...args),
+    ).deploy(...args, GLOBAL_OVERRIDES),
     strategyName,
     [...args],
     verify
@@ -628,7 +658,7 @@ export const deployReserveInterestRateStrategy = async (
   withSaveAndVerify(
     await new DefaultReserveInterestRateStrategy__factory(
       await getFirstSigner()
-    ).deploy(...args),
+    ).deploy(...args, GLOBAL_OVERRIDES),
     strategyName,
     [...args],
     verify
@@ -666,7 +696,10 @@ export const deployGenericPToken = async (
   verify?: boolean
 ) => {
   const instance = await withSaveAndVerify(
-    await new PToken__factory(await getFirstSigner()).deploy(poolAddress),
+    await new PToken__factory(await getFirstSigner()).deploy(
+      poolAddress,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.PTokenImpl,
     [poolAddress],
     verify
@@ -691,7 +724,10 @@ export const deployGenericPTokenImpl = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new PToken__factory(await getFirstSigner()).deploy(poolAddress),
+    await new PToken__factory(await getFirstSigner()).deploy(
+      poolAddress,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.PTokenImpl,
     [poolAddress],
     verify
@@ -741,7 +777,7 @@ export const deployUniswapV3NTokenImpl = async (
     await new NTokenUniswapV3__factory(
       libraries,
       await getFirstSigner()
-    ).deploy(poolAddress),
+    ).deploy(poolAddress, GLOBAL_OVERRIDES),
     eContractid.NTokenUniswapV3Impl,
     [poolAddress],
     verify
@@ -766,7 +802,7 @@ export const deployGenericMoonbirdNTokenImpl = async (
     await new NTokenMoonBirds__factory(
       libraries,
       await getFirstSigner()
-    ).deploy(poolAddress),
+    ).deploy(poolAddress, GLOBAL_OVERRIDES),
     eContractid.NTokenMoonBirdsImpl,
     [poolAddress],
     verify
@@ -1126,7 +1162,10 @@ export const deployMoonbirds = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new Moonbirds__factory(await getFirstSigner()).deploy(...args),
+    await new Moonbirds__factory(await getFirstSigner()).deploy(
+      ...args,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.MOONBIRD,
     [...args],
     verify
@@ -1134,7 +1173,9 @@ export const deployMoonbirds = async (
 
 export const deployReservesSetupHelper = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new ReservesSetupHelper__factory(await getFirstSigner()).deploy(),
+    await new ReservesSetupHelper__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
     eContractid.ReservesSetupHelper,
     [],
     verify
@@ -1147,7 +1188,7 @@ export const deployInitializableImmutableAdminUpgradeabilityProxy = async (
   withSaveAndVerify(
     await new InitializableImmutableAdminUpgradeabilityProxy__factory(
       await getFirstSigner()
-    ).deploy(...args),
+    ).deploy(...args, GLOBAL_OVERRIDES),
     eContractid.InitializableImmutableAdminUpgradeabilityProxy,
     [...args],
     verify
@@ -1155,7 +1196,9 @@ export const deployInitializableImmutableAdminUpgradeabilityProxy = async (
 
 export const deployWETH = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new WETH9Mocked__factory(await getFirstSigner()).deploy(),
+    await new WETH9Mocked__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
     eContractid.WETH,
     [],
     verify
@@ -1250,7 +1293,10 @@ export const deployMockPToken = async (
   verify?: boolean
 ) => {
   const instance = await withSaveAndVerify(
-    await new MockPToken__factory(await getFirstSigner()).deploy(args[0]),
+    await new MockPToken__factory(await getFirstSigner()).deploy(
+      args[0],
+      GLOBAL_OVERRIDES
+    ),
     eContractid.MockPToken,
     [args[0]],
     verify
@@ -1272,9 +1318,9 @@ export const deployMockPToken = async (
 
 export const deployMockIncentivesController = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new MockIncentivesController__factory(
-      await getFirstSigner()
-    ).deploy(),
+    await new MockIncentivesController__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
     eContractid.MockIncentivesController,
     [],
     verify
@@ -1282,9 +1328,9 @@ export const deployMockIncentivesController = async (verify?: boolean) =>
 
 export const deployMockReserveConfiguration = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new MockReserveConfiguration__factory(
-      await getFirstSigner()
-    ).deploy(),
+    await new MockReserveConfiguration__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
     eContractid.MockReserveConfiguration,
     [],
     verify
@@ -1292,7 +1338,7 @@ export const deployMockReserveConfiguration = async (verify?: boolean) =>
 
 // export const deployMockPool = async (verify?: boolean) =>
 //   withSaveAndVerify(
-//     await new MockPool__factory(await getFirstSigner()).deploy(),
+//     await new MockPool__factory(await getFirstSigner()).deploy(GLOBAL_OVERRIDES),
 //     eContractid.MockPool,
 //     [],
 //     verify
@@ -1300,7 +1346,9 @@ export const deployMockReserveConfiguration = async (verify?: boolean) =>
 
 export const deployMockInitializableImple = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new MockInitializableImple__factory(await getFirstSigner()).deploy(),
+    await new MockInitializableImple__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
     eContractid.MockInitializableImple,
     [],
     verify
@@ -1308,9 +1356,9 @@ export const deployMockInitializableImple = async (verify?: boolean) =>
 
 export const deployMockInitializableImpleV2 = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new MockInitializableImpleV2__factory(
-      await getFirstSigner()
-    ).deploy(),
+    await new MockInitializableImpleV2__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
     eContractid.MockInitializableImpleV2,
     [],
     verify
@@ -1323,7 +1371,7 @@ export const deployMockInitializableFromConstructorImple = async (
   withSaveAndVerify(
     await new MockInitializableFromConstructorImple__factory(
       await getFirstSigner()
-    ).deploy(...args),
+    ).deploy(...args, GLOBAL_OVERRIDES),
     eContractid.MockInitializableFromConstructorImple,
     [...args],
     verify
@@ -1333,7 +1381,7 @@ export const deployMockReentrantInitializableImple = async (verify?: boolean) =>
   withSaveAndVerify(
     await new MockReentrantInitializableImple__factory(
       await getFirstSigner()
-    ).deploy(),
+    ).deploy(GLOBAL_OVERRIDES),
     eContractid.MockReentrantInitializableImple,
     [],
     verify
@@ -1356,7 +1404,9 @@ export const deployUiPoolDataProvider = async (
 
 export const deployUiIncentiveDataProvider = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new UiIncentiveDataProvider__factory(await getFirstSigner()).deploy(),
+    await new UiIncentiveDataProvider__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
     eContractid.UiIncentiveDataProvider,
     [],
     verify
@@ -1364,7 +1414,9 @@ export const deployUiIncentiveDataProvider = async (verify?: boolean) =>
 
 export const deployWalletBalanceProvider = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new WalletBalanceProvider__factory(await getFirstSigner()).deploy(),
+    await new WalletBalanceProvider__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
     eContractid.WalletBalanceProvider,
     [],
     verify
@@ -1376,7 +1428,11 @@ export const deployWETHGateway = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new WETHGateway__factory(await getFirstSigner()).deploy(weth, pool),
+    await new WETHGateway__factory(await getFirstSigner()).deploy(
+      weth,
+      pool,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.WETHGatewayImpl,
     [weth, pool],
     verify
@@ -1391,7 +1447,7 @@ export const deployWETHGatewayProxy = async (
   const wethGatewayProxy =
     await new InitializableImmutableAdminUpgradeabilityProxy__factory(
       await getFirstSigner()
-    ).deploy(admin);
+    ).deploy(admin, GLOBAL_OVERRIDES);
   await wethGatewayProxy["initialize(address,bytes)"](wethGateway, initData);
   return withSaveAndVerify(
     wethGatewayProxy,
@@ -1409,7 +1465,9 @@ export const deployMoonbirdHelper = async (verify?: boolean) => {
     moonBirdHelperArtifact.bytecode
   );
   const moonBirdHelper = await (
-    await moonBirdHelperFactory.connect(await getFirstSigner()).deploy()
+    await moonBirdHelperFactory
+      .connect(await getFirstSigner())
+      .deploy(GLOBAL_OVERRIDES)
   ).deployed();
 
   return withSaveAndVerify(moonBirdHelper, eContractid.PoolLogic, [], verify);
@@ -1420,7 +1478,10 @@ export const deployMeebits = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new Meebits__factory(await getFirstSigner()).deploy(...args),
+    await new Meebits__factory(await getFirstSigner()).deploy(
+      ...args,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.Meebits,
     [...args],
     verify
@@ -1431,7 +1492,10 @@ export const deployAzuki = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new Azuki__factory(await getFirstSigner()).deploy(...args),
+    await new Azuki__factory(await getFirstSigner()).deploy(
+      ...args,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.Azuki,
     [...args],
     verify
@@ -1443,7 +1507,10 @@ export const deployOTHR = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new Land__factory(await getFirstSigner()).deploy(...args),
+    await new Land__factory(await getFirstSigner()).deploy(
+      ...args,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.OTHR,
     [...args],
     verify
@@ -1451,7 +1518,10 @@ export const deployOTHR = async (
 
 export const deployCloneX = async (args: [], verify?: boolean) =>
   withSaveAndVerify(
-    await new CloneX__factory(await getFirstSigner()).deploy(...args),
+    await new CloneX__factory(await getFirstSigner()).deploy(
+      ...args,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.CloneX,
     [...args],
     verify
@@ -1459,7 +1529,10 @@ export const deployCloneX = async (args: [], verify?: boolean) =>
 
 export const deployDoodle = async (args: [], verify?: boolean) =>
   withSaveAndVerify(
-    await new Doodles__factory(await getFirstSigner()).deploy(...args),
+    await new Doodles__factory(await getFirstSigner()).deploy(
+      ...args,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.Doodles,
     [...args],
     verify
@@ -1524,7 +1597,10 @@ export const deployWPunks = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new WPunk__factory(await getFirstSigner()).deploy(...args),
+    await new WPunk__factory(await getFirstSigner()).deploy(
+      ...args,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.WPunk,
     [...args],
     verify
@@ -1541,7 +1617,7 @@ export const deployPunkGateway = async (
 ) => {
   const punkImpl = await new WPunkGateway__factory(
     await getFirstSigner()
-  ).deploy(...args);
+  ).deploy(...args, GLOBAL_OVERRIDES);
   return withSaveAndVerify(
     punkImpl,
     eContractid.WPunkGatewayImpl,
@@ -1559,7 +1635,7 @@ export const deployPunkGatewayProxy = async (
   const punkGatewayProxy =
     await new InitializableImmutableAdminUpgradeabilityProxy__factory(
       await getFirstSigner()
-    ).deploy(admin);
+    ).deploy(admin, GLOBAL_OVERRIDES);
   await punkGatewayProxy["initialize(address,bytes)"](punkGateway, initData);
   return withSaveAndVerify(
     punkGatewayProxy,
@@ -1572,7 +1648,7 @@ export const deployPunkGatewayProxy = async (
 // export const deployParaSpaceToken = async (verify?: boolean) => {
 //   const paraspaceToken = await new ParaSpaceToken__factory(
 //     await getFirstSigner()
-//   ).deploy();
+//   ).deploy(GLOBAL_OVERRIDES);
 //
 //   return withSaveAndVerify(paraspaceToken, eContractid.ParaSpace, [], verify);
 // };
@@ -1583,7 +1659,7 @@ export const deployPunkGatewayProxy = async (
 // ) => {
 //   const paraspaceStakeV3 = await new StakedParaSpaceV3__factory(
 //     await getFirstSigner()
-//   ).deploy(...args);
+//   ).deploy(...args, GLOBAL_OVERRIDES);
 //
 //   return withSaveAndVerify(
 //     paraspaceStakeV3,
@@ -1600,7 +1676,7 @@ export const deployPunkGatewayProxy = async (
 //   console.log("deploying reward controller");
 //   const rewardsController = await new RewardsController__factory(
 //     await getFirstSigner()
-//   ).deploy(emissionManager);
+//   ).deploy(emissionManager, GLOBAL_OVERRIDES);
 //
 //   return withSaveAndVerify(
 //     rewardsController,
@@ -1634,7 +1710,7 @@ export const deployParaSpaceFallbackOracle = async (
 ) => {
   const fallBackOracle = await new ParaSpaceFallbackOracle__factory(
     await getFirstSigner()
-  ).deploy(...args);
+  ).deploy(...args, GLOBAL_OVERRIDES);
 
   return withSaveAndVerify(
     fallBackOracle,
@@ -1664,7 +1740,7 @@ export const deployMockTokenFaucet = async (
 export const deploySeaportAdapter = async (verify?: boolean) => {
   const seaportAdapter = await new SeaportAdapter__factory(
     await getFirstSigner()
-  ).deploy();
+  ).deploy(GLOBAL_OVERRIDES);
 
   return withSaveAndVerify(
     seaportAdapter,
@@ -1677,7 +1753,7 @@ export const deploySeaportAdapter = async (verify?: boolean) => {
 export const deployLooksRareAdapter = async (verify?: boolean) => {
   const looksRareAdapter = await new LooksRareAdapter__factory(
     await getFirstSigner()
-  ).deploy();
+  ).deploy(GLOBAL_OVERRIDES);
 
   return withSaveAndVerify(
     looksRareAdapter,
@@ -1690,7 +1766,7 @@ export const deployLooksRareAdapter = async (verify?: boolean) => {
 export const deployX2Y2Adapter = async (verify?: boolean) => {
   const x2y2Adapter = await new X2Y2Adapter__factory(
     await getFirstSigner()
-  ).deploy();
+  ).deploy(GLOBAL_OVERRIDES);
 
   return withSaveAndVerify(x2y2Adapter, eContractid.X2Y2Adapter, [], verify);
 };
@@ -1702,7 +1778,7 @@ export const deployMarketplaceLogic = async (
   const marketplaceLogic = await new MarketplaceLogic__factory(
     libraries,
     await getFirstSigner()
-  ).deploy();
+  ).deploy(GLOBAL_OVERRIDES);
 
   return withSaveAndVerify(
     marketplaceLogic,
@@ -1715,7 +1791,9 @@ export const deployMarketplaceLogic = async (
 
 export const deployConduitController = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new ConduitController__factory(await getFirstSigner()).deploy(),
+    await new ConduitController__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
     eContractid.ConduitController,
     [],
     verify
@@ -1749,7 +1827,9 @@ export const deploySeaport = async (
 
 export const deployCurrencyManager = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new CurrencyManager__factory(await getFirstSigner()).deploy(),
+    await new CurrencyManager__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
     eContractid.CurrencyManager,
     [],
     verify
@@ -1757,7 +1837,9 @@ export const deployCurrencyManager = async (verify?: boolean) =>
 
 export const deployExecutionManager = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new ExecutionManager__factory(await getFirstSigner()).deploy(),
+    await new ExecutionManager__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
     eContractid.ExecutionManager,
     [],
     verify
@@ -1864,7 +1946,7 @@ export const deployStrategyStandardSaleForFixedPrice = async (
   withSaveAndVerify(
     await new StrategyStandardSaleForFixedPrice__factory(
       await getFirstSigner()
-    ).deploy(protocolFee),
+    ).deploy(protocolFee, GLOBAL_OVERRIDES),
     eContractid.StrategyStandardSaleForFixedPrice,
     [protocolFee],
     verify
@@ -1872,7 +1954,7 @@ export const deployStrategyStandardSaleForFixedPrice = async (
 
 export const deployX2Y2R1 = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new X2Y2R1__factory(await getFirstSigner()).deploy(),
+    await new X2Y2R1__factory(await getFirstSigner()).deploy(GLOBAL_OVERRIDES),
     eContractid.X2Y2R1,
     [],
     verify
@@ -1880,7 +1962,9 @@ export const deployX2Y2R1 = async (verify?: boolean) =>
 
 export const deployERC721Delegate = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new ERC721Delegate__factory(await getFirstSigner()).deploy(),
+    await new ERC721Delegate__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
     eContractid.ERC721Delegate,
     [],
     verify
@@ -1889,7 +1973,7 @@ export const deployERC721Delegate = async (verify?: boolean) =>
 export const deployUniswapV3Factory = async (args: [], verify?: boolean) => {
   const uniswapV3Factory = await new UniswapV3Factory__factory(
     await getFirstSigner()
-  ).deploy(...args);
+  ).deploy(...args, GLOBAL_OVERRIDES);
   return withSaveAndVerify(
     uniswapV3Factory,
     eContractid.UniswapV3Factory,
@@ -1906,7 +1990,7 @@ export const deployNonfungibleTokenPositionDescriptor = async (
     await DRE.ethers.getContractFactoryFromArtifact(nFTDescriptor)
   )
     .connect(await getFirstSigner())
-    .deploy();
+    .deploy(GLOBAL_OVERRIDES);
 
   const nftDescriptorLibraryContract = await withSaveAndVerify(
     nFTDescriptorFactory,
@@ -1926,7 +2010,7 @@ export const deployNonfungibleTokenPositionDescriptor = async (
     )
   )
     .connect(await getFirstSigner())
-    .deploy(...args);
+    .deploy(...args, GLOBAL_OVERRIDES);
 
   return withSaveAndVerify(
     nonfungibleTokenPositionDescriptorFactory,
@@ -1962,7 +2046,7 @@ export const deployNonfungiblePositionManager = async (
     await DRE.ethers.getContractFactoryFromArtifact(nonfungiblePositionManager)
   )
     .connect(await getFirstSigner())
-    .deploy(...args);
+    .deploy(...args, GLOBAL_OVERRIDES);
 
   return withSaveAndVerify(
     nonfungiblePositionManagerFactory,
@@ -1980,7 +2064,7 @@ export const deployUniswapSwapRouter = async (
     await DRE.ethers.getContractFactoryFromArtifact(uniSwapRouter)
   )
     .connect(await getFirstSigner())
-    .deploy(...args);
+    .deploy(...args, GLOBAL_OVERRIDES);
 
   return withSaveAndVerify(
     swapRouter,
@@ -1995,7 +2079,10 @@ export const deployStETH = async (
   verify?: boolean
 ): Promise<StETH> =>
   withSaveAndVerify(
-    await new StETH__factory(await getFirstSigner()).deploy(...args),
+    await new StETH__factory(await getFirstSigner()).deploy(
+      ...args,
+      GLOBAL_OVERRIDES
+    ),
     args[1],
     [...args],
     verify
@@ -2006,7 +2093,10 @@ export const deployMockAToken = async (
   verify?: boolean
 ): Promise<MockAToken> =>
   withSaveAndVerify(
-    await new MockAToken__factory(await getFirstSigner()).deploy(...args),
+    await new MockAToken__factory(await getFirstSigner()).deploy(
+      ...args,
+      GLOBAL_OVERRIDES
+    ),
     args[1],
     [...args],
     verify
@@ -2017,7 +2107,10 @@ export const deployPTokenAToken = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new PTokenAToken__factory(await getFirstSigner()).deploy(poolAddress),
+    await new PTokenAToken__factory(await getFirstSigner()).deploy(
+      poolAddress,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.PTokenATokenImpl,
     [poolAddress],
     verify
@@ -2028,7 +2121,10 @@ export const deployPTokenStETH = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new PTokenStETH__factory(await getFirstSigner()).deploy(poolAddress),
+    await new PTokenStETH__factory(await getFirstSigner()).deploy(
+      poolAddress,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.PTokenStETHImpl,
     [poolAddress],
     verify
@@ -2039,7 +2135,10 @@ export const deployPTokenSApe = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new PTokenSApe__factory(await getFirstSigner()).deploy(poolAddress),
+    await new PTokenSApe__factory(await getFirstSigner()).deploy(
+      poolAddress,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.PTokenSApeImpl,
     [poolAddress],
     verify
@@ -2076,7 +2175,10 @@ export const deployApeCoinStaking = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new ApeCoinStaking__factory(await getFirstSigner()).deploy(...args),
+    await new ApeCoinStaking__factory(await getFirstSigner()).deploy(
+      ...args,
+      GLOBAL_OVERRIDES
+    ),
     eContractid.ApeCoinStaking,
     [...args],
     verify
@@ -2092,7 +2194,9 @@ export const deployApeStakingLogic = async (verify?: boolean) => {
     apeStakingLogicArtifact.bytecode
   );
   const apeStakingLogic = await (
-    await apeStakingLogicFactory.connect(await getFirstSigner()).deploy()
+    await apeStakingLogicFactory
+      .connect(await getFirstSigner())
+      .deploy(GLOBAL_OVERRIDES)
   ).deployed();
 
   return withSaveAndVerify(
@@ -2205,7 +2309,9 @@ export const deployMintableERC721Logic = async (verify?: boolean) => {
     mintableERC721LogicArtifact.bytecode
   );
   const mintableERC721Logic = await (
-    await mintableERC721LogicFactory.connect(await getFirstSigner()).deploy()
+    await mintableERC721LogicFactory
+      .connect(await getFirstSigner())
+      .deploy(GLOBAL_OVERRIDES)
   ).deployed();
 
   return withSaveAndVerify(
