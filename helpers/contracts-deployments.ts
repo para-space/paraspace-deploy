@@ -1048,28 +1048,32 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
           amount,
           "1666771200",
           "1761465600",
-          amount
+          amount,
+          GLOBAL_OVERRIDES
         );
         await apeCoinStaking.addTimeRange(
           1,
           amount,
           "1666771200",
           "1761465600",
-          amount
+          amount,
+          GLOBAL_OVERRIDES
         );
         await apeCoinStaking.addTimeRange(
           2,
           amount,
           "1666771200",
           "1761465600",
-          amount
+          amount,
+          GLOBAL_OVERRIDES
         );
         await apeCoinStaking.addTimeRange(
           3,
           amount,
           "1666771200",
           "1761465600",
-          amount
+          amount,
+          GLOBAL_OVERRIDES
         );
         continue;
       }
@@ -1128,7 +1132,10 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
           ],
           verify
         );
-        await (tokens[tokenSymbol] as Moonbirds).setNestingOpen(true);
+        await (tokens[tokenSymbol] as Moonbirds).setNestingOpen(
+          true,
+          GLOBAL_OVERRIDES
+        );
         continue;
       }
 
@@ -1224,7 +1231,8 @@ export const deployMockVariableDebtToken = async (
 ) => {
   const instance = await withSaveAndVerify(
     await new MockVariableDebtToken__factory(await getFirstSigner()).deploy(
-      args[0]
+      args[0],
+      GLOBAL_OVERRIDES
     ),
     eContractid.MockVariableDebtToken,
     [args[0]],
@@ -1238,7 +1246,8 @@ export const deployMockVariableDebtToken = async (
     "18",
     args[3],
     args[4],
-    args[5]
+    args[5],
+    GLOBAL_OVERRIDES
   );
 
   return instance;
@@ -1268,7 +1277,8 @@ export const deployMockNToken = async (
 
   const instance = await withSaveAndVerify(
     await new MockNToken__factory(libraries, await getFirstSigner()).deploy(
-      args[0]
+      args[0],
+      GLOBAL_OVERRIDES
     ),
     eContractid.MockNToken,
     [args[0], false],
@@ -1281,7 +1291,8 @@ export const deployMockNToken = async (
     args[2],
     args[3],
     args[4],
-    args[5]
+    args[5],
+    GLOBAL_OVERRIDES
   );
 
   return instance;
@@ -1317,7 +1328,8 @@ export const deployMockPToken = async (
     "18",
     args[4],
     args[5],
-    args[6]
+    args[6],
+    GLOBAL_OVERRIDES
   );
 
   return instance;
@@ -1402,7 +1414,8 @@ export const deployUiPoolDataProvider = async (
   withSaveAndVerify(
     await new UiPoolDataProvider__factory(await getFirstSigner()).deploy(
       arg1,
-      arg2
+      arg2,
+      GLOBAL_OVERRIDES
     ),
     eContractid.UiPoolDataProvider,
     [arg1, arg2],
@@ -1455,7 +1468,11 @@ export const deployWETHGatewayProxy = async (
     await new InitializableImmutableAdminUpgradeabilityProxy__factory(
       await getFirstSigner()
     ).deploy(admin, GLOBAL_OVERRIDES);
-  await wethGatewayProxy["initialize(address,bytes)"](wethGateway, initData);
+  await wethGatewayProxy["initialize(address,bytes)"](
+    wethGateway,
+    initData,
+    GLOBAL_OVERRIDES
+  );
   return withSaveAndVerify(
     wethGatewayProxy,
     eContractid.WETHGatewayProxy,
@@ -1647,7 +1664,11 @@ export const deployPunkGatewayProxy = async (
     await new InitializableImmutableAdminUpgradeabilityProxy__factory(
       await getFirstSigner()
     ).deploy(admin, GLOBAL_OVERRIDES);
-  await punkGatewayProxy["initialize(address,bytes)"](punkGateway, initData);
+  await punkGatewayProxy["initialize(address,bytes)"](
+    punkGateway,
+    initData,
+    GLOBAL_OVERRIDES
+  );
   return withSaveAndVerify(
     punkGatewayProxy,
     eContractid.WPunkGatewayProxy,

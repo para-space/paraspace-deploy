@@ -104,7 +104,7 @@ export const deployFaucet = async (mockTokens, verify?: boolean) => {
     erc20configs,
     erc721configs,
     punkConfig,
-    verify,
+    verify
   );
 
   console.log(`faucet`, faucet.address);
