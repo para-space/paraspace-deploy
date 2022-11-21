@@ -499,7 +499,7 @@ export const deployPoolComponents = async (
     ),
     poolApeStaking: await withSaveAndVerify(
       poolApeStaking,
-      eContractid.PoolMarketplaceImpl,
+      eContractid.PoolApeStakingImpl,
       [provider],
       verify,
       undefined,
