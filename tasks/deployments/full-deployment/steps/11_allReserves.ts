@@ -1,4 +1,4 @@
-import {ZERO_ADDRESS} from "../../../../helpers/constants";
+import {SAPE_ADDRESS, ZERO_ADDRESS} from "../../../../helpers/constants";
 import {
   deployMockIncentivesController,
   deployMockReserveAuctionStrategy,
@@ -97,8 +97,12 @@ export const step_11 = async (verify = false) => {
       paraSpaceAdminAddress
     );
 
-    const sApe = await getPTokenSApe();
     const pool = await getPoolProxy();
+    const sApe = await getPTokenSApe(
+      (
+        await pool.getReserveData(SAPE_ADDRESS)
+      ).xTokenAddress
+    );
     const erc721Tokens = await getAllERC721Tokens();
     await sApe.setNToken(
       (
