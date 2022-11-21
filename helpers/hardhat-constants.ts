@@ -1,5 +1,6 @@
 import {Overrides} from "@ethersproject/contracts";
 import dotenv from "dotenv";
+import {ethers} from "hardhat";
 
 dotenv.config();
 
@@ -58,6 +59,7 @@ export const BLOCKSCOUT_DISABLE_INDEXER =
   process.env.BLOCKSCOUT_DISABLE_INDEXER == "false" ? false : true;
 
 export const GLOBAL_OVERRIDES: Overrides = {
-  maxFeePerGas: 30000000000,
-  maxPriorityFeePerGas: 15000000000,
+  maxFeePerGas: ethers.utils.parseUnits("50", "gwei"),
+  maxPriorityFeePerGas: ethers.utils.parseUnits("15", "gwei"),
+  type: 2
 };
