@@ -13,6 +13,7 @@ import {
   isPublicTestnet,
   waitForTx,
 } from "../../../../helpers/misc-utils";
+import {GLOBAL_OVERRIDES} from "../../../../helpers/hardhat-constants";
 
 export const step_17 = async (verify = false) => {
   try {
@@ -27,20 +28,21 @@ export const step_17 = async (verify = false) => {
     await waitForTx(
       await x2y2R1
         .connect(deployer)
-        .initialize(0, await addressesProvider.getWETH())
+        .initialize(0, await addressesProvider.getWETH(), GLOBAL_OVERRIDES)
     );
     const erc721Delegate = await deployERC721Delegate(verify);
     await waitForTx(
       await x2y2R1
         .connect(deployer)
-        .updateDelegates([erc721Delegate.address], [])
+        .updateDelegates([erc721Delegate.address], [], GLOBAL_OVERRIDES)
     );
     await waitForTx(
       await erc721Delegate
         .connect(deployer)
         .grantRole(
           "0x7630198b183b603be5df16e380207195f2a065102b113930ccb600feaf615331",
-          x2y2R1.address
+          x2y2R1.address,
+          GLOBAL_OVERRIDES
         )
     );
     const x2y2Adapter = await deployX2Y2Adapter(verify);
@@ -51,7 +53,8 @@ export const step_17 = async (verify = false) => {
         x2y2R1.address,
         x2y2Adapter.address,
         x2y2R1.address,
-        false
+        false,
+        GLOBAL_OVERRIDES
       )
     );
   } catch (error) {

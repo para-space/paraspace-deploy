@@ -50,6 +50,7 @@ import {decodeEvents} from "./seaport-helpers/events";
 import {expect} from "chai";
 import {ABI} from "hardhat-deploy/dist/types";
 import {ethers} from "ethers";
+import {GLOBAL_OVERRIDES} from "./hardhat-constants";
 
 export type ERC20TokenMap = {[symbol: string]: ERC20};
 export type ERC721TokenMap = {[symbol: string]: ERC721};
@@ -383,7 +384,10 @@ export const createZone = async (
   owner: Signer,
   salt?: string
 ) => {
-  const tx = await pausableZoneController.createZone(salt ?? randomHex());
+  const tx = await pausableZoneController.createZone(
+    salt ?? randomHex(),
+    GLOBAL_OVERRIDES
+  );
 
   const zoneContract = await DRE.ethers.getContractFactory(
     "PausableZone",

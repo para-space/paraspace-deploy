@@ -5,6 +5,7 @@ import {
   getPoolAddressesProvider,
 } from "../../../../helpers/contracts-getters";
 import {registerContractInDb} from "../../../../helpers/contracts-helpers";
+import {GLOBAL_OVERRIDES} from "../../../../helpers/hardhat-constants";
 import {waitForTx} from "../../../../helpers/misc-utils";
 import {eContractid} from "../../../../helpers/types";
 
@@ -33,7 +34,8 @@ export const step_06 = async (verify = false) => {
           },
         ],
         ZERO_ADDRESS,
-        "0x"
+        "0x",
+        GLOBAL_OVERRIDES
       )
     );
 
@@ -47,7 +49,8 @@ export const step_06 = async (verify = false) => {
           },
         ],
         ZERO_ADDRESS,
-        "0x"
+        "0x",
+        GLOBAL_OVERRIDES
       )
     );
 
@@ -61,7 +64,8 @@ export const step_06 = async (verify = false) => {
           },
         ],
         ZERO_ADDRESS,
-        "0x"
+        "0x",
+        GLOBAL_OVERRIDES
       )
     );
 
@@ -79,7 +83,8 @@ export const step_06 = async (verify = false) => {
         poolAddress,
         poolCore.interface.encodeFunctionData("initialize", [
           addressesProvider.address,
-        ])
+        ]),
+        GLOBAL_OVERRIDES
       )
     );
 

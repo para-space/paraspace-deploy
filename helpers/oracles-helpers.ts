@@ -28,6 +28,7 @@ import {
   getContractAddresses,
   insertContractAddressInDb,
 } from "./contracts-helpers";
+import {GLOBAL_OVERRIDES} from "./hardhat-constants";
 
 export const setInitialAssetPricesInOracle = async (
   prices: iAssetBase<tEthereumAddress>,
@@ -38,7 +39,8 @@ export const setInitialAssetPricesInOracle = async (
     await waitForTx(
       await priceOracleInstance.setAssetPrice(
         assetsAddresses[assetSymbol],
-        price
+        price,
+        GLOBAL_OVERRIDES
       )
     );
   }

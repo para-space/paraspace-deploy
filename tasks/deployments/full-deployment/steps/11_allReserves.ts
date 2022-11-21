@@ -14,6 +14,7 @@ import {
   getContractAddresses,
   getParaSpaceAdmins,
 } from "../../../../helpers/contracts-helpers";
+import {GLOBAL_OVERRIDES} from "../../../../helpers/hardhat-constants";
 import {
   configureReservesByHelper,
   initReservesByHelper,
@@ -105,7 +106,8 @@ export const step_11 = async (verify = false) => {
       ).xTokenAddress,
       (
         await pool.getReserveData(erc721Tokens.MAYC.address)
-      ).xTokenAddress
+      ).xTokenAddress,
+      GLOBAL_OVERRIDES
     );
   } catch (error) {
     console.error(error);

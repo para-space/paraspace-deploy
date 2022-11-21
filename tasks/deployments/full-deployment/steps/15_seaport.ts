@@ -22,6 +22,7 @@ import {
   createConduit,
 } from "../../../../helpers/contracts-helpers";
 import {eContractid} from "../../../../helpers/types";
+import {GLOBAL_OVERRIDES} from "../../../../helpers/hardhat-constants";
 
 export const step_15 = async (verify = false) => {
   try {
@@ -44,15 +45,21 @@ export const step_15 = async (verify = false) => {
     );
     const conduitInstance = await getConduit(conduit);
     await waitForTx(
-      await conduitInstance.initialize(protocolDataProvider.address, {
-        gasLimit: 1000000,
-      })
+      await conduitInstance.initialize(
+        protocolDataProvider.address,
+        GLOBAL_OVERRIDES
+      )
     );
     const zone = await createZone(pausableZoneController, deployer);
     const seaport = await deploySeaport(conduitController.address, verify);
     const seaportAdapter = await deploySeaportAdapter(verify);
     await waitForTx(
-      await conduitController.updateChannel(conduit, seaport.address, true)
+      await conduitController.updateChannel(
+        conduit,
+        seaport.address,
+        true,
+        GLOBAL_OVERRIDES
+      )
     );
     await waitForTx(
       await addressesProvider.setMarketplace(
@@ -60,7 +67,8 @@ export const step_15 = async (verify = false) => {
         seaport.address,
         seaportAdapter.address,
         conduitInstance.address,
-        false
+        false,
+        GLOBAL_OVERRIDES
       )
     );
 
@@ -71,12 +79,15 @@ export const step_15 = async (verify = false) => {
           paraSpaceConfig.Marketplace.Seaport,
           seaportAdapter.address,
           paraSpaceConfig.Marketplace.Seaport,
-          false
+          false,
+          GLOBAL_OVERRIDES
         )
       );
     }
 
-    await waitForTx(await addressesProvider.setWETH(allTokens.WETH.address));
+    await waitForTx(
+      await addressesProvider.setWETH(allTokens.WETH.address, GLOBAL_OVERRIDES)
+    );
     await insertContractAddressInDb(eContractid.ConduitKey, conduitKey, false);
     await insertContractAddressInDb(eContractid.Conduit, conduit);
     await insertContractAddressInDb(eContractid.PausableZone, zone);

@@ -13,6 +13,7 @@ import {
   getPriceOracle,
 } from "../../../../helpers/contracts-getters";
 import {getEthersSignersAddresses} from "../../../../helpers/contracts-helpers";
+import {GLOBAL_OVERRIDES} from "../../../../helpers/hardhat-constants";
 import {getParaSpaceConfig, waitForTx} from "../../../../helpers/misc-utils";
 import {
   deployAllAggregators,
@@ -37,7 +38,14 @@ const deployNftOracle = async (verify = false) => {
       : [oracle1, oracle2, oracle3];
   const projects = Object.values(erc721Tokens).map((x) => x.address);
   const nftFloorOracle = await deployNFTFloorPriceOracle(verify);
-  await waitForTx(await nftFloorOracle.initialize(deployer, feeders, projects));
+  await waitForTx(
+    await nftFloorOracle.initialize(
+      deployer,
+      feeders,
+      projects,
+      GLOBAL_OVERRIDES
+    )
+  );
   return nftFloorOracle;
 };
 
@@ -74,7 +82,10 @@ export const step_10 = async (verify = false) => {
       verify
     );
     await waitForTx(
-      await addressesProvider.setPriceOracle(paraspaceOracle.address)
+      await addressesProvider.setPriceOracle(
+        paraspaceOracle.address,
+        GLOBAL_OVERRIDES
+      )
     );
 
     const protocolDataProvider = await deployProtocolDataProvider(
@@ -82,7 +93,8 @@ export const step_10 = async (verify = false) => {
       verify
     );
     await addressesProvider.setProtocolDataProvider(
-      protocolDataProvider.address
+      protocolDataProvider.address,
+      GLOBAL_OVERRIDES
     );
 
     await deployUiPoolDataProvider(

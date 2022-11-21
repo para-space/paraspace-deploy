@@ -6,6 +6,7 @@ import {
   getPunks,
 } from "../../../../helpers/contracts-getters";
 import {insertContractAddressInDb} from "../../../../helpers/contracts-helpers";
+import {GLOBAL_OVERRIDES} from "../../../../helpers/hardhat-constants";
 import {
   getParaSpaceConfig,
   isLocalTestnet,
@@ -31,7 +32,8 @@ export const step_09 = async (verify = false) => {
       const fallbackOracle = await deployPriceOracle(verify);
       await waitForTx(
         await fallbackOracle.setEthUsdPrice(
-          paraSpaceConfig.Mocks!.USDPriceInWEI
+          paraSpaceConfig.Mocks!.USDPriceInWEI,
+          GLOBAL_OVERRIDES
         )
       );
       await setInitialAssetPricesInOracle(

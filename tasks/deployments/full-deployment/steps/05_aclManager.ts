@@ -5,6 +5,7 @@ import {
   getFirstSigner,
   getPoolAddressesProvider,
 } from "../../../../helpers/contracts-getters";
+import {GLOBAL_OVERRIDES} from "../../../../helpers/hardhat-constants";
 
 export const step_05 = async (verify = false) => {
   const {paraSpaceAdminAddress, emergencyAdminAddresses, riskAdminAddress} =
@@ -18,18 +19,33 @@ export const step_05 = async (verify = false) => {
       addressesProvider.address,
       verify
     );
-    await waitForTx(await addressesProvider.setACLManager(aclManager.address));
-
-    await waitForTx(await aclManager.addPoolAdmin(deployerAddress));
     await waitForTx(
-      await aclManager.addAssetListingAdmin(paraSpaceAdminAddress)
+      await addressesProvider.setACLManager(
+        aclManager.address,
+        GLOBAL_OVERRIDES
+      )
+    );
+
+    await waitForTx(
+      await aclManager.addPoolAdmin(deployerAddress, GLOBAL_OVERRIDES)
+    );
+    await waitForTx(
+      await aclManager.addAssetListingAdmin(
+        paraSpaceAdminAddress,
+        GLOBAL_OVERRIDES
+      )
     );
     for (const emergencyAdminAddress of emergencyAdminAddresses) {
       await waitForTx(
-        await aclManager.addEmergencyAdmin(emergencyAdminAddress)
+        await aclManager.addEmergencyAdmin(
+          emergencyAdminAddress,
+          GLOBAL_OVERRIDES
+        )
       );
     }
-    await waitForTx(await aclManager.addRiskAdmin(riskAdminAddress));
+    await waitForTx(
+      await aclManager.addRiskAdmin(riskAdminAddress, GLOBAL_OVERRIDES)
+    );
   } catch (error) {
     console.error(error);
     process.exit(1);

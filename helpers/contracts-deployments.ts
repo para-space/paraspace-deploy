@@ -164,7 +164,8 @@ export const deployPoolAddressesProvider = async (
   return withSaveAndVerify(
     await new PoolAddressesProvider__factory(await getFirstSigner()).deploy(
       marketId,
-      owner
+      owner,
+      GLOBAL_OVERRIDES
     ),
     eContractid.PoolAddressesProvider,
     [marketId, owner],
@@ -575,7 +576,8 @@ export const deployProtocolDataProvider = async (
 ) =>
   withSaveAndVerify(
     await new ProtocolDataProvider__factory(await getFirstSigner()).deploy(
-      addressesProvider
+      addressesProvider,
+      GLOBAL_OVERRIDES
     ),
     eContractid.ProtocolDataProvider,
     [addressesProvider],
@@ -616,7 +618,8 @@ export const deployMintableDelegationERC20 = async (
 ): Promise<MintableDelegationERC20> =>
   withSaveAndVerify(
     await new MintableDelegationERC20__factory(await getFirstSigner()).deploy(
-      ...args
+      ...args,
+      GLOBAL_OVERRIDES
     ),
     eContractid.MintableDelegationERC20,
     [...args],
@@ -670,7 +673,8 @@ export const deployGenericVariableDebtToken = async (
 ) =>
   withSaveAndVerify(
     await new VariableDebtToken__factory(await getFirstSigner()).deploy(
-      poolAddress
+      poolAddress,
+      GLOBAL_OVERRIDES
     ),
     eContractid.VariableDebtTokenImpl,
     [poolAddress],
@@ -751,7 +755,8 @@ export const deployGenericNTokenImpl = async (
   return withSaveAndVerify(
     await new NToken__factory(libraries, await getFirstSigner()).deploy(
       poolAddress,
-      atomicPricing
+      atomicPricing,
+      GLOBAL_OVERRIDES
     ),
     eContractid.NTokenImpl,
     [poolAddress, atomicPricing],
@@ -829,7 +834,8 @@ export const deployDelegationAwarePToken = async (
 ) => {
   const instance = await withSaveAndVerify(
     await new DelegationAwarePToken__factory(await getFirstSigner()).deploy(
-      poolAddress
+      poolAddress,
+      GLOBAL_OVERRIDES
     ),
     eContractid.DelegationAwarePTokenImpl,
     [poolAddress],
@@ -856,7 +862,8 @@ export const deployDelegationAwarePTokenImpl = async (
 ) =>
   withSaveAndVerify(
     await new DelegationAwarePToken__factory(await getFirstSigner()).deploy(
-      poolAddress
+      poolAddress,
+      GLOBAL_OVERRIDES
     ),
     eContractid.DelegationAwarePTokenImpl,
     [poolAddress],
@@ -1544,7 +1551,8 @@ export const deployMAYC = async (
 ) =>
   withSaveAndVerify(
     await new MutantApeYachtClub__factory(await getFirstSigner()).deploy(
-      ...args
+      ...args,
+      GLOBAL_OVERRIDES
     ),
     eContractid.MutantApeYachtClub,
     [...args],
@@ -1557,7 +1565,8 @@ export const deployBAYC = async (
 ) =>
   withSaveAndVerify(
     await new BoredApeYachtClub__factory(await getFirstSigner()).deploy(
-      ...args
+      ...args,
+      GLOBAL_OVERRIDES
     ),
     eContractid.BoredApeYachtClub,
     [...args],
@@ -1575,7 +1584,8 @@ export const deployERC721OracleWrapper = async (
     await new ERC721OracleWrapper__factory(await getFirstSigner()).deploy(
       addressesProvider,
       oracleAddress,
-      asset
+      asset,
+      GLOBAL_OVERRIDES
     ),
     eContractid.Aggregator.concat(`.${symbol}`),
     [addressesProvider, oracleAddress, asset],
@@ -1585,7 +1595,8 @@ export const deployERC721OracleWrapper = async (
 export const deployPunks = async (args: [], verify?: boolean) =>
   withSaveAndVerify(
     await new CryptoPunksMarket__factory(await getFirstSigner()).deploy(
-      ...args
+      ...args,
+      GLOBAL_OVERRIDES
     ),
     eContractid.PUNKS,
     [...args],
@@ -1730,7 +1741,8 @@ export const deployMockTokenFaucet = async (
     await new MockTokenFaucet__factory(await getFirstSigner()).deploy(
       erc20configs,
       erc721configs,
-      punkConfig
+      punkConfig,
+      GLOBAL_OVERRIDES
     ),
     eContractid.MockTokenFaucet,
     [erc20configs, erc721configs, punkConfig],
@@ -1805,7 +1817,8 @@ export const deployPausableZoneController = async (
 ) =>
   withSaveAndVerify(
     await new PausableZoneController__factory(await getFirstSigner()).deploy(
-      owner
+      owner,
+      GLOBAL_OVERRIDES
     ),
     eContractid.PausableZoneController,
     [owner],
@@ -1818,7 +1831,8 @@ export const deploySeaport = async (
 ) =>
   withSaveAndVerify(
     await new Seaport__factory(await getFirstSigner()).deploy(
-      conduitController
+      conduitController,
+      GLOBAL_OVERRIDES
     ),
     eContractid.Seaport,
     [conduitController],
@@ -1859,7 +1873,8 @@ export const deployLooksRareExchange = async (
       executionManager,
       royaltyFeeManager,
       weth,
-      protocolFeeRecipient
+      protocolFeeRecipient,
+      GLOBAL_OVERRIDES
     ),
     eContractid.LooksRareExchange,
     [
@@ -1878,7 +1893,8 @@ export const deployRoyaltyFeeManager = async (
 ) =>
   withSaveAndVerify(
     await new RoyaltyFeeManager__factory(await getFirstSigner()).deploy(
-      royaltyFeeRegistry
+      royaltyFeeRegistry,
+      GLOBAL_OVERRIDES
     ),
     eContractid.RoyaltyFeeManager,
     [royaltyFeeRegistry],
@@ -1891,7 +1907,8 @@ export const deployRoyaltyFeeRegistry = async (
 ) =>
   withSaveAndVerify(
     await new RoyaltyFeeRegistry__factory(await getFirstSigner()).deploy(
-      royaltyFeeLimit
+      royaltyFeeLimit,
+      GLOBAL_OVERRIDES
     ),
     eContractid.RoyaltyFeeRegistry,
     [royaltyFeeLimit],
@@ -1906,7 +1923,8 @@ export const deployTransferSelectorNFT = async (
   withSaveAndVerify(
     await new TransferSelectorNFT__factory(await getFirstSigner()).deploy(
       transferManagerERC721,
-      transferManagerERC1155
+      transferManagerERC1155,
+      GLOBAL_OVERRIDES
     ),
     eContractid.TransferSelectorNFT,
     [transferManagerERC721, transferManagerERC1155],
@@ -1919,7 +1937,8 @@ export const deployTransferManagerERC721 = async (
 ) =>
   withSaveAndVerify(
     await new TransferManagerERC721__factory(await getFirstSigner()).deploy(
-      looksRareExchange
+      looksRareExchange,
+      GLOBAL_OVERRIDES
     ),
     eContractid.TransferManagerERC721,
     [looksRareExchange],
@@ -1932,7 +1951,8 @@ export const deployTransferManagerERC1155 = async (
 ) =>
   withSaveAndVerify(
     await new TransferManagerERC1155__factory(await getFirstSigner()).deploy(
-      looksRareExchange
+      looksRareExchange,
+      GLOBAL_OVERRIDES
     ),
     eContractid.TransferManagerERC1155,
     [looksRareExchange],
@@ -2031,7 +2051,8 @@ export const deployUniswapV3OracleWrapper = async (
     await new UniswapV3OracleWrapper__factory(await getFirstSigner()).deploy(
       factory,
       manager,
-      addressProvider
+      addressProvider,
+      GLOBAL_OVERRIDES
     ),
     eContractid.Aggregator.concat(`.${eContractid.UniswapV3}`),
     [factory, manager, addressProvider],
@@ -2150,7 +2171,8 @@ export const deployUserFlashClaimRegistry = async (
 ) =>
   withSaveAndVerify(
     await new UserFlashclaimRegistry__factory(await getFirstSigner()).deploy(
-      poolAddress
+      poolAddress,
+      GLOBAL_OVERRIDES
     ),
     eContractid.FlashClaimRegistry,
     [poolAddress],
@@ -2163,7 +2185,8 @@ export const deployMockAirdropProject = async (
 ) =>
   withSaveAndVerify(
     await new MockAirdropProject__factory(await getFirstSigner()).deploy(
-      underlyingAddress
+      underlyingAddress,
+      GLOBAL_OVERRIDES
     ),
     eContractid.MockAirdropProject,
     [underlyingAddress],
@@ -2233,7 +2256,8 @@ export const deployNTokenBAYCImpl = async (
   return withSaveAndVerify(
     await new NTokenBAYC__factory(libraries, await getFirstSigner()).deploy(
       poolAddress,
-      apeCoinStaking
+      apeCoinStaking,
+      GLOBAL_OVERRIDES
     ),
     eContractid.NTokenBAYCImpl,
     [poolAddress, apeCoinStaking],
@@ -2266,7 +2290,8 @@ export const deployNTokenMAYCImpl = async (
   return withSaveAndVerify(
     await new NTokenMAYC__factory(libraries, await getFirstSigner()).deploy(
       poolAddress,
-      apeCoinStaking
+      apeCoinStaking,
+      GLOBAL_OVERRIDES
     ),
     eContractid.NTokenMAYCImpl,
     [poolAddress, apeCoinStaking],
@@ -2279,7 +2304,8 @@ export const deployATokenDebtToken = async (
 ) =>
   withSaveAndVerify(
     await new ATokenDebtToken__factory(await getFirstSigner()).deploy(
-      poolAddress
+      poolAddress,
+      GLOBAL_OVERRIDES
     ),
     eContractid.ATokenDebtToken,
     [poolAddress],
@@ -2292,7 +2318,8 @@ export const deployStETHDebtToken = async (
 ) =>
   withSaveAndVerify(
     await new StETHDebtToken__factory(await getFirstSigner()).deploy(
-      poolAddress
+      poolAddress,
+      GLOBAL_OVERRIDES
     ),
     eContractid.StETHDebtToken,
     [poolAddress],

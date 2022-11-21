@@ -21,6 +21,7 @@ import {
   isLocalTestnet,
   isPublicTestnet,
 } from "../../../../helpers/misc-utils";
+import {GLOBAL_OVERRIDES} from "../../../../helpers/hardhat-constants";
 
 export const step_16 = async (verify = false) => {
   try {
@@ -32,8 +33,15 @@ export const step_16 = async (verify = false) => {
     const currencyManager = await deployCurrencyManager(verify);
     const addressesProvider = await getPoolAddressesProvider();
 
-    await waitForTx(await currencyManager.addCurrency(allTokens.DAI.address));
-    await waitForTx(await currencyManager.addCurrency(allTokens.WETH.address));
+    await waitForTx(
+      await currencyManager.addCurrency(allTokens.DAI.address, GLOBAL_OVERRIDES)
+    );
+    await waitForTx(
+      await currencyManager.addCurrency(
+        allTokens.WETH.address,
+        GLOBAL_OVERRIDES
+      )
+    );
 
     const executionManager = await deployExecutionManager(verify);
 
@@ -59,7 +67,8 @@ export const step_16 = async (verify = false) => {
         looksRareExchange.address,
         looksRareAdapter.address,
         looksRareExchange.address,
-        false
+        false,
+        GLOBAL_OVERRIDES
       )
     );
 
@@ -78,13 +87,17 @@ export const step_16 = async (verify = false) => {
     );
     await waitForTx(
       await looksRareExchange.updateTransferSelectorNFT(
-        transferSelectorNFT.address
+        transferSelectorNFT.address,
+        GLOBAL_OVERRIDES
       )
     );
     const standardSaleForFixedPrice =
       await deployStrategyStandardSaleForFixedPrice("0", verify);
     await waitForTx(
-      await executionManager.addStrategy(standardSaleForFixedPrice.address)
+      await executionManager.addStrategy(
+        standardSaleForFixedPrice.address,
+        GLOBAL_OVERRIDES
+      )
     );
   } catch (error) {
     console.error(error);

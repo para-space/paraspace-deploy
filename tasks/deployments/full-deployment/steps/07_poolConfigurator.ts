@@ -4,6 +4,7 @@ import {
   getPoolConfiguratorProxy,
 } from "../../../../helpers/contracts-getters";
 import {registerContractInDb} from "../../../../helpers/contracts-helpers";
+import {GLOBAL_OVERRIDES} from "../../../../helpers/hardhat-constants";
 import {getParaSpaceConfig, waitForTx} from "../../../../helpers/misc-utils";
 import {eContractid} from "../../../../helpers/types";
 
@@ -14,7 +15,8 @@ export const step_07 = async (verify = false) => {
     const poolConfiguratorImpl = await deployPoolConfigurator(verify);
     await waitForTx(
       await addressesProvider.setPoolConfiguratorImpl(
-        poolConfiguratorImpl.address
+        poolConfiguratorImpl.address,
+        GLOBAL_OVERRIDES
       )
     );
     const poolConfiguratorProxy = await getPoolConfiguratorProxy(
@@ -22,7 +24,8 @@ export const step_07 = async (verify = false) => {
     );
     await waitForTx(
       await poolConfiguratorProxy.setAuctionRecoveryHealthFactor(
-        getParaSpaceConfig().AuctionRecoveryHealthFactor
+        getParaSpaceConfig().AuctionRecoveryHealthFactor,
+        GLOBAL_OVERRIDES
       )
     );
     await registerContractInDb(

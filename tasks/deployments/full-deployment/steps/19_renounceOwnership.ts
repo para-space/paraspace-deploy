@@ -12,6 +12,7 @@ import {
   getWPunkGatewayProxy,
 } from "../../../../helpers/contracts-getters";
 import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
+import {GLOBAL_OVERRIDES} from "../../../../helpers/hardhat-constants";
 import {waitForTx} from "../../../../helpers/misc-utils";
 
 // eslint-disable-next-line
@@ -38,71 +39,105 @@ export const step_19 = async (_verify = false) => {
     }
 
     await waitForTx(
-      await addressesProviderRegistry.transferOwnership(paraSpaceAdminAddress)
+      await addressesProviderRegistry.transferOwnership(
+        paraSpaceAdminAddress,
+        GLOBAL_OVERRIDES
+      )
     );
-    await waitForTx(await addressesProvider.setACLAdmin(paraSpaceAdminAddress));
     await waitForTx(
-      await addressesProvider.transferOwnership(paraSpaceAdminAddress)
+      await addressesProvider.setACLAdmin(
+        paraSpaceAdminAddress,
+        GLOBAL_OVERRIDES
+      )
+    );
+    await waitForTx(
+      await addressesProvider.transferOwnership(
+        paraSpaceAdminAddress,
+        GLOBAL_OVERRIDES
+      )
     );
 
-    await waitForTx(await aclManager.addPoolAdmin(paraSpaceAdminAddress));
-    await waitForTx(await aclManager.removePoolAdmin(deployerAddress));
+    await waitForTx(
+      await aclManager.addPoolAdmin(paraSpaceAdminAddress, GLOBAL_OVERRIDES)
+    );
+    await waitForTx(
+      await aclManager.removePoolAdmin(deployerAddress, GLOBAL_OVERRIDES)
+    );
     await waitForTx(
       await aclManager.grantRole(
         await aclManager.DEFAULT_ADMIN_ROLE(),
-        paraSpaceAdminAddress
+        paraSpaceAdminAddress,
+        GLOBAL_OVERRIDES
       )
     );
     await waitForTx(
       await aclManager.revokeRole(
         await aclManager.DEFAULT_ADMIN_ROLE(),
-        deployerAddress
+        deployerAddress,
+        GLOBAL_OVERRIDES
       )
     );
 
     await waitForTx(
-      await reservesSetupHelper.transferOwnership(paraSpaceAdminAddress)
+      await reservesSetupHelper.transferOwnership(
+        paraSpaceAdminAddress,
+        GLOBAL_OVERRIDES
+      )
     );
 
     await waitForTx(
       await conduitController.transferOwnership(
         conduit.address,
-        paraSpaceAdminAddress
+        paraSpaceAdminAddress,
+        GLOBAL_OVERRIDES
       )
     );
     await waitForTx(
-      await zoneController.transferOwnership(paraSpaceAdminAddress)
+      await zoneController.transferOwnership(
+        paraSpaceAdminAddress,
+        GLOBAL_OVERRIDES
+      )
     );
 
     await waitForTx(
-      await wethGatewayProxy.transferOwnership(gatewayAdminAddress)
+      await wethGatewayProxy.transferOwnership(
+        gatewayAdminAddress,
+        GLOBAL_OVERRIDES
+      )
     );
     await waitForTx(
-      await punkGatewayProxy.transferOwnership(gatewayAdminAddress)
+      await punkGatewayProxy.transferOwnership(
+        gatewayAdminAddress,
+        GLOBAL_OVERRIDES
+      )
     );
 
     await waitForTx(
       await nftFloorOracle.grantRole(
         await nftFloorOracle.UPDATER_ROLE(),
-        paraSpaceAdminAddress
+        paraSpaceAdminAddress,
+        GLOBAL_OVERRIDES
       )
     );
     await waitForTx(
       await nftFloorOracle.revokeRole(
         await nftFloorOracle.UPDATER_ROLE(),
-        deployerAddress
+        deployerAddress,
+        GLOBAL_OVERRIDES
       )
     );
     await waitForTx(
       await nftFloorOracle.grantRole(
         await nftFloorOracle.DEFAULT_ADMIN_ROLE(),
-        paraSpaceAdminAddress
+        paraSpaceAdminAddress,
+        GLOBAL_OVERRIDES
       )
     );
     await waitForTx(
       await nftFloorOracle.revokeRole(
         await nftFloorOracle.DEFAULT_ADMIN_ROLE(),
-        deployerAddress
+        deployerAddress,
+        GLOBAL_OVERRIDES
       )
     );
   } catch (error) {

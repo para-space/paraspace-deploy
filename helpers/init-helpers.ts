@@ -18,6 +18,7 @@ import {
 } from "./contracts-getters";
 import {insertContractAddressInDb} from "./contracts-helpers";
 import {BigNumber, BigNumberish} from "ethers";
+import {GLOBAL_OVERRIDES} from "./hardhat-constants";
 import {
   deployReserveInterestRateStrategy,
   deployDelegationAwarePTokenImpl,
@@ -402,7 +403,10 @@ export const initReservesByHelper = async (
     chunkIndex++
   ) {
     const tx = await waitForTx(
-      await configurator.initReserves(chunkedInitInputParams[chunkIndex])
+      await configurator.initReserves(
+        chunkedInitInputParams[chunkIndex],
+        GLOBAL_OVERRIDES
+      )
     );
 
     console.log(
@@ -501,7 +505,12 @@ export const configureReservesByHelper = async (
   }
   if (tokens.length) {
     // Add reservesSetupHelper as temporal admin
-    await waitForTx(await aclManager.addPoolAdmin(reservesSetupHelper.address));
+    await waitForTx(
+      await aclManager.addPoolAdmin(
+        reservesSetupHelper.address,
+        GLOBAL_OVERRIDES
+      )
+    );
 
     // Deploy init per chunks
     const enableChunks = 20;
@@ -519,16 +528,17 @@ export const configureReservesByHelper = async (
         await reservesSetupHelper.configureReserves(
           poolConfiguratorAddress,
           chunkedInputParams[chunkIndex],
-          {
-            gasLimit: 12_450_000,
-          }
+          GLOBAL_OVERRIDES
         )
       );
       console.log(`  - Init for: ${chunkedSymbols[chunkIndex].join(", ")}`);
     }
     // Remove reservesSetupHelper as admin
     await waitForTx(
-      await aclManager.removePoolAdmin(reservesSetupHelper.address)
+      await aclManager.removePoolAdmin(
+        reservesSetupHelper.address,
+        GLOBAL_OVERRIDES
+      )
     );
   }
 };
