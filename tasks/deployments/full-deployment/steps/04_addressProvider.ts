@@ -3,6 +3,7 @@ import {
   deployPoolAddressesProviderRegistry,
 } from "../../../../helpers/contracts-deployments";
 import {getFirstSigner} from "../../../../helpers/contracts-getters";
+import {GLOBAL_OVERRIDES} from "../../../../helpers/hardhat-constants";
 import {getParaSpaceConfig, waitForTx} from "../../../../helpers/misc-utils";
 
 export const step_04 = async (verify = false) => {
@@ -22,10 +23,13 @@ export const step_04 = async (verify = false) => {
     await waitForTx(
       await addressesProviderRegistry.registerAddressesProvider(
         addressesProvider.address,
-        getParaSpaceConfig().ProviderId
+        getParaSpaceConfig().ProviderId,
+        GLOBAL_OVERRIDES
       )
     );
-    await waitForTx(await addressesProvider.setACLAdmin(deployerAddress));
+    await waitForTx(
+      await addressesProvider.setACLAdmin(deployerAddress, GLOBAL_OVERRIDES)
+    );
   } catch (error) {
     console.error(error);
     process.exit(1);

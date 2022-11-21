@@ -23,7 +23,6 @@ export const step_17 = async (verify = false) => {
 
     const deployer = await getFirstSigner();
     const addressesProvider = await getPoolAddressesProvider();
-    addressesProvider.getACLAdmin();
     const x2y2R1 = await deployX2Y2R1(verify);
     await waitForTx(
       await x2y2R1
