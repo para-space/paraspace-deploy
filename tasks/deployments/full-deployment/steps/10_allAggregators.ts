@@ -26,7 +26,9 @@ import {
 
 const deployNftOracle = async (verify = false) => {
   const erc721Tokens = await getAllERC721Tokens();
-  const oracleConfig = getParaSpaceConfig().Oracle;
+  const paraSpaceConfig = getParaSpaceConfig();
+  const oracleConfig = paraSpaceConfig.Oracle;
+  const chainlinkConfig = paraSpaceConfig.Chainlink;
   // UniswapV3 should use price from `UniswapV3OracleWrapper` instead of NFTFloorOracle
   delete erc721Tokens[ERC721TokenContractId.UniswapV3];
   const [deployer, oracle1, oracle2, oracle3] =
@@ -36,7 +38,9 @@ const deployNftOracle = async (verify = false) => {
     oracleConfig.Nodes.length > 0
       ? oracleConfig.Nodes
       : [oracle1, oracle2, oracle3];
-  const projects = Object.values(erc721Tokens).map((x) => x.address);
+  const projects = Object.entries(erc721Tokens)
+    .filter(([symbol]) => !Object.keys(chainlinkConfig).includes(symbol))
+    .map(([, nft]) => nft.address);
   const nftFloorOracle = await deployNFTFloorPriceOracle(verify);
   await waitForTx(
     await nftFloorOracle.initialize(
