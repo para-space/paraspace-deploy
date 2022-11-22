@@ -1,6 +1,4 @@
-import rawBRE from "hardhat";
-
-import {printContracts, waitForTx} from "../../../helpers/misc-utils";
+import {getParaSpaceConfig, waitForTx} from "../../../helpers/misc-utils";
 import {deployPoolComponents} from "../../../helpers/contracts-deployments";
 import {getPoolAddressesProvider} from "../../../helpers/contracts-getters";
 
@@ -11,8 +9,17 @@ import {upgradeNToken} from "./upgrade_ntoken";
 import {upgradeNTokenUniswapV3} from "./upgrade_ntoken_uniswapv3";
 import {upgradeNTokenMoonBirds} from "./upgrade_ntoken_moonbirds";
 import {ETHERSCAN_VERIFICATION} from "../../../helpers/hardhat-constants";
+import {getEthersSigners} from "../../../helpers/contracts-helpers";
 
 dotenv.config();
+
+export const loadPoolAdmin = async () => {
+  const paraSpaceConfig = getParaSpaceConfig();
+  const signers = await getEthersSigners();
+  const poolAdmin = signers[paraSpaceConfig.ParaSpaceAdminIndex];
+  console.log("poolAdmin: ", await poolAdmin.getAddress());
+  return poolAdmin;
+};
 
 export const upgradeAll = async () => {
   await upgradePool();
@@ -24,48 +31,28 @@ export const upgradeAll = async () => {
 };
 
 export const upgradePool = async () => {
-  const addressesProvider = await getPoolAddressesProvider();
+  const poolAdmin = await loadPoolAdmin();
+  const addressesProvider = (await getPoolAddressesProvider()).connect(
+    poolAdmin
+  );
 
+  console.time("deploy PoolComponent");
   const {
     poolCore,
     poolParameters,
     poolMarketplace,
+    poolApeStaking,
     poolCoreSelectors,
     poolParametersSelectors,
     poolMarketplaceSelectors,
+    poolApeStakingSelectors,
   } = await deployPoolComponents(
     addressesProvider.address,
     ETHERSCAN_VERIFICATION
   );
+  console.timeEnd("deploy PoolComponent");
 
-  await waitForTx(
-    await addressesProvider.updatePoolImpl(
-      [
-        {
-          implAddress: poolParameters.address,
-          action: 1, //replace
-          functionSelectors: poolParametersSelectors,
-        },
-      ],
-      ZERO_ADDRESS,
-      "0x"
-    )
-  );
-
-  await waitForTx(
-    await addressesProvider.updatePoolImpl(
-      [
-        {
-          implAddress: poolMarketplace.address,
-          action: 1,
-          functionSelectors: poolMarketplaceSelectors,
-        },
-      ],
-      ZERO_ADDRESS,
-      "0x"
-    )
-  );
-
+  console.time("upgrade PoolCore");
   await waitForTx(
     await addressesProvider.updatePoolImpl(
       [
@@ -79,21 +66,188 @@ export const upgradePool = async () => {
       "0x"
     )
   );
+  console.timeEnd("upgrade PoolCore");
 
-  console.log("upgrade pool components finished!");
+  console.time("upgrade PoolParameters");
+  await waitForTx(
+    await addressesProvider.connect(poolAdmin).updatePoolImpl(
+      [
+        {
+          implAddress: poolParameters.address,
+          action: 1, //replace
+          functionSelectors: poolParametersSelectors,
+        },
+      ],
+      ZERO_ADDRESS,
+      "0x"
+    )
+  );
+  console.timeEnd("upgrade PoolParameters");
+
+  console.time("upgrade PoolMarketplace");
+  await waitForTx(
+    await addressesProvider.updatePoolImpl(
+      [
+        {
+          implAddress: poolMarketplace.address,
+          action: 1,
+          functionSelectors: poolMarketplaceSelectors,
+        },
+      ],
+      ZERO_ADDRESS,
+      "0x"
+    )
+  );
+  console.timeEnd("upgrade PoolMarketplace");
+
+  console.time("upgrade PoolApeStaking");
+  await waitForTx(
+    await addressesProvider.updatePoolImpl(
+      [
+        {
+          implAddress: poolApeStaking.address,
+          action: 1,
+          functionSelectors: poolApeStakingSelectors,
+        },
+      ],
+      ZERO_ADDRESS,
+      "0x"
+    )
+  );
+  console.timeEnd("upgrade PoolApeStaking");
 };
 
-async function main() {
-  await rawBRE.run("set-DRE");
+export const removePoolFuncs = async () => {
+  const poolAdmin = await loadPoolAdmin();
+  const addressesProvider = (await getPoolAddressesProvider()).connect(
+    poolAdmin
+  );
 
-  await upgradeAll();
+  const FUNCS_TO_REMOVE = process.env.FUNCS_TO_REMOVE?.replace(
+    /\[|\]|'/g,
+    ""
+  ).split(",");
 
-  printContracts();
-}
+  if (FUNCS_TO_REMOVE && FUNCS_TO_REMOVE.length) {
+    await waitForTx(
+      await addressesProvider.updatePoolImpl(
+        [
+          {
+            implAddress: ZERO_ADDRESS,
+            action: 2,
+            functionSelectors: FUNCS_TO_REMOVE,
+          },
+        ],
+        ZERO_ADDRESS,
+        "0x"
+      )
+    );
+  }
+};
 
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+export const addPoolFuncs = async () => {
+  const poolAdmin = await loadPoolAdmin();
+  const addressesProvider = (await getPoolAddressesProvider()).connect(
+    poolAdmin
+  );
+
+  console.time("deploy PoolComponent");
+  const {
+    poolCore,
+    poolParameters,
+    poolMarketplace,
+    poolApeStaking,
+    poolCoreSelectors,
+    poolParametersSelectors,
+    poolMarketplaceSelectors,
+    poolApeStakingSelectors,
+  } = await deployPoolComponents(
+    addressesProvider.address,
+    ETHERSCAN_VERIFICATION
+  );
+  console.timeEnd("deploy PoolComponent");
+
+  const FUNCS_TO_ADD = process.env.FUNCS_TO_ADD?.replace(/\[|\]|'/g, "").split(
+    ","
+  );
+
+  if (FUNCS_TO_ADD && FUNCS_TO_ADD.length) {
+    const PoolCoreFuncs = FUNCS_TO_ADD.filter((func) =>
+      poolCoreSelectors.includes(func)
+    );
+    console.log("PoolCoreFuncs to add:", PoolCoreFuncs);
+    if (PoolCoreFuncs && PoolCoreFuncs.length) {
+      await waitForTx(
+        await addressesProvider.updatePoolImpl(
+          [
+            {
+              implAddress: poolCore.address,
+              action: 0,
+              functionSelectors: PoolCoreFuncs,
+            },
+          ],
+          ZERO_ADDRESS,
+          "0x"
+        )
+      );
+    }
+    const PoolParametersFuncs = FUNCS_TO_ADD.filter((func) =>
+      poolParametersSelectors.includes(func)
+    );
+    console.log("PoolParametersFuncs to add:", PoolParametersFuncs);
+    if (PoolParametersFuncs && PoolParametersFuncs.length) {
+      await waitForTx(
+        await addressesProvider.updatePoolImpl(
+          [
+            {
+              implAddress: poolParameters.address,
+              action: 0,
+              functionSelectors: PoolParametersFuncs,
+            },
+          ],
+          ZERO_ADDRESS,
+          "0x"
+        )
+      );
+    }
+    const PoolMarketplaceFuncs = FUNCS_TO_ADD.filter((func) =>
+      poolMarketplaceSelectors.includes(func)
+    );
+    console.log("PoolMarketplaceFuncs to add:", PoolMarketplaceFuncs);
+    if (PoolMarketplaceFuncs && PoolMarketplaceFuncs.length) {
+      await waitForTx(
+        await addressesProvider.updatePoolImpl(
+          [
+            {
+              implAddress: poolMarketplace.address,
+              action: 0,
+              functionSelectors: PoolMarketplaceFuncs,
+            },
+          ],
+          ZERO_ADDRESS,
+          "0x"
+        )
+      );
+    }
+
+    const PoolApeStakingFuncs = FUNCS_TO_ADD.filter((func) =>
+      poolApeStakingSelectors.includes(func)
+    );
+    console.log("PoolApeStakingFuncs to add:", PoolApeStakingFuncs);
+    if (PoolApeStakingFuncs && PoolApeStakingFuncs.length) {
+      await waitForTx(
+        await addressesProvider.updatePoolImpl(
+          [
+            {
+              implAddress: poolApeStaking.address,
+              action: 0,
+              functionSelectors: PoolApeStakingFuncs,
+            },
+          ],
+          ZERO_ADDRESS,
+          "0x"
+        )
+      );
+    }
+  }
+};
