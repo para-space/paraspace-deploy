@@ -1040,7 +1040,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
         );
         const amount = await convertToCurrencyDecimals(
           erc20Tokens.APE.address,
-          "100000000000000000000"
+          "94694400"
         );
 
         await apeCoinStaking.addTimeRange(
