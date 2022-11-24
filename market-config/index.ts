@@ -180,7 +180,6 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
   ParaSpaceTeam: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
   Treasury: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
   Tokens: {
-    sAPE: "0x0000000000000000000000000000000000000001",
     WETH: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     DAI: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -218,7 +217,6 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     USDT: "0xEe9F2375b4bdF6387aa8265dD4FB8F16512A1d46",
     WBTC: "0xdeb288F737066589598e9214E782fa5A8eD689e8",
     APE: "0xc7de7f4d4C9c991fF62a07D18b3E31e349833A18",
-    sAPE: "0xc7de7f4d4C9c991fF62a07D18b3E31e349833A18",
   },
   ReservesConfig: {
     DAI: strategyDAI,
@@ -226,7 +224,6 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     USDT: strategyUSDT,
     WETH: strategyWETH,
     APE: strategyAPE,
-    sAPE: strategySAPE,
     WBTC: strategyWBTC,
     DOODLE: strategyDoodles,
     BAYC: strategyBAYC,
