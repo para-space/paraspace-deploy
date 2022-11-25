@@ -536,10 +536,7 @@ export interface IUniswapConfig {
 }
 
 export interface IOracleConfig {
-  //blocks
   ExpirationPeriod: number;
-  //percent
-  DeviationRate: number;
   Nodes: tEthereumAddress[];
 }
 

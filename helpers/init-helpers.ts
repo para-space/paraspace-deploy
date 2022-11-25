@@ -330,30 +330,22 @@ export const initReservesByHelper = async (
         xTokenToUse = nTokenUniSwapV3ImplementationAddress;
       } else if (reserveSymbols[i] === ERC721TokenContractId.BAYC) {
         console.log("IS BAYC");
-        if (!isLocalTestnet() && !isPublicTestnet()) {
-          xTokenToUse = nTokenImplementationAddress;
-        } else {
-          const apeCoinStaking = await getApeCoinStaking();
-          const nTokenBAYC = await deployNTokenBAYCImpl(
-            apeCoinStaking.address,
-            pool.address,
-            verify
-          );
-          xTokenToUse = nTokenBAYC.address;
-        }
+        const apeCoinStaking = await getApeCoinStaking();
+        const nTokenBAYC = await deployNTokenBAYCImpl(
+          apeCoinStaking.address,
+          pool.address,
+          verify
+        );
+        xTokenToUse = nTokenBAYC.address;
       } else if (reserveSymbols[i] === ERC721TokenContractId.MAYC) {
         console.log("IS MAYC");
-        if (!isLocalTestnet() && !isPublicTestnet()) {
-          xTokenToUse = nTokenImplementationAddress;
-        } else {
-          const apeCoinStaking = await getApeCoinStaking();
-          const nTokenMAYC = await deployNTokenMAYCImpl(
-            apeCoinStaking.address,
-            pool.address,
-            verify
-          );
-          xTokenToUse = nTokenMAYC.address;
-        }
+        const apeCoinStaking = await getApeCoinStaking();
+        const nTokenMAYC = await deployNTokenMAYCImpl(
+          apeCoinStaking.address,
+          pool.address,
+          verify
+        );
+        xTokenToUse = nTokenMAYC.address;
       } else {
         console.log("IS", reserveSymbols[i]);
         xTokenToUse = nTokenImplementationAddress;

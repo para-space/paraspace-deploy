@@ -1002,6 +1002,56 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
           false
         );
       }
+      if (tokenSymbol === ERC721TokenContractId.MAYC) {
+        const bakc = await deployMintableERC721(["BAKC", "BAKC", ""], verify);
+
+        const apeCoinStaking = await deployApeCoinStaking(
+          [
+            erc20Tokens.APE.address,
+            tokens.BAYC.address,
+            tokens.MAYC.address,
+            bakc.address,
+          ],
+          verify
+        );
+        const amount = await convertToCurrencyDecimals(
+          erc20Tokens.APE.address,
+          "94694400"
+        );
+
+        await apeCoinStaking.addTimeRange(
+          0,
+          amount,
+          "1666771200",
+          "1761465600",
+          amount,
+          GLOBAL_OVERRIDES
+        );
+        await apeCoinStaking.addTimeRange(
+          1,
+          amount,
+          "1666771200",
+          "1761465600",
+          amount,
+          GLOBAL_OVERRIDES
+        );
+        await apeCoinStaking.addTimeRange(
+          2,
+          amount,
+          "1666771200",
+          "1761465600",
+          amount,
+          GLOBAL_OVERRIDES
+        );
+        await apeCoinStaking.addTimeRange(
+          3,
+          amount,
+          "1666771200",
+          "1761465600",
+          amount,
+          GLOBAL_OVERRIDES
+        );
+      }
       continue;
     } else {
       console.log("deploying now ", tokenSymbol);
@@ -1676,65 +1726,6 @@ export const deployPunkGatewayProxy = async (
     verify
   );
 };
-
-// export const deployParaSpaceToken = async (verify?: boolean) => {
-//   const paraspaceToken = await new ParaSpaceToken__factory(
-//     await getFirstSigner()
-//   ).deploy(GLOBAL_OVERRIDES);
-//
-//   return withSaveAndVerify(paraspaceToken, eContractid.ParaSpace, [], verify);
-// };
-//
-// export const deployStakedParaSpace = async (
-//   args: [string, string, string, string, string, string, string, string],
-//   verify?: boolean
-// ) => {
-//   const paraspaceStakeV3 = await new StakedParaSpaceV3__factory(
-//     await getFirstSigner()
-//   ).deploy(...args, GLOBAL_OVERRIDES);
-//
-//   return withSaveAndVerify(
-//     paraspaceStakeV3,
-//     eContractid.sParaSpace,
-//     [...args],
-//     verify
-//   );
-// };
-//
-// export const deployRewardsController = async (
-//   emissionManager: string,
-//   verify?: boolean
-// ) => {
-//   console.log("deploying reward controller");
-//   const rewardsController = await new RewardsController__factory(
-//     await getFirstSigner()
-//   ).deploy(emissionManager, GLOBAL_OVERRIDES);
-//
-//   return withSaveAndVerify(
-//     rewardsController,
-//     eContractid.RewardsController,
-//     [emissionManager],
-//     verify
-//   );
-// };
-//
-// export const deployPCV = async (
-//   stakedParaSpace: string,
-//   paraspace: string,
-//   verify?: boolean
-// ) => {
-//   const pcv = await new PCV__factory(await getFirstSigner()).deploy(
-//     stakedParaSpace,
-//     paraspace
-//   );
-//
-//   return withSaveAndVerify(
-//     pcv,
-//     eContractid.PCV,
-//     [stakedParaSpace, paraspace],
-//     verify
-//   );
-// };
 
 export const deployParaSpaceFallbackOracle = async (
   args: [string, string, string, string, string],
