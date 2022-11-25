@@ -992,24 +992,26 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
           false
         );
       }
-      if (
-        tokenSymbol === ERC721TokenContractId.WPUNKS &&
-        paraSpaceConfig.Tokens.PUNKS
-      ) {
+      if (tokenSymbol === ERC721TokenContractId.WPUNKS && tokensConfig.PUNKS) {
         await insertContractAddressInDb(
           eContractid.PUNKS,
-          paraSpaceConfig.Tokens.PUNKS,
+          tokensConfig.PUNKS,
           false
         );
       }
-      if (tokenSymbol === ERC721TokenContractId.MAYC) {
+      if (
+        tokenSymbol === ERC721TokenContractId.MAYC &&
+        erc20Tokens.APE &&
+        tokensConfig.BAYC &&
+        tokensConfig.MAYC
+      ) {
         const bakc = await deployMintableERC721(["BAKC", "BAKC", ""], verify);
 
         const apeCoinStaking = await deployApeCoinStaking(
           [
             erc20Tokens.APE.address,
-            tokens.BAYC.address,
-            tokens.MAYC.address,
+            tokensConfig.BAYC,
+            tokensConfig.MAYC,
             bakc.address,
           ],
           verify
