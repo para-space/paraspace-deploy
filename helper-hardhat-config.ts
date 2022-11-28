@@ -11,6 +11,7 @@ import {
   INFURA_KEY,
   MAINNET_CHAINID,
   PARALLEL_CHAINID,
+  RPC_URL,
   TENDERLY_FORK_ID,
 } from "./helpers/hardhat-constants";
 
@@ -34,22 +35,27 @@ export const buildForkConfig = ():
 };
 
 export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
-  [eEthereumNetwork.kovan]: ALCHEMY_KEY
-    ? `https://eth-kovan.alchemyapi.io/v2/${ALCHEMY_KEY}`
-    : `https://kovan.infura.io/v3/${INFURA_KEY}`,
-  [eEthereumNetwork.ropsten]: ALCHEMY_KEY
-    ? `https://eth-ropsten.alchemyapi.io/v2/${ALCHEMY_KEY}`
-    : `https://ropsten.infura.io/v3/${INFURA_KEY}`,
-  [eEthereumNetwork.goerli]: ALCHEMY_KEY
-    ? `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_KEY}`
-    : `https://goerli.infura.io/v3/${INFURA_KEY}`,
-  [eEthereumNetwork.mainnet]: ALCHEMY_KEY
-    ? `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`
-    : `https://mainnet.infura.io/v3/${INFURA_KEY}`,
-  [eEthereumNetwork.hardhat]: "http://localhost:8545",
-  [eEthereumNetwork.ganache]: "http://localhost:8545",
-  [eEthereumNetwork.tenderlyMain]: `https://rpc.tenderly.co/fork/${TENDERLY_FORK_ID}`,
-  [eEthereumNetwork.parallel]: "http://localhost:29933",
+  [eEthereumNetwork.kovan]:
+    RPC_URL || ALCHEMY_KEY
+      ? `https://eth-kovan.alchemyapi.io/v2/${ALCHEMY_KEY}`
+      : `https://kovan.infura.io/v3/${INFURA_KEY}`,
+  [eEthereumNetwork.ropsten]:
+    RPC_URL || ALCHEMY_KEY
+      ? `https://eth-ropsten.alchemyapi.io/v2/${ALCHEMY_KEY}`
+      : `https://ropsten.infura.io/v3/${INFURA_KEY}`,
+  [eEthereumNetwork.goerli]:
+    RPC_URL || ALCHEMY_KEY
+      ? `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_KEY}`
+      : `https://goerli.infura.io/v3/${INFURA_KEY}`,
+  [eEthereumNetwork.mainnet]:
+    RPC_URL || ALCHEMY_KEY
+      ? `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`
+      : `https://mainnet.infura.io/v3/${INFURA_KEY}`,
+  [eEthereumNetwork.hardhat]: RPC_URL || "http://localhost:8545",
+  [eEthereumNetwork.ganache]: RPC_URL || "http://localhost:8545",
+  [eEthereumNetwork.tenderlyMain]:
+    RPC_URL || `https://rpc.tenderly.co/fork/${TENDERLY_FORK_ID}`,
+  [eEthereumNetwork.parallel]: RPC_URL || "http://localhost:29933",
 };
 
 export const CHAINS_ID: iParamsPerNetwork<number | undefined> = {
