@@ -7,7 +7,6 @@ import {
   DRE,
   getDb,
   waitForTx,
-  impersonateAccountsHardhat,
   isLocalTestnet,
   getParaSpaceConfig,
   isFork,
@@ -284,8 +283,7 @@ export const getProxyImplementation = async (
   proxyAddress: string
 ) => {
   // Impersonate proxy admin
-  await impersonateAccountsHardhat([proxyAdminAddress]);
-  const proxyAdminSigner = await DRE.ethers.getSigner(proxyAdminAddress);
+  const proxyAdminSigner = (await impersonateAddress(proxyAdminAddress)).signer;
 
   // failing here
   const proxy = (await DRE.ethers.getContractAt(
@@ -312,7 +310,9 @@ export const impersonateAddress = async (
     });
   }
 
-  const signer = forkednetProvider.getSigner(address);
+  const signer = isLocalTestnet()
+    ? (DRE as HardhatRuntimeEnvironment).ethers.provider.getSigner(address)
+    : forkednetProvider.getSigner(address);
 
   return {
     signer,

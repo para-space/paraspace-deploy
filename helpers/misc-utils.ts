@@ -15,7 +15,6 @@ import {
   GOERLI_CHAINID,
   HARDHAT_CHAINID,
   MAINNET_CHAINID,
-  TENDERLY,
 } from "./hardhat-constants";
 import {ConstructorArgs, eContractid, tEthereumAddress} from "./types";
 import dotenv from "dotenv";
@@ -185,18 +184,4 @@ export const notFalsyOrZeroAddress = (
     return false;
   }
   return isAddress(address) && !isZeroAddress(address);
-};
-
-export const impersonateAccountsHardhat = async (accounts: string[]) => {
-  if (TENDERLY) {
-    return;
-  }
-  // eslint-disable-next-line no-restricted-syntax
-  for (const account of accounts) {
-    // eslint-disable-next-line no-await-in-loop
-    await (DRE as HardhatRuntimeEnvironment).network.provider.request({
-      method: "hardhat_impersonateAccount",
-      params: [account],
-    });
-  }
 };
