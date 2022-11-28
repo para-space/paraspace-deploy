@@ -1,41 +1,27 @@
-import {getParaSpaceConfig, waitForTx} from "../../../helpers/misc-utils";
+import {waitForTx} from "../../../helpers/misc-utils";
 import {deployPoolComponents} from "../../../helpers/contracts-deployments";
-import {getPoolAddressesProvider} from "../../../helpers/contracts-getters";
+import {
+  getFirstSigner,
+  getPoolAddressesProvider,
+} from "../../../helpers/contracts-getters";
 
 import dotenv from "dotenv";
 import {ZERO_ADDRESS} from "../../../helpers/constants";
 import {upgradePToken} from "./upgrade_ptoken";
 import {upgradeNToken} from "./upgrade_ntoken";
-import {upgradeNTokenUniswapV3} from "./upgrade_ntoken_uniswapv3";
-import {upgradeNTokenMoonBirds} from "./upgrade_ntoken_moonbirds";
 import {ETHERSCAN_VERIFICATION} from "../../../helpers/hardhat-constants";
-import {getEthersSigners} from "../../../helpers/contracts-helpers";
 
 dotenv.config();
-
-export const loadPoolAdmin = async () => {
-  const paraSpaceConfig = getParaSpaceConfig();
-  const signers = await getEthersSigners();
-  const poolAdmin = signers[paraSpaceConfig.ParaSpaceAdminIndex];
-  console.log("poolAdmin: ", await poolAdmin.getAddress());
-  return poolAdmin;
-};
 
 export const upgradeAll = async () => {
   await upgradePool();
   await upgradePToken();
   await upgradeNToken();
-  await upgradeNTokenUniswapV3();
-  await upgradeNTokenMoonBirds();
   console.log("upgrade all finished!");
 };
 
 export const upgradePool = async () => {
-  const poolAdmin = await loadPoolAdmin();
-  const addressesProvider = (await getPoolAddressesProvider()).connect(
-    poolAdmin
-  );
-
+  const addressesProvider = await getPoolAddressesProvider();
   console.time("deploy PoolComponent");
   const {
     poolCore,
@@ -70,7 +56,7 @@ export const upgradePool = async () => {
 
   console.time("upgrade PoolParameters");
   await waitForTx(
-    await addressesProvider.connect(poolAdmin).updatePoolImpl(
+    await addressesProvider.updatePoolImpl(
       [
         {
           implAddress: poolParameters.address,
@@ -118,7 +104,7 @@ export const upgradePool = async () => {
 };
 
 export const removePoolFuncs = async () => {
-  const poolAdmin = await loadPoolAdmin();
+  const poolAdmin = await getFirstSigner();
   const addressesProvider = (await getPoolAddressesProvider()).connect(
     poolAdmin
   );
@@ -146,7 +132,7 @@ export const removePoolFuncs = async () => {
 };
 
 export const addPoolFuncs = async () => {
-  const poolAdmin = await loadPoolAdmin();
+  const poolAdmin = await getFirstSigner();
   const addressesProvider = (await getPoolAddressesProvider()).connect(
     poolAdmin
   );
