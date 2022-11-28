@@ -1124,8 +1124,8 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
       if (tokenSymbol === ERC721TokenContractId.MOONBIRD) {
         tokens[tokenSymbol] = await deployMoonbirds(
           [
-            "MOON",
-            "MOON",
+            "Moonbirds",
+            "MOONBIRD",
             "0x0000000000000000000000000000000000000000",
             paraSpaceConfig.ParaSpaceTeam,
             paraSpaceConfig.ParaSpaceTeam,

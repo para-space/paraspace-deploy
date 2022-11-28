@@ -67,6 +67,8 @@ import {
   getEthersSigners,
   ERC20TokenMap,
   ERC721TokenMap,
+  impersonateAddress,
+  getParaSpaceAdmins,
 } from "./contracts-helpers";
 import {DRE, getDb, getParaSpaceConfig} from "./misc-utils";
 import {
@@ -80,6 +82,7 @@ import {
   INonfungiblePositionManager__factory,
   ISwapRouter__factory,
 } from "../../types";
+import {RPC_URL} from "./hardhat-constants";
 
 declare let hre: HardhatRuntimeEnvironment;
 
@@ -87,7 +90,14 @@ const readArtifact = async (id: string) => {
   return (DRE as HardhatRuntimeEnvironment).artifacts.readArtifact(id);
 };
 
-export const getFirstSigner = async () => first(await getEthersSigners())!;
+export const getFirstSigner = async () => {
+  if (!RPC_URL) {
+    return first(await getEthersSigners())!;
+  }
+
+  const {paraSpaceAdminAddress} = await getParaSpaceAdmins();
+  return (await impersonateAddress(paraSpaceAdminAddress)).signer;
+};
 export const getLastSigner = async () => last(await getEthersSigners())!;
 
 export const getPoolAddressesProvider = async (address?: tEthereumAddress) => {

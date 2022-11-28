@@ -64,3 +64,5 @@ export const GLOBAL_OVERRIDES: Overrides = {
   gasLimit: 12_450_000,
   type: 2,
 };
+
+export const RPC_URL = process.env.RPC_URL || "";

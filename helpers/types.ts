@@ -22,6 +22,7 @@ export enum XTokenType {
   RebasingPToken = 8,
   PTokenAToken = 9,
   PTokenStETH = 10,
+  PTokenSApe = 11,
 }
 
 export type ConstructorArgs =
