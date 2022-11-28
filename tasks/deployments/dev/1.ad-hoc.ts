@@ -4,22 +4,22 @@ import {
   getEthersSigners,
   getParaSpaceAdmins,
 } from "../../../helpers/contracts-helpers";
-import {DRE} from "../../../helpers/misc-utils";
+import {DRE, waitForTx} from "../../../helpers/misc-utils";
 import * as envs from "../../../helpers/hardhat-constants";
-// import {waitForTx} from "../../../helpers/misc-utils";
-// import {GLOBAL_OVERRIDES} from "../../../helpers/hardhat-constants";
 
 const adHoc = async () => {
   await DRE.run("set-DRE");
   console.time("ad-hoc");
 
-  // const signer = await getFirstSigner()
-  // await waitForTx(await signer.sendTransaction({
-  //   to: "0x018281853eCC543Aa251732e8FDaa7323247eBeB",
-  //   nonce: 2566,
-  //   value: DRE.ethers.utils.parseEther("0"),
-  //   ...GLOBAL_OVERRIDES
-  // }))
+  const signer = await getFirstSigner();
+  await waitForTx(
+    await signer.sendTransaction({
+      to: "0x018281853eCC543Aa251732e8FDaa7323247eBeB",
+      nonce: 2613,
+      value: DRE.ethers.utils.parseEther("0"),
+      ...envs.GLOBAL_OVERRIDES,
+    })
+  );
 
   console.log(await DRE.ethers.provider.getNetwork());
   console.log(await (await getFirstSigner()).getAddress());

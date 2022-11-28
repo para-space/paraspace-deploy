@@ -384,7 +384,7 @@ export const deployPoolParametersLibraries = async (
   };
 };
 
-const checkPoolSignatures = () => {
+export const checkPoolSignatures = () => {
   const poolCoreSelectors = getFunctionSignatures(PoolCore__factory.abi);
 
   const poolParametersSelectors = getFunctionSignatures(
@@ -1479,22 +1479,6 @@ export const deployWETHGatewayProxy = async (
     [admin],
     verify
   );
-};
-
-export const deployMoonbirdHelper = async (verify?: boolean) => {
-  const moonBirdHelperArtifact = await readArtifact(eContractid.MoonBirdHelper);
-
-  const moonBirdHelperFactory = await DRE.ethers.getContractFactory(
-    moonBirdHelperArtifact.abi,
-    moonBirdHelperArtifact.bytecode
-  );
-  const moonBirdHelper = await (
-    await moonBirdHelperFactory
-      .connect(await getFirstSigner())
-      .deploy(GLOBAL_OVERRIDES)
-  ).deployed();
-
-  return withSaveAndVerify(moonBirdHelper, eContractid.PoolLogic, [], verify);
 };
 
 export const deployMeebits = async (

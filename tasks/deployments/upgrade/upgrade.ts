@@ -1,5 +1,8 @@
 import {waitForTx} from "../../../helpers/misc-utils";
-import {deployPoolComponents} from "../../../helpers/contracts-deployments";
+import {
+  checkPoolSignatures,
+  deployPoolComponents,
+} from "../../../helpers/contracts-deployments";
 import {
   getFirstSigner,
   getPoolAddressesProvider,
@@ -23,45 +26,52 @@ export const upgradeAll = async () => {
 export const upgradePool = async () => {
   const addressesProvider = await getPoolAddressesProvider();
   console.time("deploy PoolComponent");
+  // const {
+  //   poolCore,
+  //   poolParameters,
+  //   poolMarketplace,
+  //   poolApeStaking,
+  //   poolCoreSelectors,
+  //   poolParametersSelectors,
+  //   poolMarketplaceSelectors,
+  //   poolApeStakingSelectors,
+  // } = await deployPoolComponents(
+  //   addressesProvider.address,
+  //   ETHERSCAN_VERIFICATION
+  // );
+
   const {
-    poolCore,
-    poolParameters,
-    poolMarketplace,
-    poolApeStaking,
-    poolCoreSelectors,
+    // poolCoreSelectors,
     poolParametersSelectors,
     poolMarketplaceSelectors,
     poolApeStakingSelectors,
-  } = await deployPoolComponents(
-    addressesProvider.address,
-    ETHERSCAN_VERIFICATION
-  );
+  } = checkPoolSignatures();
   console.timeEnd("deploy PoolComponent");
 
-  console.time("upgrade PoolCore");
-  await waitForTx(
-    await addressesProvider.updatePoolImpl(
-      [
-        {
-          implAddress: poolCore.address,
-          action: 1,
-          functionSelectors: poolCoreSelectors,
-        },
-      ],
-      ZERO_ADDRESS,
-      "0x"
-    )
-  );
-  console.timeEnd("upgrade PoolCore");
+  // console.time("upgrade PoolCore");
+  // await waitForTx(
+  //   await addressesProvider.updatePoolImpl(
+  //     [
+  //       {
+  //         implAddress: poolCore.address,
+  //         action: 1,
+  //         functionSelectors: poolCoreSelectors,
+  //       },
+  //     ],
+  //     ZERO_ADDRESS,
+  //     "0x"
+  //   )
+  // );
+  // console.timeEnd("upgrade PoolCore");
 
   console.time("upgrade PoolParameters");
   await waitForTx(
     await addressesProvider.updatePoolImpl(
       [
         {
-          implAddress: poolParameters.address,
+          implAddress: "0x90648ff3873185a2d71BAC16749278A6B793f27D",
           action: 1, //replace
-          functionSelectors: poolParametersSelectors,
+          functionSelectors: poolParametersSelectors.map((s) => s.signature),
         },
       ],
       ZERO_ADDRESS,
@@ -75,9 +85,9 @@ export const upgradePool = async () => {
     await addressesProvider.updatePoolImpl(
       [
         {
-          implAddress: poolMarketplace.address,
+          implAddress: "0x0c70E9Cf0E8cb2C700CF87A2C5EF79d515FCdf6f",
           action: 1,
-          functionSelectors: poolMarketplaceSelectors,
+          functionSelectors: poolMarketplaceSelectors.map((s) => s.signature),
         },
       ],
       ZERO_ADDRESS,
@@ -91,9 +101,9 @@ export const upgradePool = async () => {
     await addressesProvider.updatePoolImpl(
       [
         {
-          implAddress: poolApeStaking.address,
+          implAddress: "0x05445cAcA96a5fd4D0cc3064Ef175fB0a0a26652",
           action: 1,
-          functionSelectors: poolApeStakingSelectors,
+          functionSelectors: poolApeStakingSelectors.map((s) => s.signature),
         },
       ],
       ZERO_ADDRESS,
