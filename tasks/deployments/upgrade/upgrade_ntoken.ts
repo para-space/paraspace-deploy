@@ -129,7 +129,7 @@ export const upgradeNToken = async () => {
     }
 
     console.log(
-      `upgrading ${token.symbol}'s version from ${oldRevision} to ${newRevision}`
+      `upgrading ${token.symbol}'s version from v${oldRevision} to v${newRevision}`
     );
 
     await waitForTx(
