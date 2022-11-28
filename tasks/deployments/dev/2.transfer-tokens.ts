@@ -14,7 +14,7 @@ import {ERC721Enumerable__factory} from "../../../../types";
 import {Moonbirds__factory} from "../../../../types";
 import {impersonateAddress} from "../../../helpers/contracts-helpers";
 import {BigNumber, utils} from "ethers";
-import {getLastSigner} from "../../../helpers/contracts-getters";
+import {getFirstSigner} from "../../../helpers/contracts-getters";
 
 // eslint-disable-next-line
 enum AssetType {
@@ -35,7 +35,7 @@ const transferTokens = async () => {
 
   const paraSpaceConfig = getParaSpaceConfig();
   const tokens = paraSpaceConfig.Tokens;
-  const signer = await getLastSigner();
+  const signer = await getFirstSigner();
   const receiver = await signer.getAddress();
 
   const configs = [
