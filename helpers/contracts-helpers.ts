@@ -448,7 +448,10 @@ export const createBlurOrder = async <
 
   const signature = await DRE.ethers.provider
     .getSigner(signer.address)
-    ._signTypedData(domainData, blurOrderType, order);
+    ._signTypedData(domainData, blurOrderType, {
+      ...order,
+      nonce: await blur.nonces(signer.address),
+    });
 
   const {r, s, v} = splitSignature(signature);
 

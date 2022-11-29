@@ -1,7 +1,7 @@
 const orderType = {
   Fee: [
-    {name: "recipient", type: "address"},
     {name: "rate", type: "uint16"},
+    {name: "recipient", type: "address"},
   ],
   Order: [
     {name: "trader", type: "address"},
@@ -17,6 +17,7 @@ const orderType = {
     {name: "fees", type: "Fee[]"},
     {name: "salt", type: "uint256"},
     {name: "extraParams", type: "bytes"},
+    {name: "nonce", type: "uint256"},
   ],
 };
 

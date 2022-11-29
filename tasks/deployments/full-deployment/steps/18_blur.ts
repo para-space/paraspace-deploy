@@ -58,6 +58,13 @@ export const step_18 = async (verify = false) => {
     );
     const blurExchange = await getBlurExchangeProxy();
 
+    await waitForTx(
+      await executionDelegate.approveContract(
+        blurExchange.address,
+        GLOBAL_OVERRIDES
+      )
+    );
+
     const blurAdapter = await deployBlurAdapter();
 
     await waitForTx(
