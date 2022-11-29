@@ -30,8 +30,11 @@ import {
   randomHex,
   toBN,
 } from "./seaport-helpers/encoding";
-import {orderType as eip712OrderType} from "./seaport-helpers/eip-712-types/order";
+import {orderType as seaportOrderType} from "./seaport-helpers/eip-712-types/order";
+import {splitSignature} from "ethers/lib/utils";
+import blurOrderType from "./blur-helpers/eip-712-types/order";
 import {
+  BlurExchange,
   ConduitController,
   ERC20,
   ERC721,
@@ -46,6 +49,7 @@ import {SignerWithAddress} from "../../test/helpers/make-suite";
 import {verifyEtherscanContract} from "./etherscan-verification";
 import {InitializableImmutableAdminUpgradeabilityProxy} from "../../types";
 import {decodeEvents} from "./seaport-helpers/events";
+import {Order, SignatureVersion} from "./blur-helpers/types";
 import {expect} from "chai";
 import {ABI} from "hardhat-deploy/dist/types";
 import {ethers} from "ethers";
@@ -368,7 +372,7 @@ export const createSeaportOrder = async <
 
   const signature = await DRE.ethers.provider
     .getSigner(signer.address)
-    ._signTypedData(domainData, eip712OrderType, orderComponents);
+    ._signTypedData(domainData, seaportOrderType, orderComponents);
 
   return {
     parameters: orderParameters,
@@ -426,6 +430,37 @@ export const createConduit = async (
     .createConduit(assignedConduitKey, ownerAddress, GLOBAL_OVERRIDES);
 
   return conduitAddress;
+};
+
+export const createBlurOrder = async <
+  T extends {signer: Signer; address: string}
+>(
+  blur: BlurExchange,
+  signer: T,
+  order: Order
+) => {
+  const domainData = {
+    name: "Blur Exchange",
+    version: "1.0",
+    chainId: (await DRE.ethers.provider.getNetwork()).chainId,
+    verifyingContract: blur.address,
+  };
+
+  const signature = await DRE.ethers.provider
+    .getSigner(signer.address)
+    ._signTypedData(domainData, blurOrderType, order);
+
+  const {r, s, v} = splitSignature(signature);
+
+  return {
+    order,
+    v,
+    r,
+    s,
+    extraSignature: "0x",
+    signatureVersion: SignatureVersion.Single,
+    blockNumber: 0,
+  };
 };
 
 export const getParaSpaceAdmins = async (): Promise<{

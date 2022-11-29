@@ -16,7 +16,7 @@ import {GLOBAL_OVERRIDES} from "../../../../helpers/hardhat-constants";
 import {waitForTx} from "../../../../helpers/misc-utils";
 
 // eslint-disable-next-line
-export const step_19 = async (_verify = false) => {
+export const step_20 = async (_verify = false) => {
   const {paraSpaceAdminAddress, gatewayAdminAddress} =
     await getParaSpaceAdmins();
   const deployer = await getFirstSigner();

@@ -62,6 +62,9 @@ import {
   NTokenMAYC__factory,
   ApeCoinStaking__factory,
   PTokenSApe__factory,
+  StandardPolicyERC721__factory,
+  BlurExchange__factory,
+  ExecutionDelegate__factory,
 } from "../../types";
 import {
   getEthersSigners,
@@ -984,3 +987,36 @@ export const getMintableERC721Logic = async (address?: tEthereumAddress) => {
     ? await mintableERC721LogicFactory.attach(address || db.address)
     : undefined;
 };
+
+export const getExecutionDelegate = async (address?: tEthereumAddress) =>
+  await ExecutionDelegate__factory.connect(
+    address ||
+      (
+        await getDb()
+          .get(`${eContractid.ExecutionDelegate}.${DRE.network.name}`)
+          .value()
+      ).address,
+    await getFirstSigner()
+  );
+
+export const getStandardPolicyERC721 = async (address?: tEthereumAddress) =>
+  await StandardPolicyERC721__factory.connect(
+    address ||
+      (
+        await getDb()
+          .get(`${eContractid.StandardPolicyERC721}.${DRE.network.name}`)
+          .value()
+      ).address,
+    await getFirstSigner()
+  );
+
+export const getBlurExchangeProxy = async (address?: tEthereumAddress) =>
+  await BlurExchange__factory.connect(
+    address ||
+      (
+        await getDb()
+          .get(`${eContractid.BlurExchangeProxy}.${DRE.network.name}`)
+          .value()
+      ).address,
+    await getFirstSigner()
+  );

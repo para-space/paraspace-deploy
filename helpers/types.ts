@@ -1,4 +1,5 @@
 import {BigNumber} from "ethers";
+import {BlurExchangeLibraryAddresses} from "../../types/factories/dependencies/blur-exchange/BlurExchange__factory";
 import {LiquidationLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/LiquidationLogic__factory";
 import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/pool/PoolConfigurator__factory";
 import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/PoolCore__factory";
@@ -39,6 +40,7 @@ export type ParaSpaceLibraryAddresses =
   | PoolMarketplaceLibraryAddresses
   | PoolParametersLibraryAddresses
   | PoolConfiguratorLibraryAddresses
+  | BlurExchangeLibraryAddresses
   | {["NFTDescriptor"]: string};
 
 export enum eEthereumNetwork {
@@ -147,6 +149,7 @@ export enum eContractid {
   SeaportAdapter = "SeaportAdapter",
   LooksRareAdapter = "LooksRareAdapter",
   X2Y2Adapter = "X2Y2Adapter",
+  BlurAdapter = "BlurAdapter",
   CurrencyManager = "CurrencyManager",
   ExecutionManager = "ExecutionManager",
   LooksRareExchange = "LooksRareExchange",
@@ -177,6 +180,12 @@ export enum eContractid {
   StETHDebtToken = "StETHDebtToken",
   ApeStakingLogic = "ApeStakingLogic",
   MintableERC721Logic = "MintableERC721Logic",
+  MerkleVerifier = "MerkleVerifier",
+  ExecutionDelegate = "ExecutionDelegate",
+  PolicyManager = "PolicyManager",
+  StandardPolicyERC721 = "StandardPolicyERC721",
+  BlurExchangeImpl = "BlurExchangeImpl",
+  BlurExchangeProxy = "BlurExchangeProxy",
 }
 
 /*

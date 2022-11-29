@@ -9,14 +9,20 @@ import {
 import {
   ATokenDebtToken__factory,
   AuctionLogic__factory,
+  BlurAdapter__factory,
+  BlurExchange__factory,
+  ExecutionDelegate__factory,
+  MerkleVerifier__factory,
   MintableERC20,
   MintableERC721,
   MockNToken__factory,
   MockReserveAuctionStrategy__factory,
   NFTFloorOracle__factory,
   ParaProxy__factory,
+  PolicyManager__factory,
   PoolApeStaking__factory,
   PTokenSApe__factory,
+  StandardPolicyERC721__factory,
   StETHDebtToken__factory,
   X2Y2Adapter__factory,
 } from "../../types";
@@ -2368,4 +2374,95 @@ export const deployMintableERC721Logic = async (verify?: boolean) => {
     [],
     verify
   );
+};
+
+export const deployMerkleVerifier = async (verify?: boolean) =>
+  withSaveAndVerify(
+    await new MerkleVerifier__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
+    eContractid.MerkleVerifier,
+    [],
+    verify
+  );
+
+export const deployExecutionDelegate = async (verify?: boolean) =>
+  withSaveAndVerify(
+    await new ExecutionDelegate__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
+    eContractid.ExecutionDelegate,
+    [],
+    verify
+  );
+
+export const deployPolicyManager = async (verify?: boolean) =>
+  withSaveAndVerify(
+    await new PolicyManager__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
+    eContractid.PolicyManager,
+    [],
+    verify
+  );
+
+export const deployStandardPolicyERC721 = async (verify?: boolean) =>
+  withSaveAndVerify(
+    await new StandardPolicyERC721__factory(await getFirstSigner()).deploy(
+      GLOBAL_OVERRIDES
+    ),
+    eContractid.StandardPolicyERC721,
+    [],
+    verify
+  );
+
+export const deployBlurExchangeImpl = async (verify?: boolean) => {
+  const merkleVerifier = await deployMerkleVerifier(verify);
+  const blurExchangeLibraries = {
+    ["contracts/dependencies/blur-exchange/MerkleVerifier.sol:MerkleVerifier"]:
+      merkleVerifier.address,
+  };
+  const blurExchange = await new BlurExchange__factory(
+    blurExchangeLibraries,
+    await getFirstSigner()
+  ).deploy();
+
+  return withSaveAndVerify(
+    blurExchange,
+    eContractid.BlurExchangeImpl,
+    [],
+    verify,
+    blurExchangeLibraries
+  );
+};
+
+export const deployBlurExchangeProxy = async (
+  admin: string,
+  blurExchange: string,
+  initData: string,
+  verify?: boolean
+) => {
+  const blurExchangeProxy =
+    await new InitializableImmutableAdminUpgradeabilityProxy__factory(
+      await getFirstSigner()
+    ).deploy(admin, GLOBAL_OVERRIDES);
+  await blurExchangeProxy["initialize(address,bytes)"](
+    blurExchange,
+    initData,
+    GLOBAL_OVERRIDES
+  );
+  return withSaveAndVerify(
+    blurExchangeProxy,
+    eContractid.BlurExchangeProxy,
+    [admin],
+    verify
+  );
+};
+
+export const deployBlurAdapter = async (verify?: boolean) => {
+  const blurAdapter = await new BlurAdapter__factory(
+    await getFirstSigner()
+  ).deploy(GLOBAL_OVERRIDES);
+
+  return withSaveAndVerify(blurAdapter, eContractid.BlurAdapter, [], verify);
 };
