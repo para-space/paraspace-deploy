@@ -247,6 +247,7 @@ export const ParaSpaceConfigs: Partial<
   Record<eEthereumNetwork, IParaSpaceConfiguration>
 > = {
   [eEthereumNetwork.hardhat]: HardhatParaSpaceConfig,
+  [eEthereumNetwork.anvil]: HardhatParaSpaceConfig,
   [eEthereumNetwork.localhost]: HardhatParaSpaceConfig,
   [eEthereumNetwork.goerli]: GoerliParaSpaceConfig,
   [eEthereumNetwork.mainnet]: MainnetParaSpaceConfig,
