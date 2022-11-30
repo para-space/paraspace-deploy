@@ -51,6 +51,7 @@ export enum eEthereumNetwork {
   ganache = "ganache",
   parallel = "parallel",
   localhost = "localhost",
+  anvil = "anvil",
 }
 
 export enum eContractid {
@@ -479,6 +480,7 @@ export interface iEthereumParamsPerNetwork<T> {
   [eEthereumNetwork.goerli]: T;
   [eEthereumNetwork.mainnet]: T;
   [eEthereumNetwork.hardhat]: T;
+  [eEthereumNetwork.anvil]: T;
   [eEthereumNetwork.ganache]: T;
   [eEthereumNetwork.parallel]: T;
   [eEthereumNetwork.tenderlyMain]: T;
