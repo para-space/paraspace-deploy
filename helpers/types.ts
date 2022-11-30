@@ -187,6 +187,7 @@ export enum eContractid {
   StandardPolicyERC721 = "StandardPolicyERC721",
   BlurExchangeImpl = "BlurExchangeImpl",
   BlurExchangeProxy = "BlurExchangeProxy",
+  BAKC = "BAKC",
 }
 
 /*
