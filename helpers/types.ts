@@ -91,7 +91,7 @@ export enum eContractid {
   NTokenMoonBirdsImpl = "NTokenMoonBirdsImpl",
   NTokenUniswapV3Impl = "NTokenUniswapV3Impl",
   NTokenBAYCImpl = "NTokenBAYCImpl",
-  NTokenMAYCImpl = "NTOkenMAYCImpl",
+  NTokenMAYCImpl = "NTokenMAYCImpl",
   DelegationAwarePTokenImpl = "DelegationAwarePTokenImpl",
   VariableDebtTokenImpl = "VariableDebtTokenImpl",
   MockVariableDebtToken = "MockVariableDebtToken",
@@ -420,7 +420,7 @@ export enum ERC721TokenContractId {
 export enum NTokenContractId {
   nBAYC = "nBAYC",
   nMAYC = "nMAYC",
-  nDOODLES = "nDOODLES",
+  nDOODLE = "nDOODLE",
   nWPUNKS = "nWPUNKS",
   nMOONBIRD = "nMOONBIRD",
   nUniswapV3 = "nUniswapV3",
