@@ -384,7 +384,7 @@ export const deployPoolParametersLibraries = async (
   };
 };
 
-const checkPoolSignatures = () => {
+export const checkPoolSignatures = () => {
   const poolCoreSelectors = getFunctionSignatures(PoolCore__factory.abi);
 
   const poolParametersSelectors = getFunctionSignatures(
