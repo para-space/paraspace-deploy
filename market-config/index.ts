@@ -222,9 +222,9 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
   },
   ReservesConfig: {
     // DAI: strategyDAI,
-    // USDC: strategyUSDC,
-    // USDT: strategyUSDT,
-    // WETH: strategyWETH,
+    USDC: strategyUSDC,
+    USDT: strategyUSDT,
+    WETH: strategyWETH,
     APE: strategyAPE,
     // sAPE: strategySAPE,
     // WBTC: strategyWBTC,

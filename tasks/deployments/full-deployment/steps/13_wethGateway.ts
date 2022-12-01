@@ -8,9 +8,16 @@ import {
   getPoolProxy,
   getPoolAddressesProvider,
 } from "../../../../helpers/contracts-getters";
+import {getParaSpaceConfig} from "../../../../helpers/misc-utils";
+import {ERC20TokenContractId} from "../../../../helpers/types";
 
 export const step_13 = async (verify = false) => {
+  const paraSpaceConfig = getParaSpaceConfig();
   try {
+    if (!paraSpaceConfig.ReservesConfig[ERC20TokenContractId.WETH]) {
+      return;
+    }
+
     const allTokens = await getAllTokens();
     const addressesProvider = await getPoolAddressesProvider();
     const poolAddress = await addressesProvider.getPool();

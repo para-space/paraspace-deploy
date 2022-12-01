@@ -13,13 +13,18 @@ import {
 } from "../../../../helpers/contracts-getters";
 import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
 import {GLOBAL_OVERRIDES} from "../../../../helpers/hardhat-constants";
-import {waitForTx} from "../../../../helpers/misc-utils";
+import {getParaSpaceConfig, waitForTx} from "../../../../helpers/misc-utils";
+import {
+  ERC20TokenContractId,
+  ERC721TokenContractId,
+} from "../../../../helpers/types";
 
 // eslint-disable-next-line
 export const step_19 = async (_verify = false) => {
   const {paraSpaceAdminAddress, gatewayAdminAddress} =
     await getParaSpaceAdmins();
   const deployer = await getFirstSigner();
+  const paraSpaceConfig = await getParaSpaceConfig();
   const deployerAddress = await deployer.getAddress();
 
   try {
@@ -30,8 +35,6 @@ export const step_19 = async (_verify = false) => {
     const conduit = await getConduit();
     const zoneController = await getPausableZoneController();
     const aclManager = await getACLManager();
-    const wethGatewayProxy = await getWETHGatewayProxy();
-    const punkGatewayProxy = await getWPunkGatewayProxy();
     const nftFloorOracle = await getNFTFloorOracle();
 
     if (deployerAddress === paraSpaceAdminAddress) {
@@ -99,18 +102,25 @@ export const step_19 = async (_verify = false) => {
       )
     );
 
-    await waitForTx(
-      await wethGatewayProxy.transferOwnership(
-        gatewayAdminAddress,
-        GLOBAL_OVERRIDES
-      )
-    );
-    await waitForTx(
-      await punkGatewayProxy.transferOwnership(
-        gatewayAdminAddress,
-        GLOBAL_OVERRIDES
-      )
-    );
+    if (paraSpaceConfig.ReservesConfig[ERC20TokenContractId.WETH]) {
+      const wethGatewayProxy = await getWETHGatewayProxy();
+      await waitForTx(
+        await wethGatewayProxy.transferOwnership(
+          gatewayAdminAddress,
+          GLOBAL_OVERRIDES
+        )
+      );
+    }
+
+    if (paraSpaceConfig.ReservesConfig[ERC721TokenContractId.WPUNKS]) {
+      const punkGatewayProxy = await getWPunkGatewayProxy();
+      await waitForTx(
+        await punkGatewayProxy.transferOwnership(
+          gatewayAdminAddress,
+          GLOBAL_OVERRIDES
+        )
+      );
+    }
 
     await waitForTx(
       await nftFloorOracle.grantRole(
