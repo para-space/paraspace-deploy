@@ -440,10 +440,10 @@ export const deployPoolComponents = async (
   );
   const parametersLibraries = await deployPoolParametersLibraries(verify);
 
-  const apeStakingLibraries = pick(coreLibraries, [
-    "contracts/protocol/libraries/logic/BorrowLogic.sol:BorrowLogic",
-    "contracts/protocol/libraries/logic/SupplyLogic.sol:SupplyLogic",
-  ]);
+  // const apeStakingLibraries = pick(coreLibraries, [
+  //   "contracts/protocol/libraries/logic/BorrowLogic.sol:BorrowLogic",
+  //   "contracts/protocol/libraries/logic/SupplyLogic.sol:SupplyLogic",
+  // ]);
 
   const poolCore = await new PoolCore__factory(
     coreLibraries,
@@ -460,16 +460,16 @@ export const deployPoolComponents = async (
     await getFirstSigner()
   ).deploy(provider, GLOBAL_OVERRIDES);
 
-  const poolApeStaking = await new PoolApeStaking__factory(
-    apeStakingLibraries,
-    await getFirstSigner()
-  ).deploy(provider, GLOBAL_OVERRIDES);
+  // const poolApeStaking = await new PoolApeStaking__factory(
+  //   apeStakingLibraries,
+  //   await getFirstSigner()
+  // ).deploy(provider, GLOBAL_OVERRIDES);
 
   const {
     poolCoreSelectors,
     poolParametersSelectors,
     poolMarketplaceSelectors,
-    poolApeStakingSelectors,
+    // poolApeStakingSelectors,
   } = checkPoolSignatures();
 
   return {
@@ -497,18 +497,18 @@ export const deployPoolComponents = async (
       marketplaceLibraries,
       poolMarketplaceSelectors
     ),
-    poolApeStaking: await withSaveAndVerify(
-      poolApeStaking,
-      eContractid.PoolApeStakingImpl,
-      [provider],
-      verify,
-      undefined,
-      poolApeStakingSelectors
-    ),
+    // poolApeStaking: await withSaveAndVerify(
+    //   poolApeStaking,
+    //   eContractid.PoolApeStakingImpl,
+    //   [provider],
+    //   verify,
+    //   undefined,
+    //   poolApeStakingSelectors
+    // ),
     poolCoreSelectors: poolCoreSelectors.map((s) => s.signature),
     poolParametersSelectors: poolParametersSelectors.map((s) => s.signature),
     poolMarketplaceSelectors: poolMarketplaceSelectors.map((s) => s.signature),
-    poolApeStakingSelectors: poolApeStakingSelectors.map((s) => s.signature),
+    // poolApeStakingSelectors: poolApeStakingSelectors.map((s) => s.signature),
   };
 };
 

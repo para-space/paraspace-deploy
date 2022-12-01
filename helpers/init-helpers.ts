@@ -23,10 +23,10 @@ import {
   deployReserveInterestRateStrategy,
   deployDelegationAwarePTokenImpl,
   deployGenericPTokenImpl,
-  deployGenericNTokenImpl,
+  // deployGenericNTokenImpl,
   deployGenericVariableDebtToken,
-  deployGenericMoonbirdNTokenImpl,
-  deployUniswapV3NTokenImpl,
+  // deployGenericMoonbirdNTokenImpl,
+  // deployUniswapV3NTokenImpl,
   deployReserveAuctionStrategy,
   deployPTokenStETH,
   deployPTokenAToken,
@@ -106,9 +106,9 @@ export const initReservesByHelper = async (
   const xTokenType: Record<string, string> = {};
   let delegationAwarePTokenImplementationAddress = "";
   let pTokenImplementationAddress = "";
-  let nTokenImplementationAddress = "";
-  let nTokenMoonBirdImplementationAddress = "";
-  let nTokenUniSwapV3ImplementationAddress = "";
+  const nTokenImplementationAddress = "";
+  const nTokenMoonBirdImplementationAddress = "";
+  const nTokenUniSwapV3ImplementationAddress = "";
   let variableDebtTokenImplementationAddress = "";
 
   if (!genericVariableDebtTokenAddress) {
@@ -130,26 +130,26 @@ export const initReservesByHelper = async (
     pTokenImplementationAddress = genericPTokenImplAddress;
   }
 
-  if (!genericNTokenImplAddress) {
-    const nTokenImplementation = await deployGenericNTokenImpl(
-      pool.address,
-      false,
-      verify
-    );
-    nTokenImplementationAddress = nTokenImplementation.address;
-  } else {
-    nTokenImplementationAddress = genericNTokenImplAddress;
-  }
-  const nTokenMoonBirdImplementation = await deployGenericMoonbirdNTokenImpl(
-    pool.address,
-    verify
-  );
-
-  const nTokenUniSwapV3 = await deployUniswapV3NTokenImpl(pool.address, verify);
-
-  nTokenMoonBirdImplementationAddress = nTokenMoonBirdImplementation.address;
-
-  nTokenUniSwapV3ImplementationAddress = nTokenUniSwapV3.address;
+  // if (!genericNTokenImplAddress) {
+  //   const nTokenImplementation = await deployGenericNTokenImpl(
+  //     pool.address,
+  //     false,
+  //     verify
+  //   );
+  //   nTokenImplementationAddress = nTokenImplementation.address;
+  // } else {
+  //   nTokenImplementationAddress = genericNTokenImplAddress;
+  // }
+  // const nTokenMoonBirdImplementation = await deployGenericMoonbirdNTokenImpl(
+  //   pool.address,
+  //   verify
+  // );
+  //
+  // const nTokenUniSwapV3 = await deployUniswapV3NTokenImpl(pool.address, verify);
+  //
+  // nTokenMoonBirdImplementationAddress = nTokenMoonBirdImplementation.address;
+  //
+  // nTokenUniSwapV3ImplementationAddress = nTokenUniSwapV3.address;
 
   const delegatedAwareReserves = Object.entries(reservesParams).filter(
     ([, {xTokenImpl}]) => xTokenImpl === eContractid.DelegationAwarePTokenImpl
