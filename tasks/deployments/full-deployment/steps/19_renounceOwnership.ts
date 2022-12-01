@@ -122,13 +122,13 @@ export const step_19 = async (_verify = false) => {
       );
     }
 
-    await waitForTx(
-      await nftFloorOracle.grantRole(
-        await nftFloorOracle.UPDATER_ROLE(),
-        paraSpaceAdminAddress,
-        GLOBAL_OVERRIDES
-      )
-    );
+    // await waitForTx(
+    //   await nftFloorOracle.grantRole(
+    //     await nftFloorOracle.UPDATER_ROLE(),
+    //     paraSpaceAdminAddress,
+    //     GLOBAL_OVERRIDES
+    //   )
+    // );
     await waitForTx(
       await nftFloorOracle.revokeRole(
         await nftFloorOracle.UPDATER_ROLE(),
