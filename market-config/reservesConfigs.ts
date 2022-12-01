@@ -108,7 +108,7 @@ export const strategyAPE: IReserveParams = {
   liquidationProtocolFeePercentage: "0",
   liquidationThreshold: "7000",
   liquidationBonus: "10500",
-  borrowingEnabled: true,
+  borrowingEnabled: false,
   reserveDecimals: "18",
   xTokenImpl: eContractid.PTokenImpl,
   reserveFactor: "2500",

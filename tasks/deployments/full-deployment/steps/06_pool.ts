@@ -17,11 +17,11 @@ export const step_06 = async (verify = false) => {
       poolCore,
       poolParameters,
       poolMarketplace,
-      poolApeStaking,
+      // poolApeStaking,
       poolCoreSelectors,
       poolParametersSelectors,
       poolMarketplaceSelectors,
-      poolApeStakingSelectors,
+      // poolApeStakingSelectors,
     } = await deployPoolComponents(addressesProvider.address, verify);
 
     await waitForTx(
@@ -54,20 +54,20 @@ export const step_06 = async (verify = false) => {
       )
     );
 
-    await waitForTx(
-      await addressesProvider.updatePoolImpl(
-        [
-          {
-            implAddress: poolApeStaking.address,
-            action: 0,
-            functionSelectors: poolApeStakingSelectors,
-          },
-        ],
-        ZERO_ADDRESS,
-        "0x",
-        GLOBAL_OVERRIDES
-      )
-    );
+    // await waitForTx(
+    //   await addressesProvider.updatePoolImpl(
+    //     [
+    //       {
+    //         implAddress: poolApeStaking.address,
+    //         action: 0,
+    //         functionSelectors: poolApeStakingSelectors,
+    //       },
+    //     ],
+    //     ZERO_ADDRESS,
+    //     "0x",
+    //     GLOBAL_OVERRIDES
+    //   )
+    // );
 
     const poolAddress = await addressesProvider.getPool();
 
