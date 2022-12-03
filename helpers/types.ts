@@ -5,6 +5,7 @@ import {PoolConfiguratorLibraryAddresses} from "../../types/factories/protocol/p
 import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/PoolCore__factory";
 import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
 import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
+import {NTokenLibraryAddresses} from "../../types/factories/protocol/tokenization/NToken__factory";
 
 export enum AssetType {
   ERC20 = 0,
@@ -26,11 +27,7 @@ export enum XTokenType {
   PTokenSApe = 11,
 }
 
-export type ConstructorArgs =
-  | string
-  | number
-  | boolean
-  | (string | string[] | number | boolean)[];
+export type ConstructorArgs = (string | string[] | number | boolean)[];
 
 export type LibraryAddresses = {[key: string]: string};
 
@@ -41,6 +38,7 @@ export type ParaSpaceLibraryAddresses =
   | PoolParametersLibraryAddresses
   | PoolConfiguratorLibraryAddresses
   | BlurExchangeLibraryAddresses
+  | NTokenLibraryAddresses
   | {["NFTDescriptor"]: string};
 
 export enum eEthereumNetwork {

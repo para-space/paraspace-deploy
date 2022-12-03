@@ -88,3 +88,6 @@ export const GLOBAL_OVERRIDES: Overrides = {
 };
 
 export const RPC_URL = process.env.RPC_URL || "";
+
+export const INCREMENTAL_DEPLOYMENT =
+  process.env.INCREMENTAL_DEPLOYMENT == "true" ? true : false;

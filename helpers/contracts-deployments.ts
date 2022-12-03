@@ -1,219 +1,291 @@
-import {DRE, getDb, getParaSpaceConfig} from "./misc-utils";
-import {
-  tEthereumAddress,
-  eContractid,
-  tStringTokenSmallUnits,
-  ERC20TokenContractId,
-  ERC721TokenContractId,
-} from "./types";
-import {
-  ATokenDebtToken__factory,
-  AuctionLogic__factory,
-  BlurAdapter__factory,
-  BlurExchange__factory,
-  ExecutionDelegate__factory,
-  MerkleVerifier__factory,
-  MintableERC20,
-  MintableERC721,
-  MockNToken__factory,
-  MockReserveAuctionStrategy__factory,
-  NFTFloorOracle__factory,
-  ParaProxy__factory,
-  PolicyManager__factory,
-  PoolApeStaking__factory,
-  PTokenSApe__factory,
-  StandardPolicyERC721__factory,
-  StETHDebtToken__factory,
-  X2Y2Adapter__factory,
-} from "../../types";
-import {StETH, MockAToken} from "../../types";
 import {MockContract} from "ethereum-waffle";
+import {
+  ACLManager,
+  ACLManager__factory,
+  ApeCoinStaking,
+  ApeCoinStaking__factory,
+  ApeStakingLogic,
+  ApeStakingLogic__factory,
+  ATokenDebtToken,
+  ATokenDebtToken__factory,
+  AuctionLogic,
+  AuctionLogic__factory,
+  Azuki,
+  Azuki__factory,
+  BlurAdapter,
+  BlurAdapter__factory,
+  BlurExchange,
+  BlurExchange__factory,
+  BoredApeYachtClub,
+  BoredApeYachtClub__factory,
+  BorrowLogic,
+  BorrowLogic__factory,
+  CloneX,
+  CloneX__factory,
+  ConduitController,
+  ConduitController__factory,
+  ConfiguratorLogic,
+  ConfiguratorLogic__factory,
+  CryptoPunksMarket,
+  CryptoPunksMarket__factory,
+  CurrencyManager,
+  CurrencyManager__factory,
+  DefaultReserveAuctionStrategy,
+  DefaultReserveAuctionStrategy__factory,
+  DefaultReserveInterestRateStrategy,
+  DefaultReserveInterestRateStrategy__factory,
+  DelegationAwarePToken,
+  DelegationAwarePToken__factory,
+  Doodles,
+  Doodles__factory,
+  ERC721Delegate,
+  ERC721Delegate__factory,
+  ERC721OracleWrapper,
+  ERC721OracleWrapper__factory,
+  ExecutionDelegate,
+  ExecutionDelegate__factory,
+  ExecutionManager,
+  ExecutionManager__factory,
+  FlashClaimLogic,
+  FlashClaimLogic__factory,
+  InitializableImmutableAdminUpgradeabilityProxy,
+  InitializableImmutableAdminUpgradeabilityProxy__factory,
+  Land,
+  Land__factory,
+  LiquidationLogic,
+  LiquidationLogic__factory,
+  LooksRareAdapter,
+  LooksRareAdapter__factory,
+  LooksRareExchange,
+  LooksRareExchange__factory,
+  MarketplaceLogic,
+  MarketplaceLogic__factory,
+  Meebits,
+  Meebits__factory,
+  MerkleVerifier,
+  MerkleVerifier__factory,
+  MintableDelegationERC20__factory,
+  MintableERC20,
+  MintableERC20__factory,
+  MintableERC721,
+  MintableERC721Logic,
+  MintableERC721Logic__factory,
+  MintableERC721__factory,
+  MockAggregator,
+  MockAggregator__factory,
+  MockAirdropProject,
+  MockAirdropProject__factory,
+  MockAToken,
+  MockAToken__factory,
+  MockIncentivesController,
+  MockIncentivesController__factory,
+  MockInitializableFromConstructorImple,
+  MockInitializableFromConstructorImple__factory,
+  MockInitializableImple,
+  MockInitializableImpleV2,
+  MockInitializableImpleV2__factory,
+  MockInitializableImple__factory,
+  MockNToken__factory,
+  MockPToken__factory,
+  MockReentrantInitializableImple,
+  MockReentrantInitializableImple__factory,
+  MockReserveAuctionStrategy,
+  MockReserveAuctionStrategy__factory,
+  MockReserveConfiguration,
+  MockReserveConfiguration__factory,
+  MockTokenFaucet,
+  MockTokenFaucet__factory,
+  MockVariableDebtToken__factory,
+  Moonbirds,
+  Moonbirds__factory,
+  MutantApeYachtClub,
+  MutantApeYachtClub__factory,
+  NFTFloorOracle,
+  NFTFloorOracle__factory,
+  NToken,
+  NTokenBAYC,
+  NTokenBAYC__factory,
+  NTokenMAYC,
+  NTokenMAYC__factory,
+  NTokenMoonBirds,
+  NTokenMoonBirds__factory,
+  NTokenUniswapV3,
+  NTokenUniswapV3__factory,
+  NToken__factory,
+  ParaProxy__factory,
+  ParaSpaceFallbackOracle,
+  ParaSpaceFallbackOracle__factory,
+  ParaSpaceOracle,
+  ParaSpaceOracle__factory,
+  PausableZoneController,
+  PausableZoneController__factory,
+  PolicyManager,
+  PolicyManager__factory,
+  PoolAddressesProvider,
+  PoolAddressesProviderRegistry,
+  PoolAddressesProviderRegistry__factory,
+  PoolAddressesProvider__factory,
+  PoolApeStaking,
+  PoolApeStaking__factory,
+  PoolConfigurator,
+  PoolConfigurator__factory,
+  PoolCore,
+  PoolCore__factory,
+  PoolLogic,
+  PoolLogic__factory,
+  PoolMarketplace,
+  PoolMarketplace__factory,
+  PoolParameters,
+  PoolParameters__factory,
+  PriceOracle,
+  PriceOracle__factory,
+  ProtocolDataProvider,
+  ProtocolDataProvider__factory,
+  PToken,
+  PTokenAToken,
+  PTokenAToken__factory,
+  PTokenSApe,
+  PTokenSApe__factory,
+  PTokenStETH,
+  PTokenStETH__factory,
+  PToken__factory,
+  ReservesSetupHelper,
+  ReservesSetupHelper__factory,
+  RoyaltyFeeManager,
+  RoyaltyFeeManager__factory,
+  RoyaltyFeeRegistry,
+  RoyaltyFeeRegistry__factory,
+  Seaport,
+  SeaportAdapter,
+  SeaportAdapter__factory,
+  Seaport__factory,
+  StandardPolicyERC721,
+  StandardPolicyERC721__factory,
+  StETH,
+  StETHDebtToken,
+  StETHDebtToken__factory,
+  StETH__factory,
+  StrategyStandardSaleForFixedPrice,
+  StrategyStandardSaleForFixedPrice__factory,
+  SupplyLogic,
+  SupplyLogic__factory,
+  TransferManagerERC1155,
+  TransferManagerERC1155__factory,
+  TransferManagerERC721,
+  TransferManagerERC721__factory,
+  TransferSelectorNFT,
+  TransferSelectorNFT__factory,
+  UiIncentiveDataProvider,
+  UiIncentiveDataProvider__factory,
+  UiPoolDataProvider,
+  UiPoolDataProvider__factory,
+  UniswapV3Factory,
+  UniswapV3Factory__factory,
+  UniswapV3OracleWrapper,
+  UniswapV3OracleWrapper__factory,
+  UserFlashclaimRegistry,
+  UserFlashclaimRegistry__factory,
+  VariableDebtToken,
+  VariableDebtToken__factory,
+  WalletBalanceProvider,
+  WalletBalanceProvider__factory,
+  WETH9Mocked,
+  WETH9Mocked__factory,
+  WETHGateway,
+  WETHGateway__factory,
+  WPunk,
+  WPunkGateway,
+  WPunkGateway__factory,
+  WPunk__factory,
+  X2Y2Adapter,
+  X2Y2Adapter__factory,
+  X2Y2R1,
+  X2Y2R1__factory,
+} from "../../types";
 import {
   getAllERC20Tokens,
   getApeStakingLogic,
-  getPunks,
   getFirstSigner,
-  getWETH,
   getMintableERC721Logic,
+  getPunks,
+  getWETH,
 } from "./contracts-getters";
 import {
   convertToCurrencyDecimals,
   getFunctionSignatures,
 } from "./contracts-helpers";
+import {DRE, getDb, getParaSpaceConfig} from "./misc-utils";
 import {
-  ProtocolDataProvider__factory,
-  PToken__factory,
-  NToken__factory,
-  ReservesSetupHelper__factory,
-  ParaSpaceOracle__factory,
-  DefaultReserveInterestRateStrategy__factory,
-  DefaultReserveAuctionStrategy__factory,
-  DelegationAwarePToken__factory,
-  PoolAddressesProvider__factory,
-  PoolAddressesProviderRegistry__factory,
-  PoolConfigurator__factory,
-  MintableDelegationERC20__factory,
-  MintableERC20__factory,
-  MintableERC721__factory,
-  MockAggregator__factory,
-  MockPToken__factory,
-  MockVariableDebtToken__factory,
-  PriceOracle__factory,
-  VariableDebtToken__factory,
-  WETH9Mocked__factory,
-  ConfiguratorLogic__factory,
-  MockIncentivesController__factory,
-  MockInitializableFromConstructorImple__factory,
-  MockInitializableImple__factory,
-  MockInitializableImpleV2__factory,
-  InitializableImmutableAdminUpgradeabilityProxy__factory,
-  WETH9Mocked,
-  ACLManager__factory,
-  MockReserveConfiguration__factory,
-  MockReentrantInitializableImple__factory,
-  UiPoolDataProvider__factory,
-  UiIncentiveDataProvider__factory,
-  WalletBalanceProvider__factory,
-  WETHGateway__factory,
-  ERC721OracleWrapper__factory,
-  CryptoPunksMarket__factory,
-  WPunk__factory,
-  WPunkGateway__factory,
-  WPunk,
-  CryptoPunksMarket,
-  LiquidationLogic__factory,
-  BoredApeYachtClub__factory,
-  MutantApeYachtClub__factory,
-  Doodles__factory,
-  ParaSpaceFallbackOracle__factory,
-  Doodles,
-  BoredApeYachtClub,
-  MutantApeYachtClub,
-  MockTokenFaucet__factory,
-  Azuki,
-  CloneX,
-  Land,
-  Meebits,
-  Moonbirds,
-  Azuki__factory,
-  CloneX__factory,
-  Moonbirds__factory,
-  Meebits__factory,
-  Land__factory,
-  ConduitController__factory,
-  Seaport__factory,
-  PausableZoneController__factory,
-  CurrencyManager__factory,
-  ExecutionManager__factory,
-  LooksRareExchange__factory,
-  RoyaltyFeeManager__factory,
-  RoyaltyFeeRegistry__factory,
-  TransferSelectorNFT__factory,
-  TransferManagerERC721__factory,
-  TransferManagerERC1155__factory,
-  StrategyStandardSaleForFixedPrice__factory,
-  X2Y2R1__factory,
-  ERC721Delegate__factory,
-  NTokenMoonBirds__factory,
-  UniswapV3OracleWrapper__factory,
-  NTokenUniswapV3__factory,
-  MarketplaceLogic__factory,
-  SeaportAdapter__factory,
-  LooksRareAdapter__factory,
-  UniswapV3Factory__factory,
-  StETH__factory,
-  MockAToken__factory,
-  PTokenAToken__factory,
-  PTokenStETH__factory,
-  UserFlashclaimRegistry__factory,
-  MockAirdropProject__factory,
-  PoolCore__factory,
-  PoolParameters__factory,
-  PoolMarketplace__factory,
-  ApeCoinStaking__factory,
-  NTokenBAYC__factory,
-  NTokenMAYC__factory,
-} from "../../types";
+  eContractid,
+  ERC20TokenContractId,
+  ERC721TokenContractId,
+  tEthereumAddress,
+  tStringTokenSmallUnits,
+} from "./types";
 
-import * as nonfungiblePositionManager from "@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json";
-import * as uniSwapRouter from "@uniswap/v3-periphery/artifacts/contracts/SwapRouter.sol/SwapRouter.json";
 import * as nFTDescriptor from "@uniswap/v3-periphery/artifacts/contracts/libraries/NFTDescriptor.sol/NFTDescriptor.json";
+import * as nonfungiblePositionManager from "@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json";
 import * as nonfungibleTokenPositionDescriptor from "@uniswap/v3-periphery/artifacts/contracts/NonfungibleTokenPositionDescriptor.sol/NonfungibleTokenPositionDescriptor.json";
+import * as uniSwapRouter from "@uniswap/v3-periphery/artifacts/contracts/SwapRouter.sol/SwapRouter.json";
 
-import {
-  withSaveAndVerify,
-  insertContractAddressInDb,
-} from "./contracts-helpers";
-import {MintableDelegationERC20} from "../../types";
-import {HardhatRuntimeEnvironment} from "hardhat/types";
-import {Address} from "hardhat-deploy/dist/types";
 import {Contract} from "ethers";
+import {Address} from "hardhat-deploy/dist/types";
+import {MintableDelegationERC20} from "../../types";
 import {LiquidationLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/LiquidationLogic__factory";
 import {MarketplaceLogicLibraryAddresses} from "../../types/factories/protocol/libraries/logic/MarketplaceLogic__factory";
 import {PoolCoreLibraryAddresses} from "../../types/factories/protocol/pool/PoolCore__factory";
 import {PoolMarketplaceLibraryAddresses} from "../../types/factories/protocol/pool/PoolMarketplace__factory";
 import {PoolParametersLibraryAddresses} from "../../types/factories/protocol/pool/PoolParameters__factory";
+import {
+  insertContractAddressInDb,
+  withSaveAndVerify,
+} from "./contracts-helpers";
 
 import {pick} from "lodash";
 import {ZERO_ADDRESS} from "./constants";
 import {GLOBAL_OVERRIDES} from "./hardhat-constants";
 
-const readArtifact = async (id: string) => {
-  return (DRE as HardhatRuntimeEnvironment).artifacts.readArtifact(id);
-};
-
 export const deployPoolAddressesProvider = async (
   marketId: string,
   owner: string,
   verify?: boolean
-) => {
-  return withSaveAndVerify(
-    await new PoolAddressesProvider__factory(await getFirstSigner()).deploy(
-      marketId,
-      owner,
-      GLOBAL_OVERRIDES
-    ),
+) =>
+  withSaveAndVerify<C extends ContractFactory>(
+    PoolAddressesProvider__factory,
     eContractid.PoolAddressesProvider,
     [marketId, owner],
     verify
-  );
-};
+  ) as Promise<PoolAddressesProvider>;
+
 export const deployPoolAddressesProviderRegistry = async (
   owner: string,
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new PoolAddressesProviderRegistry__factory(
-      await getFirstSigner()
-    ).deploy(owner, GLOBAL_OVERRIDES),
+    PoolAddressesProviderRegistry__factory,
     eContractid.PoolAddressesProviderRegistry,
     [owner],
     verify
-  );
+  ) as Promise<PoolAddressesProviderRegistry>;
 
 export const deployACLManager = async (
   provider: tEthereumAddress,
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new ACLManager__factory(await getFirstSigner()).deploy(
-      provider,
-      GLOBAL_OVERRIDES
-    ),
+    ACLManager__factory,
     eContractid.ACLManager,
     [provider],
     verify
-  );
+  ) as Promise<ACLManager>;
 
 export const deployConfiguratorLogicLibrary = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new ConfiguratorLogic__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
+    ConfiguratorLogic__factory,
     eContractid.ConfiguratorLogic,
     [],
     verify
-  );
+  ) as Promise<ConfiguratorLogic>;
 
 export const deployPoolConfigurator = async (verify?: boolean) => {
   const configuratorLogic = await deployConfiguratorLogicLibrary(verify);
@@ -221,117 +293,72 @@ export const deployPoolConfigurator = async (verify?: boolean) => {
     ["contracts/protocol/libraries/logic/ConfiguratorLogic.sol:ConfiguratorLogic"]:
       configuratorLogic.address,
   };
-  const poolConfiguratorImpl = await new PoolConfigurator__factory(
-    libraries,
-    await getFirstSigner()
-  ).deploy(GLOBAL_OVERRIDES);
   return withSaveAndVerify(
-    poolConfiguratorImpl,
+    PoolConfigurator__factory,
     eContractid.PoolConfiguratorImpl,
     [],
     verify,
+    false,
     libraries
-  );
+  ) as Promise<PoolConfigurator>;
 };
 
-export const deploySupplyLogic = async (verify?: boolean) => {
-  const supplyLogicArtifact = await readArtifact(eContractid.SupplyLogic);
-
-  const supplyLogicFactory = await DRE.ethers.getContractFactory(
-    supplyLogicArtifact.abi,
-    supplyLogicArtifact.bytecode
-  );
-  const supplyLogic = await (
-    await supplyLogicFactory
-      .connect(await getFirstSigner())
-      .deploy(GLOBAL_OVERRIDES)
-  ).deployed();
-
-  return withSaveAndVerify(supplyLogic, eContractid.SupplyLogic, [], verify);
-};
+export const deploySupplyLogic = async (verify?: boolean) =>
+  withSaveAndVerify(
+    SupplyLogic__factory,
+    eContractid.SupplyLogic,
+    [],
+    verify
+  ) as Promise<SupplyLogic>;
 
 export const deployFlashClaimLogic = async (verify?: boolean) => {
-  const supplyLogicArtifact = await readArtifact(eContractid.FlashClaimLogic);
-
-  const supplyLogicFactory = await DRE.ethers.getContractFactory(
-    supplyLogicArtifact.abi,
-    supplyLogicArtifact.bytecode
-  );
-  const supplyLogic = await (
-    await supplyLogicFactory
-      .connect(await getFirstSigner())
-      .deploy(GLOBAL_OVERRIDES)
-  ).deployed();
-
   return withSaveAndVerify(
-    supplyLogic,
+    FlashClaimLogic__factory,
     eContractid.FlashClaimLogic,
     [],
     verify
-  );
+  ) as Promise<FlashClaimLogic>;
 };
 
 export const deployBorrowLogic = async (verify?: boolean) => {
-  const borrowLogicArtifact = await readArtifact(eContractid.BorrowLogic);
-
-  const borrowLogicFactory = await DRE.ethers.getContractFactory(
-    borrowLogicArtifact.abi,
-    borrowLogicArtifact.bytecode
-  );
-  const borrowLogic = await (
-    await borrowLogicFactory
-      .connect(await getFirstSigner())
-      .deploy(GLOBAL_OVERRIDES)
-  ).deployed();
-
-  return withSaveAndVerify(borrowLogic, eContractid.BorrowLogic, [], verify);
+  return withSaveAndVerify(
+    BorrowLogic__factory,
+    eContractid.BorrowLogic,
+    [],
+    verify
+  ) as Promise<BorrowLogic>;
 };
 
 export const deployLiquidationLogic = async (
   libraries: LiquidationLogicLibraryAddresses,
   verify?: boolean
 ) => {
-  const liquidationLibrary = await new LiquidationLogic__factory(
-    libraries,
-    await getFirstSigner()
-  ).deploy(GLOBAL_OVERRIDES);
-
   return withSaveAndVerify(
-    liquidationLibrary,
+    LiquidationLogic__factory,
     eContractid.LiquidationLogic,
     [],
     verify,
+    false,
     libraries
-  );
+  ) as Promise<LiquidationLogic>;
 };
 
 export const deployAuctionLogic = async (verify?: boolean) => {
-  const auctionLibrary = await new AuctionLogic__factory(
-    await getFirstSigner()
-  ).deploy(GLOBAL_OVERRIDES);
-
   return withSaveAndVerify(
-    auctionLibrary,
+    AuctionLogic__factory,
     eContractid.AuctionLogic,
     [],
     verify
-  );
+  ) as Promise<AuctionLogic>;
 };
 
 export const deployPoolLogic = async (verify?: boolean) => {
-  const poolLogicArtifact = await readArtifact(eContractid.PoolLogic);
-
-  const poolLogicFactory = await DRE.ethers.getContractFactory(
-    poolLogicArtifact.abi,
-    poolLogicArtifact.bytecode
-  );
-  const poolLogic = await (
-    await poolLogicFactory
-      .connect(await getFirstSigner())
-      .deploy(GLOBAL_OVERRIDES)
-  ).deployed();
-
-  return withSaveAndVerify(poolLogic, eContractid.PoolLogic, [], verify);
+  return withSaveAndVerify(
+    PoolLogic__factory,
+    eContractid.PoolLogic,
+    [],
+    verify
+  ) as Promise<PoolLogic>;
 };
 
 export const deployPoolCoreLibraries = async (
@@ -451,26 +478,6 @@ export const deployPoolComponents = async (
     "contracts/protocol/libraries/logic/SupplyLogic.sol:SupplyLogic",
   ]);
 
-  const poolCore = await new PoolCore__factory(
-    coreLibraries,
-    await getFirstSigner()
-  ).deploy(provider, GLOBAL_OVERRIDES);
-
-  const poolParameters = await new PoolParameters__factory(
-    parametersLibraries,
-    await getFirstSigner()
-  ).deploy(provider, GLOBAL_OVERRIDES);
-
-  const poolMarketplace = await new PoolMarketplace__factory(
-    marketplaceLibraries,
-    await getFirstSigner()
-  ).deploy(provider, GLOBAL_OVERRIDES);
-
-  const poolApeStaking = await new PoolApeStaking__factory(
-    apeStakingLibraries,
-    await getFirstSigner()
-  ).deploy(provider, GLOBAL_OVERRIDES);
-
   const {
     poolCoreSelectors,
     poolParametersSelectors,
@@ -479,38 +486,42 @@ export const deployPoolComponents = async (
   } = getPoolSignatures();
 
   return {
-    poolCore: await withSaveAndVerify(
-      poolCore,
+    poolCore: (await withSaveAndVerify(
+      PoolCore__factory,
       eContractid.PoolCoreImpl,
       [provider],
       verify,
+      false,
       coreLibraries,
       poolCoreSelectors
-    ),
-    poolParameters: await withSaveAndVerify(
-      poolParameters,
+    )) as PoolCore,
+    poolParameters: (await withSaveAndVerify(
+      PoolParameters__factory,
       eContractid.PoolParametersImpl,
       [provider],
       verify,
+      false,
       parametersLibraries,
       poolParametersSelectors
-    ),
-    poolMarketplace: await withSaveAndVerify(
-      poolMarketplace,
+    )) as PoolParameters,
+    poolMarketplace: (await withSaveAndVerify(
+      PoolMarketplace__factory,
       eContractid.PoolMarketplaceImpl,
       [provider],
       verify,
+      false,
       marketplaceLibraries,
       poolMarketplaceSelectors
-    ),
-    poolApeStaking: await withSaveAndVerify(
-      poolApeStaking,
+    )) as PoolMarketplace,
+    poolApeStaking: (await withSaveAndVerify(
+      PoolApeStaking__factory,
       eContractid.PoolApeStakingImpl,
       [provider],
       verify,
+      false,
       apeStakingLibraries,
       poolApeStakingSelectors
-    ),
+    )) as PoolApeStaking,
     poolCoreSelectors: poolCoreSelectors.map((s) => s.signature),
     poolParametersSelectors: poolParametersSelectors.map((s) => s.signature),
     poolMarketplaceSelectors: poolMarketplaceSelectors.map((s) => s.signature),
@@ -520,13 +531,11 @@ export const deployPoolComponents = async (
 
 export const deployPriceOracle = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new PriceOracle__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
+    PriceOracle__factory,
     eContractid.PriceOracle,
     [],
     verify
-  );
+  ) as Promise<PriceOracle>;
 
 export const deployAggregator = async (
   symbol: string,
@@ -534,14 +543,11 @@ export const deployAggregator = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new MockAggregator__factory(await getFirstSigner()).deploy(
-      price,
-      GLOBAL_OVERRIDES
-    ),
+    MockAggregator__factory,
     eContractid.Aggregator.concat(`.${symbol}`),
     [price],
     verify
-  );
+  ) as Promise<MockAggregator>;
 
 export const deployParaSpaceOracle = async (
   args: [
@@ -555,95 +561,74 @@ export const deployParaSpaceOracle = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new ParaSpaceOracle__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
+    ParaSpaceOracle__factory,
     eContractid.ParaSpaceOracle,
     [...args],
     verify
-  );
+  ) as Promise<ParaSpaceOracle>;
 
-export const deployNFTFloorPriceOracle = async (verify?: boolean) => {
-  const nftFloorOracle = await withSaveAndVerify(
-    await new NFTFloorOracle__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
+export const deployNFTFloorPriceOracle = async (verify?: boolean) =>
+  withSaveAndVerify(
+    NFTFloorOracle__factory,
     eContractid.NFTFloorOracle,
     [],
     verify
-  );
-  return nftFloorOracle;
-};
+  ) as Promise<NFTFloorOracle>;
 
 export const deployProtocolDataProvider = async (
   addressesProvider: tEthereumAddress,
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new ProtocolDataProvider__factory(await getFirstSigner()).deploy(
-      addressesProvider,
-      GLOBAL_OVERRIDES
-    ),
+    ProtocolDataProvider__factory,
     eContractid.ProtocolDataProvider,
     [addressesProvider],
     verify
-  );
+  ) as Promise<ProtocolDataProvider>;
 
 export const deployMintableERC20 = async (
   args: [string, string, string],
   verify?: boolean
 ): Promise<MintableERC20> =>
   withSaveAndVerify(
-    await new MintableERC20__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
+    MintableERC20__factory,
     args[1],
     [...args],
     verify
-  );
+  ) as Promise<MintableERC20>;
 
 export const deployMintableERC721 = async (
   args: [string, string, string],
   verify?: boolean
 ): Promise<MintableERC721> =>
   withSaveAndVerify(
-    await new MintableERC721__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
+    MintableERC721__factory,
     args[1],
     [...args],
     verify
-  );
+  ) as Promise<MintableERC721>;
 
 export const deployMintableDelegationERC20 = async (
   args: [string, string, string],
   verify?: boolean
 ): Promise<MintableDelegationERC20> =>
   withSaveAndVerify(
-    await new MintableDelegationERC20__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
+    MintableDelegationERC20__factory,
     eContractid.MintableDelegationERC20,
     [...args],
     verify
-  );
+  ) as Promise<MintableDelegationERC20>;
 
 export const deployMockReserveAuctionStrategy = async (
   args: [string, string, string, string, string, string],
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new MockReserveAuctionStrategy__factory(
-      await getFirstSigner()
-    ).deploy(...args, GLOBAL_OVERRIDES),
+    MockReserveAuctionStrategy__factory,
     eContractid.MockReserveAuctionStrategy,
     [...args],
     verify
-  );
+  ) as Promise<MockReserveAuctionStrategy>;
 
 export const deployReserveAuctionStrategy = async (
   strategyName: string,
@@ -651,13 +636,11 @@ export const deployReserveAuctionStrategy = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new DefaultReserveAuctionStrategy__factory(
-      await getFirstSigner()
-    ).deploy(...args, GLOBAL_OVERRIDES),
+    DefaultReserveAuctionStrategy__factory,
     strategyName,
     [...args],
     verify
-  );
+  ) as Promise<DefaultReserveAuctionStrategy>;
 
 export const deployReserveInterestRateStrategy = async (
   strategyName: string,
@@ -665,83 +648,33 @@ export const deployReserveInterestRateStrategy = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new DefaultReserveInterestRateStrategy__factory(
-      await getFirstSigner()
-    ).deploy(...args, GLOBAL_OVERRIDES),
+    DefaultReserveInterestRateStrategy__factory,
     strategyName,
     [...args],
     verify
-  );
+  ) as Promise<DefaultReserveInterestRateStrategy>;
 
 export const deployGenericVariableDebtToken = async (
   poolAddress: tEthereumAddress,
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new VariableDebtToken__factory(await getFirstSigner()).deploy(
-      poolAddress,
-      GLOBAL_OVERRIDES
-    ),
+    VariableDebtToken__factory,
     eContractid.VariableDebtTokenImpl,
     [poolAddress],
     verify
-  );
-
-export const deployGenericPToken = async (
-  [
-    poolAddress,
-    underlyingAssetAddress,
-    treasuryAddress,
-    incentivesController,
-    name,
-    symbol,
-  ]: [
-    tEthereumAddress,
-    tEthereumAddress,
-    tEthereumAddress,
-    tEthereumAddress,
-    string,
-    string
-  ],
-  verify?: boolean
-) => {
-  const instance = await withSaveAndVerify(
-    await new PToken__factory(await getFirstSigner()).deploy(
-      poolAddress,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.PTokenImpl,
-    [poolAddress],
-    verify
-  );
-
-  await instance.initialize(
-    poolAddress,
-    treasuryAddress,
-    underlyingAssetAddress,
-    incentivesController,
-    "18",
-    name,
-    symbol,
-    "0x10"
-  );
-
-  return instance;
-};
+  ) as Promise<VariableDebtToken>;
 
 export const deployGenericPTokenImpl = async (
   poolAddress: tEthereumAddress,
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new PToken__factory(await getFirstSigner()).deploy(
-      poolAddress,
-      GLOBAL_OVERRIDES
-    ),
+    PToken__factory,
     eContractid.PTokenImpl,
     [poolAddress],
     verify
-  );
+  ) as Promise<PToken>;
 
 export const deployGenericNTokenImpl = async (
   poolAddress: tEthereumAddress,
@@ -759,15 +692,13 @@ export const deployGenericNTokenImpl = async (
       mintableERC721Logic.address,
   };
   return withSaveAndVerify(
-    await new NToken__factory(libraries, await getFirstSigner()).deploy(
-      poolAddress,
-      atomicPricing,
-      GLOBAL_OVERRIDES
-    ),
+    NToken__factory,
     eContractid.NTokenImpl,
     [poolAddress, atomicPricing],
-    verify
-  );
+    verify,
+    false,
+    libraries
+  ) as Promise<NToken>;
 };
 
 export const deployUniswapV3NTokenImpl = async (
@@ -785,14 +716,13 @@ export const deployUniswapV3NTokenImpl = async (
       mintableERC721Logic.address,
   };
   return withSaveAndVerify(
-    await new NTokenUniswapV3__factory(
-      libraries,
-      await getFirstSigner()
-    ).deploy(poolAddress, GLOBAL_OVERRIDES),
+    NTokenUniswapV3__factory,
     eContractid.NTokenUniswapV3Impl,
     [poolAddress],
-    verify
-  );
+    verify,
+    false,
+    libraries
+  ) as Promise<NTokenUniswapV3>;
 };
 
 export const deployGenericMoonbirdNTokenImpl = async (
@@ -810,56 +740,13 @@ export const deployGenericMoonbirdNTokenImpl = async (
       mintableERC721Logic.address,
   };
   return withSaveAndVerify(
-    await new NTokenMoonBirds__factory(
-      libraries,
-      await getFirstSigner()
-    ).deploy(poolAddress, GLOBAL_OVERRIDES),
+    NTokenMoonBirds__factory,
     eContractid.NTokenMoonBirdsImpl,
     [poolAddress],
-    verify
-  );
-};
-
-export const deployDelegationAwarePToken = async (
-  [
-    poolAddress,
-    underlyingAssetAddress,
-    treasuryAddress,
-    incentivesController,
-    name,
-    symbol,
-  ]: [
-    tEthereumAddress,
-    tEthereumAddress,
-    tEthereumAddress,
-    tEthereumAddress,
-    string,
-    string
-  ],
-  verify?: boolean
-) => {
-  const instance = await withSaveAndVerify(
-    await new DelegationAwarePToken__factory(await getFirstSigner()).deploy(
-      poolAddress,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.DelegationAwarePTokenImpl,
-    [poolAddress],
-    verify
-  );
-
-  await instance.initialize(
-    poolAddress,
-    treasuryAddress,
-    underlyingAssetAddress,
-    incentivesController,
-    "18",
-    name,
-    symbol,
-    "0x10"
-  );
-
-  return instance;
+    verify,
+    false,
+    libraries
+  ) as Promise<NTokenMoonBirds>;
 };
 
 export const deployDelegationAwarePTokenImpl = async (
@@ -867,14 +754,11 @@ export const deployDelegationAwarePTokenImpl = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new DelegationAwarePToken__factory(await getFirstSigner()).deploy(
-      poolAddress,
-      GLOBAL_OVERRIDES
-    ),
+    DelegationAwarePToken__factory,
     eContractid.DelegationAwarePTokenImpl,
     [poolAddress],
     verify
-  );
+  ) as Promise<DelegationAwarePToken>;
 
 export const deployAllERC20Tokens = async (verify?: boolean) => {
   const tokens: {
@@ -1182,47 +1066,829 @@ export const deployMoonbirds = async (
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new Moonbirds__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
+    Moonbirds__factory,
     eContractid.MOONBIRD,
     [...args],
     verify
-  );
+  ) as Promise<Moonbirds>;
 
 export const deployReservesSetupHelper = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new ReservesSetupHelper__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
+    ReservesSetupHelper__factory,
     eContractid.ReservesSetupHelper,
     [],
     verify
-  );
+  ) as Promise<ReservesSetupHelper>;
 
 export const deployInitializableImmutableAdminUpgradeabilityProxy = async (
   args: [tEthereumAddress],
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new InitializableImmutableAdminUpgradeabilityProxy__factory(
-      await getFirstSigner()
-    ).deploy(...args, GLOBAL_OVERRIDES),
+    InitializableImmutableAdminUpgradeabilityProxy__factory,
     eContractid.InitializableImmutableAdminUpgradeabilityProxy,
     [...args],
     verify
-  );
+  ) as Promise<InitializableImmutableAdminUpgradeabilityProxy>;
 
 export const deployWETH = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new WETH9Mocked__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
+    WETH9Mocked__factory,
     eContractid.WETH,
     [],
     verify
+  ) as Promise<WETH9Mocked>;
+
+export const deployUiPoolDataProvider = async (
+  arg1: string,
+  arg2: string,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    UiPoolDataProvider__factory,
+    eContractid.UiPoolDataProvider,
+    [arg1, arg2],
+    verify
+  ) as Promise<UiPoolDataProvider>;
+
+export const deployUiIncentiveDataProvider = async (verify?: boolean) =>
+  withSaveAndVerify(
+    UiIncentiveDataProvider__factory,
+    eContractid.UiIncentiveDataProvider,
+    [],
+    verify
+  ) as Promise<UiIncentiveDataProvider>;
+
+export const deployWalletBalanceProvider = async (verify?: boolean) =>
+  withSaveAndVerify(
+    WalletBalanceProvider__factory,
+    eContractid.WalletBalanceProvider,
+    [],
+    verify
+  ) as Promise<WalletBalanceProvider>;
+
+export const deployWETHGateway = async (
+  weth: string,
+  pool: Address,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    WETHGateway__factory,
+    eContractid.WETHGatewayImpl,
+    [weth, pool],
+    verify
+  ) as Promise<WETHGateway>;
+
+export const deployWETHGatewayProxy = async (
+  admin: string,
+  impl: string,
+  initData: string,
+  verify?: boolean
+) => {
+  return withSaveAndVerify(
+    InitializableImmutableAdminUpgradeabilityProxy__factory,
+    eContractid.WETHGatewayProxy,
+    [admin, impl, initData],
+    verify,
+    true
+  ) as Promise<InitializableImmutableAdminUpgradeabilityProxy>;
+};
+
+export const deployMeebits = async (
+  args: [tEthereumAddress, tEthereumAddress, tEthereumAddress],
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    Meebits__factory,
+    eContractid.Meebits,
+    [...args],
+    verify
+  ) as Promise<Meebits>;
+
+export const deployAzuki = async (
+  args: [number, number, number, number],
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    Azuki__factory,
+    eContractid.Azuki,
+    [...args],
+    verify
+  ) as Promise<Azuki>;
+
+export const deployOTHR = async (
+  // eslint-disable-next-line
+  args: [any, any, any, any, any, any, any, any, any, any],
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    Land__factory,
+    eContractid.OTHR,
+    [...args],
+    verify
+  ) as Promise<Land>;
+
+export const deployCloneX = async (args: [], verify?: boolean) =>
+  withSaveAndVerify(
+    CloneX__factory,
+    eContractid.CloneX,
+    [...args],
+    verify
+  ) as Promise<CloneX>;
+
+export const deployDoodle = async (args: [], verify?: boolean) =>
+  withSaveAndVerify(
+    Doodles__factory,
+    eContractid.Doodles,
+    [...args],
+    verify
+  ) as Promise<Doodles>;
+
+export const deployMAYC = async (
+  args: [string, string, string, string],
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    MutantApeYachtClub__factory,
+    eContractid.MutantApeYachtClub,
+    [...args],
+    verify
+  ) as Promise<MutantApeYachtClub>;
+
+export const deployBAYC = async (
+  args: [string, string, string, string],
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    BoredApeYachtClub__factory,
+    eContractid.BoredApeYachtClub,
+    [...args],
+    verify
+  ) as Promise<BoredApeYachtClub>;
+
+export const deployERC721OracleWrapper = async (
+  addressesProvider: string,
+  oracleAddress: string,
+  asset: string,
+  symbol: string,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    ERC721OracleWrapper__factory,
+    eContractid.Aggregator.concat(`.${symbol}`),
+    [addressesProvider, oracleAddress, asset],
+    verify
+  ) as Promise<ERC721OracleWrapper>;
+
+export const deployPunks = async (args: [], verify?: boolean) =>
+  withSaveAndVerify(
+    CryptoPunksMarket__factory,
+    eContractid.PUNKS,
+    [...args],
+    verify
+  ) as Promise<CryptoPunksMarket>;
+
+export const deployWPunks = async (
+  args: [tEthereumAddress],
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    WPunk__factory,
+    eContractid.WPunk,
+    [...args],
+    verify
+  ) as Promise<WPunk>;
+
+export const deployPunkGateway = async (
+  args: [
+    tEthereumAddress,
+    tEthereumAddress,
+    // tEthereumAddress,
+    tEthereumAddress
+  ],
+  verify?: boolean
+) => {
+  return withSaveAndVerify(
+    WPunkGateway__factory,
+    eContractid.WPunkGatewayImpl,
+    [...args],
+    verify
+  ) as Promise<WPunkGateway>;
+};
+
+export const deployPunkGatewayProxy = async (
+  admin: string,
+  impl: string,
+  initData: string,
+  verify?: boolean
+) => {
+  return withSaveAndVerify(
+    InitializableImmutableAdminUpgradeabilityProxy__factory,
+    eContractid.WPunkGatewayProxy,
+    [admin, impl, initData],
+    verify,
+    true
+  ) as Promise<InitializableImmutableAdminUpgradeabilityProxy>;
+};
+
+export const deployParaSpaceFallbackOracle = async (
+  args: [string, string, string, string, string],
+  verify?: boolean
+) => {
+  return withSaveAndVerify(
+    ParaSpaceFallbackOracle__factory,
+    eContractid.PriceOracle,
+    [...args],
+    verify
+  ) as Promise<ParaSpaceFallbackOracle>;
+};
+
+export const deployMockTokenFaucet = async (
+  erc20configs,
+  erc721configs,
+  punkConfig,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    MockTokenFaucet__factory,
+    eContractid.MockTokenFaucet,
+    [erc20configs, erc721configs, punkConfig],
+    verify
+  ) as Promise<MockTokenFaucet>;
+
+export const deploySeaportAdapter = async (verify?: boolean) => {
+  return withSaveAndVerify(
+    SeaportAdapter__factory,
+    eContractid.SeaportAdapter,
+    [],
+    verify
+  ) as Promise<SeaportAdapter>;
+};
+
+export const deployLooksRareAdapter = async (verify?: boolean) => {
+  return withSaveAndVerify(
+    LooksRareAdapter__factory,
+    eContractid.LooksRareAdapter,
+    [],
+    verify
+  ) as Promise<LooksRareAdapter>;
+};
+
+export const deployX2Y2Adapter = async (verify?: boolean) => {
+  return withSaveAndVerify(
+    X2Y2Adapter__factory,
+    eContractid.X2Y2Adapter,
+    [],
+    verify
+  ) as Promise<X2Y2Adapter>;
+};
+
+export const deployMarketplaceLogic = async (
+  libraries: MarketplaceLogicLibraryAddresses,
+  verify?: boolean
+) => {
+  return withSaveAndVerify(
+    MarketplaceLogic__factory,
+    eContractid.MarketplaceLogic,
+    [],
+    verify,
+    false,
+    libraries
+  ) as Promise<MarketplaceLogic>;
+};
+
+export const deployConduitController = async (verify?: boolean) =>
+  withSaveAndVerify(
+    ConduitController__factory,
+    eContractid.ConduitController,
+    [],
+    verify
+  ) as Promise<ConduitController>;
+
+export const deployPausableZoneController = async (
+  owner: tEthereumAddress,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    PausableZoneController__factory,
+    eContractid.PausableZoneController,
+    [owner],
+    verify
+  ) as Promise<PausableZoneController>;
+
+export const deploySeaport = async (
+  conduitController: string,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    Seaport__factory,
+    eContractid.Seaport,
+    [conduitController],
+    verify
+  ) as Promise<Seaport>;
+
+export const deployCurrencyManager = async (verify?: boolean) =>
+  withSaveAndVerify(
+    CurrencyManager__factory,
+    eContractid.CurrencyManager,
+    [],
+    verify
+  ) as Promise<CurrencyManager>;
+
+export const deployExecutionManager = async (verify?: boolean) =>
+  withSaveAndVerify(
+    ExecutionManager__factory,
+    eContractid.ExecutionManager,
+    [],
+    verify
+  ) as Promise<ExecutionManager>;
+
+export const deployLooksRareExchange = async (
+  currencyManager: string,
+  executionManager: string,
+  royaltyFeeManager: string,
+  weth: string,
+  protocolFeeRecipient: string,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    LooksRareExchange__factory,
+    eContractid.LooksRareExchange,
+    [
+      currencyManager,
+      executionManager,
+      royaltyFeeManager,
+      weth,
+      protocolFeeRecipient,
+    ],
+    verify
+  ) as Promise<LooksRareExchange>;
+
+export const deployRoyaltyFeeManager = async (
+  royaltyFeeRegistry: string,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    RoyaltyFeeManager__factory,
+    eContractid.RoyaltyFeeManager,
+    [royaltyFeeRegistry],
+    verify
+  ) as Promise<RoyaltyFeeManager>;
+
+export const deployRoyaltyFeeRegistry = async (
+  royaltyFeeLimit: string,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    RoyaltyFeeRegistry__factory,
+    eContractid.RoyaltyFeeRegistry,
+    [royaltyFeeLimit],
+    verify
+  ) as Promise<RoyaltyFeeRegistry>;
+
+export const deployTransferSelectorNFT = async (
+  transferManagerERC721: string,
+  transferManagerERC1155: string,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    TransferSelectorNFT__factory,
+    eContractid.TransferSelectorNFT,
+    [transferManagerERC721, transferManagerERC1155],
+    verify
+  ) as Promise<TransferSelectorNFT>;
+
+export const deployTransferManagerERC721 = async (
+  looksRareExchange: string,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    TransferManagerERC721__factory,
+    eContractid.TransferManagerERC721,
+    [looksRareExchange],
+    verify
+  ) as Promise<TransferManagerERC721>;
+
+export const deployTransferManagerERC1155 = async (
+  looksRareExchange: string,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    TransferManagerERC1155__factory,
+    eContractid.TransferManagerERC1155,
+    [looksRareExchange],
+    verify
+  ) as Promise<TransferManagerERC1155>;
+
+export const deployStrategyStandardSaleForFixedPrice = async (
+  protocolFee: string,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    StrategyStandardSaleForFixedPrice__factory,
+    eContractid.StrategyStandardSaleForFixedPrice,
+    [protocolFee],
+    verify
+  ) as Promise<StrategyStandardSaleForFixedPrice>;
+
+export const deployX2Y2R1 = async (verify?: boolean) =>
+  withSaveAndVerify(
+    X2Y2R1__factory,
+    eContractid.X2Y2R1,
+    [],
+    verify
+  ) as Promise<X2Y2R1>;
+
+export const deployERC721Delegate = async (verify?: boolean) =>
+  withSaveAndVerify(
+    ERC721Delegate__factory,
+    eContractid.ERC721Delegate,
+    [],
+    verify
+  ) as Promise<ERC721Delegate>;
+
+export const deployUniswapV3Factory = async (args: [], verify?: boolean) => {
+  return withSaveAndVerify(
+    UniswapV3Factory__factory,
+    eContractid.UniswapV3Factory,
+    [...args],
+    verify
+  ) as Promise<UniswapV3Factory>;
+};
+
+export const deployNonfungibleTokenPositionDescriptor = async (
+  args: [string, string],
+  verify?: boolean
+) => {
+  const nFTDescriptorFactory = (
+    await DRE.ethers.getContractFactoryFromArtifact(nFTDescriptor)
+  ).connect(await getFirstSigner());
+
+  const nftDescriptorLibraryContract = await withSaveAndVerify(
+    nFTDescriptorFactory,
+    eContractid.NFTDescriptor,
+    [],
+    verify
   );
+  const libraries = {
+    NFTDescriptor: nftDescriptorLibraryContract.address,
+  };
+  const nonfungibleTokenPositionDescriptorFactory = (
+    await DRE.ethers.getContractFactoryFromArtifact(
+      nonfungibleTokenPositionDescriptor,
+      {
+        libraries,
+      }
+    )
+  ).connect(await getFirstSigner());
+
+  return withSaveAndVerify(
+    nonfungibleTokenPositionDescriptorFactory,
+    eContractid.NonfungibleTokenPositionDescriptor,
+    [...args],
+    verify,
+    false,
+    libraries
+  );
+};
+
+export const deployUniswapV3OracleWrapper = async (
+  factory: string,
+  manager: string,
+  addressProvider: string,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    UniswapV3OracleWrapper__factory,
+    eContractid.Aggregator.concat(`.${eContractid.UniswapV3}`),
+    [factory, manager, addressProvider],
+    verify
+  ) as Promise<UniswapV3OracleWrapper>;
+
+export const deployNonfungiblePositionManager = async (
+  args: [string, string, string],
+  verify?: boolean
+) => {
+  const nonfungiblePositionManagerFactory = (
+    await DRE.ethers.getContractFactoryFromArtifact(nonfungiblePositionManager)
+  ).connect(await getFirstSigner());
+
+  return withSaveAndVerify(
+    nonfungiblePositionManagerFactory,
+    eContractid.UniswapV3,
+    [...args],
+    verify
+  );
+};
+
+export const deployUniswapSwapRouter = async (
+  args: [string, string],
+  verify?: boolean
+) => {
+  const swapRouter = (
+    await DRE.ethers.getContractFactoryFromArtifact(uniSwapRouter)
+  ).connect(await getFirstSigner());
+
+  return withSaveAndVerify(
+    swapRouter,
+    eContractid.UniswapV3SwapRouter,
+    [...args],
+    verify
+  );
+};
+
+export const deployStETH = async (
+  args: [string, string, string],
+  verify?: boolean
+): Promise<StETH> =>
+  withSaveAndVerify(
+    StETH__factory,
+    args[1],
+    [...args],
+    verify
+  ) as Promise<StETH>;
+
+export const deployMockAToken = async (
+  args: [string, string, string],
+  verify?: boolean
+): Promise<MockAToken> =>
+  withSaveAndVerify(
+    MockAToken__factory,
+    args[1],
+    [...args],
+    verify
+  ) as Promise<MockAToken>;
+
+export const deployPTokenAToken = async (
+  poolAddress: tEthereumAddress,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    PTokenAToken__factory,
+    eContractid.PTokenATokenImpl,
+    [poolAddress],
+    verify
+  ) as Promise<PTokenAToken>;
+
+export const deployPTokenStETH = async (
+  poolAddress: tEthereumAddress,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    PTokenStETH__factory,
+    eContractid.PTokenStETHImpl,
+    [poolAddress],
+    verify
+  ) as Promise<PTokenStETH>;
+
+export const deployPTokenSApe = async (
+  poolAddress: tEthereumAddress,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    PTokenSApe__factory,
+    eContractid.PTokenSApeImpl,
+    [poolAddress],
+    verify
+  ) as Promise<PTokenSApe>;
+
+export const deployUserFlashClaimRegistry = async (
+  poolAddress: tEthereumAddress,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    UserFlashclaimRegistry__factory,
+    eContractid.FlashClaimRegistry,
+    [poolAddress],
+    verify
+  ) as Promise<UserFlashclaimRegistry>;
+
+export const deployApeCoinStaking = async (
+  args: [string, string, string, string],
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    ApeCoinStaking__factory,
+    eContractid.ApeCoinStaking,
+    [...args],
+    verify
+  ) as Promise<ApeCoinStaking>;
+
+export const deployApeStakingLogic = async (verify?: boolean) => {
+  return withSaveAndVerify(
+    ApeStakingLogic__factory,
+    eContractid.ApeStakingLogic,
+    [],
+    verify
+  ) as Promise<ApeStakingLogic>;
+};
+
+export const deployNTokenBAYCImpl = async (
+  apeCoinStaking: tEthereumAddress,
+  poolAddress: tEthereumAddress,
+  verify?: boolean
+) => {
+  let apeStakingLogic;
+  apeStakingLogic = await getApeStakingLogic();
+  if (!apeStakingLogic) {
+    apeStakingLogic = await deployApeStakingLogic(verify);
+  }
+  let mintableERC721Logic;
+  mintableERC721Logic = await getMintableERC721Logic();
+  if (!mintableERC721Logic) {
+    mintableERC721Logic = await deployMintableERC721Logic(verify);
+  }
+
+  const libraries = {
+    ["contracts/protocol/tokenization/libraries/ApeStakingLogic.sol:ApeStakingLogic"]:
+      apeStakingLogic.address,
+    ["contracts/protocol/tokenization/libraries/MintableERC721Logic.sol:MintableERC721Logic"]:
+      mintableERC721Logic.address,
+  };
+
+  return withSaveAndVerify(
+    NTokenBAYC__factory,
+    eContractid.NTokenBAYCImpl,
+    [poolAddress, apeCoinStaking],
+    verify,
+    false,
+    libraries
+  ) as Promise<NTokenBAYC>;
+};
+
+export const deployNTokenMAYCImpl = async (
+  apeCoinStaking: tEthereumAddress,
+  poolAddress: tEthereumAddress,
+  verify?: boolean
+) => {
+  let apeStakingLogic;
+  apeStakingLogic = await getApeStakingLogic();
+  if (!apeStakingLogic) {
+    apeStakingLogic = await deployApeStakingLogic();
+  }
+  let mintableERC721Logic;
+  mintableERC721Logic = await getMintableERC721Logic();
+  if (!mintableERC721Logic) {
+    mintableERC721Logic = await deployMintableERC721Logic(verify);
+  }
+
+  const libraries = {
+    ["contracts/protocol/tokenization/libraries/ApeStakingLogic.sol:ApeStakingLogic"]:
+      apeStakingLogic.address,
+    ["contracts/protocol/tokenization/libraries/MintableERC721Logic.sol:MintableERC721Logic"]:
+      mintableERC721Logic.address,
+  };
+  return withSaveAndVerify(
+    NTokenMAYC__factory,
+    eContractid.NTokenMAYCImpl,
+    [poolAddress, apeCoinStaking],
+    verify,
+    false,
+    libraries
+  ) as Promise<NTokenMAYC>;
+};
+export const deployATokenDebtToken = async (
+  poolAddress: tEthereumAddress,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    ATokenDebtToken__factory,
+    eContractid.ATokenDebtToken,
+    [poolAddress],
+    verify
+  ) as Promise<ATokenDebtToken>;
+
+export const deployStETHDebtToken = async (
+  poolAddress: tEthereumAddress,
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    StETHDebtToken__factory,
+    eContractid.StETHDebtToken,
+    [poolAddress],
+    verify
+  ) as Promise<StETHDebtToken>;
+
+export const deployMintableERC721Logic = async (verify?: boolean) => {
+  return withSaveAndVerify(
+    MintableERC721Logic__factory,
+    eContractid.MintableERC721Logic,
+    [],
+    verify
+  ) as Promise<MintableERC721Logic>;
+};
+
+export const deployMerkleVerifier = async (verify?: boolean) =>
+  withSaveAndVerify(
+    MerkleVerifier__factory,
+    eContractid.MerkleVerifier,
+    [],
+    verify
+  ) as Promise<MerkleVerifier>;
+
+export const deployExecutionDelegate = async (verify?: boolean) =>
+  withSaveAndVerify(
+    ExecutionDelegate__factory,
+    eContractid.ExecutionDelegate,
+    [],
+    verify
+  ) as Promise<ExecutionDelegate>;
+
+export const deployPolicyManager = async (verify?: boolean) =>
+  withSaveAndVerify(
+    PolicyManager__factory,
+    eContractid.PolicyManager,
+    [],
+    verify
+  ) as Promise<PolicyManager>;
+
+export const deployStandardPolicyERC721 = async (verify?: boolean) =>
+  withSaveAndVerify(
+    StandardPolicyERC721__factory,
+    eContractid.StandardPolicyERC721,
+    [],
+    verify
+  ) as Promise<StandardPolicyERC721>;
+
+export const deployBlurExchangeImpl = async (verify?: boolean) => {
+  const merkleVerifier = await deployMerkleVerifier(verify);
+  const blurExchangeLibraries = {
+    ["contracts/dependencies/blur-exchange/MerkleVerifier.sol:MerkleVerifier"]:
+      merkleVerifier.address,
+  };
+
+  return withSaveAndVerify(
+    BlurExchange__factory,
+    eContractid.BlurExchangeImpl,
+    [],
+    verify,
+    false,
+    blurExchangeLibraries
+  ) as Promise<BlurExchange>;
+};
+
+export const deployBlurExchangeProxy = async (
+  admin: string,
+  impl: string,
+  initData: string,
+  verify?: boolean
+) => {
+  return withSaveAndVerify(
+    InitializableImmutableAdminUpgradeabilityProxy__factory,
+    eContractid.BlurExchangeProxy,
+    [admin, impl, initData],
+    verify,
+    true
+  ) as Promise<InitializableImmutableAdminUpgradeabilityProxy>;
+};
+
+export const deployBlurAdapter = async (verify?: boolean) => {
+  return withSaveAndVerify(
+    BlurAdapter__factory,
+    eContractid.BlurAdapter,
+    [],
+    verify
+  ) as Promise<BlurAdapter>;
+};
+
+export const deployDelegationAwarePToken = async (
+  [
+    poolAddress,
+    underlyingAssetAddress,
+    treasuryAddress,
+    incentivesController,
+    name,
+    symbol,
+  ]: [
+    tEthereumAddress,
+    tEthereumAddress,
+    tEthereumAddress,
+    tEthereumAddress,
+    string,
+    string
+  ],
+  verify?: boolean
+) => {
+  const instance = await withSaveAndVerify(
+    DelegationAwarePToken__factory,
+    eContractid.DelegationAwarePTokenImpl,
+    [poolAddress],
+    verify
+  );
+
+  await instance.initialize(
+    poolAddress,
+    treasuryAddress,
+    underlyingAssetAddress,
+    incentivesController,
+    "18",
+    name,
+    symbol,
+    "0x10"
+  );
+
+  return instance;
+};
 
 export const deployMockVariableDebtToken = async (
   args: [
@@ -1236,10 +1902,7 @@ export const deployMockVariableDebtToken = async (
   verify?: boolean
 ) => {
   const instance = await withSaveAndVerify(
-    await new MockVariableDebtToken__factory(await getFirstSigner()).deploy(
-      args[0],
-      GLOBAL_OVERRIDES
-    ),
+    MockVariableDebtToken__factory,
     eContractid.MockVariableDebtToken,
     [args[0]],
     verify
@@ -1282,13 +1945,12 @@ export const deployMockNToken = async (
   };
 
   const instance = await withSaveAndVerify(
-    await new MockNToken__factory(libraries, await getFirstSigner()).deploy(
-      args[0],
-      GLOBAL_OVERRIDES
-    ),
+    MockNToken__factory,
     eContractid.MockNToken,
     [args[0], false],
-    verify
+    verify,
+    false,
+    libraries
   );
 
   await instance.initialize(
@@ -1317,10 +1979,7 @@ export const deployMockPToken = async (
   verify?: boolean
 ) => {
   const instance = await withSaveAndVerify(
-    await new MockPToken__factory(await getFirstSigner()).deploy(
-      args[0],
-      GLOBAL_OVERRIDES
-    ),
+    MockPToken__factory,
     eContractid.MockPToken,
     [args[0]],
     verify
@@ -1343,1126 +2002,62 @@ export const deployMockPToken = async (
 
 export const deployMockIncentivesController = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new MockIncentivesController__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
+    MockIncentivesController__factory,
     eContractid.MockIncentivesController,
     [],
     verify
-  );
+  ) as Promise<MockIncentivesController>;
 
 export const deployMockReserveConfiguration = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new MockReserveConfiguration__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
+    MockReserveConfiguration__factory,
     eContractid.MockReserveConfiguration,
     [],
     verify
-  );
-
-// export const deployMockPool = async (verify?: boolean) =>
-//   withSaveAndVerify(
-//     await new MockPool__factory(await getFirstSigner()).deploy(GLOBAL_OVERRIDES),
-//     eContractid.MockPool,
-//     [],
-//     verify
-//   );
+  ) as Promise<MockReserveConfiguration>;
 
 export const deployMockInitializableImple = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new MockInitializableImple__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
+    MockInitializableImple__factory,
     eContractid.MockInitializableImple,
     [],
     verify
-  );
+  ) as Promise<MockInitializableImple>;
 
 export const deployMockInitializableImpleV2 = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new MockInitializableImpleV2__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
+    MockInitializableImpleV2__factory,
     eContractid.MockInitializableImpleV2,
     [],
     verify
-  );
+  ) as Promise<MockInitializableImpleV2>;
 
 export const deployMockInitializableFromConstructorImple = async (
   args: [string],
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new MockInitializableFromConstructorImple__factory(
-      await getFirstSigner()
-    ).deploy(...args, GLOBAL_OVERRIDES),
+    MockInitializableFromConstructorImple__factory,
     eContractid.MockInitializableFromConstructorImple,
     [...args],
     verify
-  );
+  ) as Promise<MockInitializableFromConstructorImple>;
 
 export const deployMockReentrantInitializableImple = async (verify?: boolean) =>
   withSaveAndVerify(
-    await new MockReentrantInitializableImple__factory(
-      await getFirstSigner()
-    ).deploy(GLOBAL_OVERRIDES),
+    MockReentrantInitializableImple__factory,
     eContractid.MockReentrantInitializableImple,
     [],
     verify
-  );
-
-export const deployUiPoolDataProvider = async (
-  arg1: string,
-  arg2: string,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new UiPoolDataProvider__factory(await getFirstSigner()).deploy(
-      arg1,
-      arg2,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.UiPoolDataProvider,
-    [arg1, arg2],
-    verify
-  );
-
-export const deployUiIncentiveDataProvider = async (verify?: boolean) =>
-  withSaveAndVerify(
-    await new UiIncentiveDataProvider__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.UiIncentiveDataProvider,
-    [],
-    verify
-  );
-
-export const deployWalletBalanceProvider = async (verify?: boolean) =>
-  withSaveAndVerify(
-    await new WalletBalanceProvider__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.WalletBalanceProvider,
-    [],
-    verify
-  );
-
-export const deployWETHGateway = async (
-  weth: string,
-  pool: Address,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new WETHGateway__factory(await getFirstSigner()).deploy(
-      weth,
-      pool,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.WETHGatewayImpl,
-    [weth, pool],
-    verify
-  );
-
-export const deployWETHGatewayProxy = async (
-  admin: string,
-  wethGateway: string,
-  initData: string,
-  verify?: boolean
-) => {
-  const wethGatewayProxy =
-    await new InitializableImmutableAdminUpgradeabilityProxy__factory(
-      await getFirstSigner()
-    ).deploy(admin, GLOBAL_OVERRIDES);
-  await wethGatewayProxy["initialize(address,bytes)"](
-    wethGateway,
-    initData,
-    GLOBAL_OVERRIDES
-  );
-  return withSaveAndVerify(
-    wethGatewayProxy,
-    eContractid.WETHGatewayProxy,
-    [admin],
-    verify
-  );
-};
-
-export const deployMoonbirdHelper = async (verify?: boolean) => {
-  const moonBirdHelperArtifact = await readArtifact(eContractid.MoonBirdHelper);
-
-  const moonBirdHelperFactory = await DRE.ethers.getContractFactory(
-    moonBirdHelperArtifact.abi,
-    moonBirdHelperArtifact.bytecode
-  );
-  const moonBirdHelper = await (
-    await moonBirdHelperFactory
-      .connect(await getFirstSigner())
-      .deploy(GLOBAL_OVERRIDES)
-  ).deployed();
-
-  return withSaveAndVerify(moonBirdHelper, eContractid.PoolLogic, [], verify);
-};
-
-export const deployMeebits = async (
-  args: [tEthereumAddress, tEthereumAddress, tEthereumAddress],
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new Meebits__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.Meebits,
-    [...args],
-    verify
-  );
-
-export const deployAzuki = async (
-  args: [number, number, number, number],
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new Azuki__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.Azuki,
-    [...args],
-    verify
-  );
-
-export const deployOTHR = async (
-  // eslint-disable-next-line
-  args: [any, any, any, any, any, any, any, any, any, any],
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new Land__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.OTHR,
-    [...args],
-    verify
-  );
-
-export const deployCloneX = async (args: [], verify?: boolean) =>
-  withSaveAndVerify(
-    await new CloneX__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.CloneX,
-    [...args],
-    verify
-  );
-
-export const deployDoodle = async (args: [], verify?: boolean) =>
-  withSaveAndVerify(
-    await new Doodles__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.Doodles,
-    [...args],
-    verify
-  );
-
-export const deployMAYC = async (
-  args: [string, string, string, string],
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new MutantApeYachtClub__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.MutantApeYachtClub,
-    [...args],
-    verify
-  );
-
-export const deployBAYC = async (
-  args: [string, string, string, string],
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new BoredApeYachtClub__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.BoredApeYachtClub,
-    [...args],
-    verify
-  );
-
-export const deployERC721OracleWrapper = async (
-  addressesProvider: string,
-  oracleAddress: string,
-  asset: string,
-  symbol: string,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new ERC721OracleWrapper__factory(await getFirstSigner()).deploy(
-      addressesProvider,
-      oracleAddress,
-      asset,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.Aggregator.concat(`.${symbol}`),
-    [addressesProvider, oracleAddress, asset],
-    verify
-  );
-
-export const deployPunks = async (args: [], verify?: boolean) =>
-  withSaveAndVerify(
-    await new CryptoPunksMarket__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.PUNKS,
-    [...args],
-    verify
-  );
-
-export const deployWPunks = async (
-  args: [tEthereumAddress],
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new WPunk__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.WPunk,
-    [...args],
-    verify
-  );
-
-export const deployPunkGateway = async (
-  args: [
-    tEthereumAddress,
-    tEthereumAddress,
-    // tEthereumAddress,
-    tEthereumAddress
-  ],
-  verify?: boolean
-) => {
-  const punkImpl = await new WPunkGateway__factory(
-    await getFirstSigner()
-  ).deploy(...args, GLOBAL_OVERRIDES);
-  return withSaveAndVerify(
-    punkImpl,
-    eContractid.WPunkGatewayImpl,
-    [...args],
-    verify
-  );
-};
-
-export const deployPunkGatewayProxy = async (
-  admin: string,
-  punkGateway: string,
-  initData: string,
-  verify?: boolean
-) => {
-  const punkGatewayProxy =
-    await new InitializableImmutableAdminUpgradeabilityProxy__factory(
-      await getFirstSigner()
-    ).deploy(admin, GLOBAL_OVERRIDES);
-  await punkGatewayProxy["initialize(address,bytes)"](
-    punkGateway,
-    initData,
-    GLOBAL_OVERRIDES
-  );
-  return withSaveAndVerify(
-    punkGatewayProxy,
-    eContractid.WPunkGatewayProxy,
-    [admin],
-    verify
-  );
-};
-
-// export const deployParaSpaceToken = async (verify?: boolean) => {
-//   const paraspaceToken = await new ParaSpaceToken__factory(
-//     await getFirstSigner()
-//   ).deploy(GLOBAL_OVERRIDES);
-//
-//   return withSaveAndVerify(paraspaceToken, eContractid.ParaSpace, [], verify);
-// };
-//
-// export const deployStakedParaSpace = async (
-//   args: [string, string, string, string, string, string, string, string],
-//   verify?: boolean
-// ) => {
-//   const paraspaceStakeV3 = await new StakedParaSpaceV3__factory(
-//     await getFirstSigner()
-//   ).deploy(...args, GLOBAL_OVERRIDES);
-//
-//   return withSaveAndVerify(
-//     paraspaceStakeV3,
-//     eContractid.sParaSpace,
-//     [...args],
-//     verify
-//   );
-// };
-//
-// export const deployRewardsController = async (
-//   emissionManager: string,
-//   verify?: boolean
-// ) => {
-//   console.log("deploying reward controller");
-//   const rewardsController = await new RewardsController__factory(
-//     await getFirstSigner()
-//   ).deploy(emissionManager, GLOBAL_OVERRIDES);
-//
-//   return withSaveAndVerify(
-//     rewardsController,
-//     eContractid.RewardsController,
-//     [emissionManager],
-//     verify
-//   );
-// };
-//
-// export const deployPCV = async (
-//   stakedParaSpace: string,
-//   paraspace: string,
-//   verify?: boolean
-// ) => {
-//   const pcv = await new PCV__factory(await getFirstSigner()).deploy(
-//     stakedParaSpace,
-//     paraspace
-//   );
-//
-//   return withSaveAndVerify(
-//     pcv,
-//     eContractid.PCV,
-//     [stakedParaSpace, paraspace],
-//     verify
-//   );
-// };
-
-export const deployParaSpaceFallbackOracle = async (
-  args: [string, string, string, string, string],
-  verify?: boolean
-) => {
-  const fallBackOracle = await new ParaSpaceFallbackOracle__factory(
-    await getFirstSigner()
-  ).deploy(...args, GLOBAL_OVERRIDES);
-
-  return withSaveAndVerify(
-    fallBackOracle,
-    eContractid.PriceOracle,
-    [...args],
-    verify
-  );
-};
-
-export const deployMockTokenFaucet = async (
-  erc20configs,
-  erc721configs,
-  punkConfig,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new MockTokenFaucet__factory(await getFirstSigner()).deploy(
-      erc20configs,
-      erc721configs,
-      punkConfig,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.MockTokenFaucet,
-    [erc20configs, erc721configs, punkConfig],
-    verify
-  );
-
-export const deploySeaportAdapter = async (verify?: boolean) => {
-  const seaportAdapter = await new SeaportAdapter__factory(
-    await getFirstSigner()
-  ).deploy(GLOBAL_OVERRIDES);
-
-  return withSaveAndVerify(
-    seaportAdapter,
-    eContractid.SeaportAdapter,
-    [],
-    verify
-  );
-};
-
-export const deployLooksRareAdapter = async (verify?: boolean) => {
-  const looksRareAdapter = await new LooksRareAdapter__factory(
-    await getFirstSigner()
-  ).deploy(GLOBAL_OVERRIDES);
-
-  return withSaveAndVerify(
-    looksRareAdapter,
-    eContractid.LooksRareAdapter,
-    [],
-    verify
-  );
-};
-
-export const deployX2Y2Adapter = async (verify?: boolean) => {
-  const x2y2Adapter = await new X2Y2Adapter__factory(
-    await getFirstSigner()
-  ).deploy(GLOBAL_OVERRIDES);
-
-  return withSaveAndVerify(x2y2Adapter, eContractid.X2Y2Adapter, [], verify);
-};
-
-export const deployMarketplaceLogic = async (
-  libraries: MarketplaceLogicLibraryAddresses,
-  verify?: boolean
-) => {
-  const marketplaceLogic = await new MarketplaceLogic__factory(
-    libraries,
-    await getFirstSigner()
-  ).deploy(GLOBAL_OVERRIDES);
-
-  return withSaveAndVerify(
-    marketplaceLogic,
-    eContractid.MarketplaceLogic,
-    [],
-    verify,
-    libraries
-  );
-};
-
-export const deployConduitController = async (verify?: boolean) =>
-  withSaveAndVerify(
-    await new ConduitController__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.ConduitController,
-    [],
-    verify
-  );
-
-export const deployPausableZoneController = async (
-  owner: tEthereumAddress,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new PausableZoneController__factory(await getFirstSigner()).deploy(
-      owner,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.PausableZoneController,
-    [owner],
-    verify
-  );
-
-export const deploySeaport = async (
-  conduitController: string,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new Seaport__factory(await getFirstSigner()).deploy(
-      conduitController,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.Seaport,
-    [conduitController],
-    verify
-  );
-
-export const deployCurrencyManager = async (verify?: boolean) =>
-  withSaveAndVerify(
-    await new CurrencyManager__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.CurrencyManager,
-    [],
-    verify
-  );
-
-export const deployExecutionManager = async (verify?: boolean) =>
-  withSaveAndVerify(
-    await new ExecutionManager__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.ExecutionManager,
-    [],
-    verify
-  );
-
-export const deployLooksRareExchange = async (
-  currencyManager: string,
-  executionManager: string,
-  royaltyFeeManager: string,
-  weth: string,
-  protocolFeeRecipient: string,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new LooksRareExchange__factory(await getFirstSigner()).deploy(
-      currencyManager,
-      executionManager,
-      royaltyFeeManager,
-      weth,
-      protocolFeeRecipient,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.LooksRareExchange,
-    [
-      currencyManager,
-      executionManager,
-      royaltyFeeManager,
-      weth,
-      protocolFeeRecipient,
-    ],
-    verify
-  );
-
-export const deployRoyaltyFeeManager = async (
-  royaltyFeeRegistry: string,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new RoyaltyFeeManager__factory(await getFirstSigner()).deploy(
-      royaltyFeeRegistry,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.RoyaltyFeeManager,
-    [royaltyFeeRegistry],
-    verify
-  );
-
-export const deployRoyaltyFeeRegistry = async (
-  royaltyFeeLimit: string,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new RoyaltyFeeRegistry__factory(await getFirstSigner()).deploy(
-      royaltyFeeLimit,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.RoyaltyFeeRegistry,
-    [royaltyFeeLimit],
-    verify
-  );
-
-export const deployTransferSelectorNFT = async (
-  transferManagerERC721: string,
-  transferManagerERC1155: string,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new TransferSelectorNFT__factory(await getFirstSigner()).deploy(
-      transferManagerERC721,
-      transferManagerERC1155,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.TransferSelectorNFT,
-    [transferManagerERC721, transferManagerERC1155],
-    verify
-  );
-
-export const deployTransferManagerERC721 = async (
-  looksRareExchange: string,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new TransferManagerERC721__factory(await getFirstSigner()).deploy(
-      looksRareExchange,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.TransferManagerERC721,
-    [looksRareExchange],
-    verify
-  );
-
-export const deployTransferManagerERC1155 = async (
-  looksRareExchange: string,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new TransferManagerERC1155__factory(await getFirstSigner()).deploy(
-      looksRareExchange,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.TransferManagerERC1155,
-    [looksRareExchange],
-    verify
-  );
-
-export const deployStrategyStandardSaleForFixedPrice = async (
-  protocolFee: string,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new StrategyStandardSaleForFixedPrice__factory(
-      await getFirstSigner()
-    ).deploy(protocolFee, GLOBAL_OVERRIDES),
-    eContractid.StrategyStandardSaleForFixedPrice,
-    [protocolFee],
-    verify
-  );
-
-export const deployX2Y2R1 = async (verify?: boolean) =>
-  withSaveAndVerify(
-    await new X2Y2R1__factory(await getFirstSigner()).deploy(GLOBAL_OVERRIDES),
-    eContractid.X2Y2R1,
-    [],
-    verify
-  );
-
-export const deployERC721Delegate = async (verify?: boolean) =>
-  withSaveAndVerify(
-    await new ERC721Delegate__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.ERC721Delegate,
-    [],
-    verify
-  );
-
-export const deployUniswapV3Factory = async (args: [], verify?: boolean) => {
-  const uniswapV3Factory = await new UniswapV3Factory__factory(
-    await getFirstSigner()
-  ).deploy(...args, GLOBAL_OVERRIDES);
-  return withSaveAndVerify(
-    uniswapV3Factory,
-    eContractid.UniswapV3Factory,
-    [...args],
-    verify
-  );
-};
-
-export const deployNonfungibleTokenPositionDescriptor = async (
-  args: [string, string],
-  verify?: boolean
-) => {
-  const nFTDescriptorFactory = await (
-    await DRE.ethers.getContractFactoryFromArtifact(nFTDescriptor)
-  )
-    .connect(await getFirstSigner())
-    .deploy(GLOBAL_OVERRIDES);
-
-  const nftDescriptorLibraryContract = await withSaveAndVerify(
-    nFTDescriptorFactory,
-    eContractid.NFTDescriptor,
-    [],
-    verify
-  );
-  const libraries = {
-    NFTDescriptor: nftDescriptorLibraryContract.address,
-  };
-  const nonfungibleTokenPositionDescriptorFactory = await (
-    await DRE.ethers.getContractFactoryFromArtifact(
-      nonfungibleTokenPositionDescriptor,
-      {
-        libraries,
-      }
-    )
-  )
-    .connect(await getFirstSigner())
-    .deploy(...args, GLOBAL_OVERRIDES);
-
-  return withSaveAndVerify(
-    nonfungibleTokenPositionDescriptorFactory,
-    eContractid.NonfungibleTokenPositionDescriptor,
-    [...args],
-    verify,
-    libraries
-  );
-};
-
-export const deployUniswapV3OracleWrapper = async (
-  factory: string,
-  manager: string,
-  addressProvider: string,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new UniswapV3OracleWrapper__factory(await getFirstSigner()).deploy(
-      factory,
-      manager,
-      addressProvider,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.Aggregator.concat(`.${eContractid.UniswapV3}`),
-    [factory, manager, addressProvider],
-    verify
-  );
-
-export const deployNonfungiblePositionManager = async (
-  args: [string, string, string],
-  verify?: boolean
-) => {
-  const nonfungiblePositionManagerFactory = await (
-    await DRE.ethers.getContractFactoryFromArtifact(nonfungiblePositionManager)
-  )
-    .connect(await getFirstSigner())
-    .deploy(...args, GLOBAL_OVERRIDES);
-
-  return withSaveAndVerify(
-    nonfungiblePositionManagerFactory,
-    eContractid.UniswapV3,
-    [...args],
-    verify
-  );
-};
-
-export const deployUniswapSwapRouter = async (
-  args: [string, string],
-  verify?: boolean
-) => {
-  const swapRouter = await (
-    await DRE.ethers.getContractFactoryFromArtifact(uniSwapRouter)
-  )
-    .connect(await getFirstSigner())
-    .deploy(...args, GLOBAL_OVERRIDES);
-
-  return withSaveAndVerify(
-    swapRouter,
-    eContractid.UniswapV3SwapRouter,
-    [...args],
-    verify
-  );
-};
-
-export const deployStETH = async (
-  args: [string, string, string],
-  verify?: boolean
-): Promise<StETH> =>
-  withSaveAndVerify(
-    await new StETH__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
-    args[1],
-    [...args],
-    verify
-  );
-
-export const deployMockAToken = async (
-  args: [string, string, string],
-  verify?: boolean
-): Promise<MockAToken> =>
-  withSaveAndVerify(
-    await new MockAToken__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
-    args[1],
-    [...args],
-    verify
-  );
-
-export const deployPTokenAToken = async (
-  poolAddress: tEthereumAddress,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new PTokenAToken__factory(await getFirstSigner()).deploy(
-      poolAddress,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.PTokenATokenImpl,
-    [poolAddress],
-    verify
-  );
-
-export const deployPTokenStETH = async (
-  poolAddress: tEthereumAddress,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new PTokenStETH__factory(await getFirstSigner()).deploy(
-      poolAddress,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.PTokenStETHImpl,
-    [poolAddress],
-    verify
-  );
-
-export const deployPTokenSApe = async (
-  poolAddress: tEthereumAddress,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new PTokenSApe__factory(await getFirstSigner()).deploy(
-      poolAddress,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.PTokenSApeImpl,
-    [poolAddress],
-    verify
-  );
-
-export const deployUserFlashClaimRegistry = async (
-  poolAddress: tEthereumAddress,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new UserFlashclaimRegistry__factory(await getFirstSigner()).deploy(
-      poolAddress,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.FlashClaimRegistry,
-    [poolAddress],
-    verify
-  );
+  ) as Promise<MockReentrantInitializableImple>;
 
 export const deployMockAirdropProject = async (
   underlyingAddress: tEthereumAddress,
   verify?: boolean
 ) =>
   withSaveAndVerify(
-    await new MockAirdropProject__factory(await getFirstSigner()).deploy(
-      underlyingAddress,
-      GLOBAL_OVERRIDES
-    ),
+    MockAirdropProject__factory,
     eContractid.MockAirdropProject,
     [underlyingAddress],
     verify
-  );
-
-export const deployApeCoinStaking = async (
-  args: [string, string, string, string],
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new ApeCoinStaking__factory(await getFirstSigner()).deploy(
-      ...args,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.ApeCoinStaking,
-    [...args],
-    verify
-  );
-
-export const deployApeStakingLogic = async (verify?: boolean) => {
-  const apeStakingLogicArtifact = await readArtifact(
-    eContractid.ApeStakingLogic
-  );
-
-  const apeStakingLogicFactory = await DRE.ethers.getContractFactory(
-    apeStakingLogicArtifact.abi,
-    apeStakingLogicArtifact.bytecode
-  );
-  const apeStakingLogic = await (
-    await apeStakingLogicFactory
-      .connect(await getFirstSigner())
-      .deploy(GLOBAL_OVERRIDES)
-  ).deployed();
-
-  return withSaveAndVerify(
-    apeStakingLogic,
-    eContractid.ApeStakingLogic,
-    [],
-    verify
-  );
-};
-
-export const deployNTokenBAYCImpl = async (
-  apeCoinStaking: tEthereumAddress,
-  poolAddress: tEthereumAddress,
-  verify?: boolean
-) => {
-  let apeStakingLogic;
-  apeStakingLogic = await getApeStakingLogic();
-  if (!apeStakingLogic) {
-    apeStakingLogic = await deployApeStakingLogic(verify);
-  }
-  let mintableERC721Logic;
-  mintableERC721Logic = await getMintableERC721Logic();
-  if (!mintableERC721Logic) {
-    mintableERC721Logic = await deployMintableERC721Logic(verify);
-  }
-
-  const libraries = {
-    ["contracts/protocol/tokenization/libraries/ApeStakingLogic.sol:ApeStakingLogic"]:
-      apeStakingLogic.address,
-    ["contracts/protocol/tokenization/libraries/MintableERC721Logic.sol:MintableERC721Logic"]:
-      mintableERC721Logic.address,
-  };
-
-  return withSaveAndVerify(
-    await new NTokenBAYC__factory(libraries, await getFirstSigner()).deploy(
-      poolAddress,
-      apeCoinStaking,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.NTokenBAYCImpl,
-    [poolAddress, apeCoinStaking],
-    verify
-  );
-};
-
-export const deployNTokenMAYCImpl = async (
-  apeCoinStaking: tEthereumAddress,
-  poolAddress: tEthereumAddress,
-  verify?: boolean
-) => {
-  let apeStakingLogic;
-  apeStakingLogic = await getApeStakingLogic();
-  if (!apeStakingLogic) {
-    apeStakingLogic = await deployApeStakingLogic();
-  }
-  let mintableERC721Logic;
-  mintableERC721Logic = await getMintableERC721Logic();
-  if (!mintableERC721Logic) {
-    mintableERC721Logic = await deployMintableERC721Logic(verify);
-  }
-
-  const libraries = {
-    ["contracts/protocol/tokenization/libraries/ApeStakingLogic.sol:ApeStakingLogic"]:
-      apeStakingLogic.address,
-    ["contracts/protocol/tokenization/libraries/MintableERC721Logic.sol:MintableERC721Logic"]:
-      mintableERC721Logic.address,
-  };
-  return withSaveAndVerify(
-    await new NTokenMAYC__factory(libraries, await getFirstSigner()).deploy(
-      poolAddress,
-      apeCoinStaking,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.NTokenMAYCImpl,
-    [poolAddress, apeCoinStaking],
-    verify
-  );
-};
-export const deployATokenDebtToken = async (
-  poolAddress: tEthereumAddress,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new ATokenDebtToken__factory(await getFirstSigner()).deploy(
-      poolAddress,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.ATokenDebtToken,
-    [poolAddress],
-    verify
-  );
-
-export const deployStETHDebtToken = async (
-  poolAddress: tEthereumAddress,
-  verify?: boolean
-) =>
-  withSaveAndVerify(
-    await new StETHDebtToken__factory(await getFirstSigner()).deploy(
-      poolAddress,
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.StETHDebtToken,
-    [poolAddress],
-    verify
-  );
-
-export const deployMintableERC721Logic = async (verify?: boolean) => {
-  const mintableERC721LogicArtifact = await readArtifact(
-    eContractid.MintableERC721Logic
-  );
-
-  const mintableERC721LogicFactory = await DRE.ethers.getContractFactory(
-    mintableERC721LogicArtifact.abi,
-    mintableERC721LogicArtifact.bytecode
-  );
-  const mintableERC721Logic = await (
-    await mintableERC721LogicFactory
-      .connect(await getFirstSigner())
-      .deploy(GLOBAL_OVERRIDES)
-  ).deployed();
-
-  return withSaveAndVerify(
-    mintableERC721Logic,
-    eContractid.MintableERC721Logic,
-    [],
-    verify
-  );
-};
-
-export const deployMerkleVerifier = async (verify?: boolean) =>
-  withSaveAndVerify(
-    await new MerkleVerifier__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.MerkleVerifier,
-    [],
-    verify
-  );
-
-export const deployExecutionDelegate = async (verify?: boolean) =>
-  withSaveAndVerify(
-    await new ExecutionDelegate__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.ExecutionDelegate,
-    [],
-    verify
-  );
-
-export const deployPolicyManager = async (verify?: boolean) =>
-  withSaveAndVerify(
-    await new PolicyManager__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.PolicyManager,
-    [],
-    verify
-  );
-
-export const deployStandardPolicyERC721 = async (verify?: boolean) =>
-  withSaveAndVerify(
-    await new StandardPolicyERC721__factory(await getFirstSigner()).deploy(
-      GLOBAL_OVERRIDES
-    ),
-    eContractid.StandardPolicyERC721,
-    [],
-    verify
-  );
-
-export const deployBlurExchangeImpl = async (verify?: boolean) => {
-  const merkleVerifier = await deployMerkleVerifier(verify);
-  const blurExchangeLibraries = {
-    ["contracts/dependencies/blur-exchange/MerkleVerifier.sol:MerkleVerifier"]:
-      merkleVerifier.address,
-  };
-  const blurExchange = await new BlurExchange__factory(
-    blurExchangeLibraries,
-    await getFirstSigner()
-  ).deploy();
-
-  return withSaveAndVerify(
-    blurExchange,
-    eContractid.BlurExchangeImpl,
-    [],
-    verify,
-    blurExchangeLibraries
-  );
-};
-
-export const deployBlurExchangeProxy = async (
-  admin: string,
-  blurExchange: string,
-  initData: string,
-  verify?: boolean
-) => {
-  const blurExchangeProxy =
-    await new InitializableImmutableAdminUpgradeabilityProxy__factory(
-      await getFirstSigner()
-    ).deploy(admin, GLOBAL_OVERRIDES);
-  await blurExchangeProxy["initialize(address,bytes)"](
-    blurExchange,
-    initData,
-    GLOBAL_OVERRIDES
-  );
-  return withSaveAndVerify(
-    blurExchangeProxy,
-    eContractid.BlurExchangeProxy,
-    [admin],
-    verify
-  );
-};
-
-export const deployBlurAdapter = async (verify?: boolean) => {
-  const blurAdapter = await new BlurAdapter__factory(
-    await getFirstSigner()
-  ).deploy(GLOBAL_OVERRIDES);
-
-  return withSaveAndVerify(blurAdapter, eContractid.BlurAdapter, [], verify);
-};
+  ) as Promise<MockAirdropProject>;

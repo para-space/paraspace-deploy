@@ -68,6 +68,8 @@ import {
   MarketplaceLogic__factory,
   FlashClaimLogic__factory,
   PoolLogic__factory,
+  INonfungiblePositionManager__factory,
+  ISwapRouter__factory,
 } from "../../types";
 import {
   getEthersSigners,
@@ -84,10 +86,6 @@ import {
   ERC20TokenContractId,
 } from "./types";
 import {first, last} from "lodash";
-import {
-  INonfungiblePositionManager__factory,
-  ISwapRouter__factory,
-} from "../../types";
 import {RPC_URL} from "./hardhat-constants";
 
 declare let hre: HardhatRuntimeEnvironment;
@@ -1025,3 +1023,605 @@ export const getBlurExchangeProxy = async (address?: tEthereumAddress) =>
       ).address,
     await getFirstSigner()
   );
+
+// export const getContractFromId = async (id: eContractid) => {
+//   switch (id) {
+//     case eContractid.ProtocolDataProvider:
+//       ProtocolDataProvider__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.ProtocolDataProvider}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.PToken:
+//       PToken__factory.connect(
+//         (await getDb().get(`${eContractid.PToken}.${DRE.network.name}`)).value()
+//           .address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.NToken:
+//       NToken__factory.connect(
+//         (await getDb().get(`${eContractid.NToken}.${DRE.network.name}`)).value()
+//           .address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.ReservesSetupHelper:
+//       ReservesSetupHelper__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.ReservesSetupHelper}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.PoolAddressesProvider:
+//       PoolAddressesProvider__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.PoolAddressesProvider}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.PoolAddressesProviderRegistry:
+//       PoolAddressesProviderRegistry__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.PoolAddressesProviderRegistry}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.PoolConfiguratorImpl:
+//       PoolConfigurator__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.PoolConfiguratorImpl}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.MintableERC20:
+//       MintableERC20__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.MintableERC20}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.MintableERC721:
+//       MintableERC721__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.MintableERC721}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.MockVariableDebtToken:
+//       MockVariableDebtToken__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.MockVariableDebtToken}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.PriceOracle:
+//       PriceOracle__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.PriceOracle}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.VariableDebtTokenImpl:
+//       VariableDebtToken__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.VariableDebtTokenImpl}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.WETH:
+//       WETH9Mocked__factory.connect(
+//         (await getDb().get(`${eContractid.WETH}.${DRE.network.name}`)).value()
+//           .address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.ParaSpaceOracle:
+//       ParaSpaceOracle__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.ParaSpaceOracle}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.MockInitializableImple:
+//       MockInitializableImple__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.MockInitializableImple}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.MockInitializableImpleV2:
+//       MockInitializableImpleV2__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.MockInitializableImpleV2}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.SupplyLogic:
+//       SupplyLogic__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.SupplyLogic}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.BorrowLogic:
+//       BorrowLogic__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.BorrowLogic}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.LiquidationLogic:
+//       LiquidationLogic__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.LiquidationLogic}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.ACLManager:
+//       ACLManager__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.ACLManager}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.DefaultReserveInterestRateStrategy:
+//       DefaultReserveInterestRateStrategy__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.DefaultReserveInterestRateStrategy}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.UiPoolDataProvider:
+//       UiPoolDataProvider__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.UiPoolDataProvider}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.UiIncentiveDataProvider:
+//       UiIncentiveDataProvider__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.UiIncentiveDataProvider}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.WETHGatewayImpl:
+//       WETHGateway__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.WETHGatewayImpl}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.WETHGatewayProxy:
+//       WETHGateway__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.WETHGatewayProxy}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.WPunk:
+//       WPunk__factory.connect(
+//         (await getDb().get(`${eContractid.WPunk}.${DRE.network.name}`)).value()
+//           .address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.PUNKS:
+//       CryptoPunksMarket__factory.connect(
+//         (await getDb().get(`${eContractid.PUNKS}.${DRE.network.name}`)).value()
+//           .address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.MockTokenFaucet:
+//       MockTokenFaucet__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.MockTokenFaucet}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.IERC20Detailed:
+//       IERC20Detailed__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.IERC20Detailed}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.MockIncentivesController:
+//       MockIncentivesController__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.MockIncentivesController}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.ERC721:
+//       ERC721__factory.connect(
+//         (await getDb().get(`${eContractid.ERC721}.${DRE.network.name}`)).value()
+//           .address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.Moonbirds:
+//       Moonbirds__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.Moonbirds}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.ConduitController:
+//       ConduitController__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.ConduitController}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.Seaport:
+//       Seaport__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.Seaport}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.LooksRareExchange:
+//       LooksRareExchange__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.LooksRareExchange}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.StrategyStandardSaleForFixedPrice:
+//       StrategyStandardSaleForFixedPrice__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.StrategyStandardSaleForFixedPrice}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.TransferManagerERC721:
+//       TransferManagerERC721__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.TransferManagerERC721}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.X2Y2R1:
+//       X2Y2R1__factory.connect(
+//         (await getDb().get(`${eContractid.X2Y2R1}.${DRE.network.name}`)).value()
+//           .address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.ERC721Delegate:
+//       ERC721Delegate__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.ERC721Delegate}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.PausableZoneController:
+//       PausableZoneController__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.PausableZoneController}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.PausableZone:
+//       PausableZone__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.PausableZone}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.Conduit:
+//       Conduit__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.Conduit}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.NTokenMoonBirds:
+//       NTokenMoonBirds__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.NTokenMoonBirds}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.UniswapV3Factory:
+//       UniswapV3Factory__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.UniswapV3Factory}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.UniswapV3OracleWrapper:
+//       UniswapV3OracleWrapper__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.UniswapV3OracleWrapper}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.NTokenUniswapV3:
+//       NTokenUniswapV3__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.NTokenUniswapV3}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.StETH:
+//       StETH__factory.connect(
+//         (await getDb().get(`${eContractid.StETH}.${DRE.network.name}`)).value()
+//           .address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.PTokenStETH:
+//       PTokenStETH__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.PTokenStETH}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.MockAToken:
+//       MockAToken__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.MockAToken}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.PTokenAToken:
+//       PTokenAToken__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.PTokenAToken}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.NFTFloorOracle:
+//       NFTFloorOracle__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.NFTFloorOracle}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.UserFlashclaimRegistry:
+//       UserFlashclaimRegistry__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.UserFlashclaimRegistry}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.MockAirdropProject:
+//       MockAirdropProject__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.MockAirdropProject}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.IPool:
+//       IPool__factory.connect(
+//         (await getDb().get(`${eContractid.IPool}.${DRE.network.name}`)).value()
+//           .address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.MockReserveAuctionStrategy:
+//       MockReserveAuctionStrategy__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.MockReserveAuctionStrategy}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.NTokenBAYC:
+//       NTokenBAYC__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.NTokenBAYC}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.NTokenMAYC:
+//       NTokenMAYC__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.NTokenMAYC}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.ApeCoinStaking:
+//       ApeCoinStaking__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.ApeCoinStaking}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.PTokenSApe:
+//       PTokenSApe__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.PTokenSApe}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.StandardPolicyERC721:
+//       StandardPolicyERC721__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.StandardPolicyERC721}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.BlurExchange:
+//       BlurExchange__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.BlurExchange}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.ExecutionDelegate:
+//       ExecutionDelegate__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.ExecutionDelegate}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.MarketplaceLogic:
+//       MarketplaceLogic__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.MarketplaceLogic}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.FlashClaimLogic:
+//       FlashClaimLogic__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.FlashClaimLogic}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.PoolLogic:
+//       PoolLogic__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.PoolLogic}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.INonfungiblePositionManager:
+//       INonfungiblePositionManager__factory.connect(
+//         (
+//           await getDb().get(
+//             `${eContractid.INonfungiblePositionManager}.${DRE.network.name}`
+//           )
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//     case eContractid.ISwapRouter:
+//       ISwapRouter__factory.connect(
+//         (
+//           await getDb().get(`${eContractid.ISwapRouter}.${DRE.network.name}`)
+//         ).value().address,
+//         await getFirstSigner()
+//       );
+//       break;
+//   }
+// };
