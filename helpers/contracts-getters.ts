@@ -65,6 +65,9 @@ import {
   StandardPolicyERC721__factory,
   BlurExchange__factory,
   ExecutionDelegate__factory,
+  MarketplaceLogic__factory,
+  FlashClaimLogic__factory,
+  PoolLogic__factory,
 } from "../../types";
 import {
   getEthersSigners,
@@ -150,15 +153,6 @@ export const getSupplyLogic = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-// export const getBridgeLogic = async (address?: tEthereumAddress) =>
-//   await BridgeLogic__factory.connect(
-//     address ||
-//       (
-//         await getDb().get(`${eContractid.Pool}.${DRE.network.name}`).value()
-//       ).address,
-//     await getFirstSigner()
-//   );
-
 export const getBorrowLogic = async (address?: tEthereumAddress) =>
   await BorrowLogic__factory.connect(
     address ||
@@ -181,27 +175,38 @@ export const getLiquidationLogic = async (address?: tEthereumAddress) =>
     await getFirstSigner()
   );
 
-// export const getEModeLogic = async (address?: tEthereumAddress) =>
-//   await EModeLogic__factory.connect(
-//     address ||
-//       (
-//         await getDb()
-//           .get(`${eContractid.EModeLogic}.${DRE.network.name}`)
-//           .value()
-//       ).address,
-//     await getFirstSigner()
-//   );
+export const getMarketplaceLogic = async (address?: tEthereumAddress) =>
+  await MarketplaceLogic__factory.connect(
+    address ||
+      (
+        await getDb()
+          .get(`${eContractid.MarketplaceLogic}.${DRE.network.name}`)
+          .value()
+      ).address,
+    await getFirstSigner()
+  );
 
-// export const getFlashLoanLogic = async (address?: tEthereumAddress) =>
-//   await FlashLoanLogic__factory.connect(
-//     address ||
-//       (
-//         await getDb()
-//           .get(`${eContractid.FlashLoanLogic}.${DRE.network.name}`)
-//           .value()
-//       ).address,
-//     await getFirstSigner()
-//   );
+export const getFlashClaimLogic = async (address?: tEthereumAddress) =>
+  await FlashClaimLogic__factory.connect(
+    address ||
+      (
+        await getDb()
+          .get(`${eContractid.FlashClaimRegistry}.${DRE.network.name}`)
+          .value()
+      ).address,
+    await getFirstSigner()
+  );
+
+export const getPoolLogic = async (address?: tEthereumAddress) =>
+  await PoolLogic__factory.connect(
+    address ||
+      (
+        await getDb()
+          .get(`${eContractid.PoolLogic}.${DRE.network.name}`)
+          .value()
+      ).address,
+    await getFirstSigner()
+  );
 
 export const getPoolProxy = async (address?: tEthereumAddress) =>
   await IPool__factory.connect(

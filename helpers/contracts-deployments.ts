@@ -390,7 +390,7 @@ export const deployPoolParametersLibraries = async (
   };
 };
 
-const checkPoolSignatures = () => {
+export const getPoolSignatures = () => {
   const poolCoreSelectors = getFunctionSignatures(PoolCore__factory.abi);
 
   const poolParametersSelectors = getFunctionSignatures(
@@ -476,7 +476,7 @@ export const deployPoolComponents = async (
     poolParametersSelectors,
     poolMarketplaceSelectors,
     poolApeStakingSelectors,
-  } = checkPoolSignatures();
+  } = getPoolSignatures();
 
   return {
     poolCore: await withSaveAndVerify(
@@ -508,7 +508,7 @@ export const deployPoolComponents = async (
       eContractid.PoolApeStakingImpl,
       [provider],
       verify,
-      undefined,
+      apeStakingLibraries,
       poolApeStakingSelectors
     ),
     poolCoreSelectors: poolCoreSelectors.map((s) => s.signature),

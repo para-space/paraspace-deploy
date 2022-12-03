@@ -1,6 +1,9 @@
 import {ethers} from "ethers";
 import dotenv from "dotenv";
-import {DEPLOYER_MNEMONIC} from "./helpers/hardhat-constants";
+import {
+  DEPLOYER_MNEMONIC,
+  DEPLOYER_PRIVATE_KEY,
+} from "./helpers/hardhat-constants";
 import {HardhatNetworkAccountUserConfig} from "hardhat/types";
 
 dotenv.config();
@@ -49,7 +52,9 @@ export const accounts: HardhatNetworkAccountUserConfig[] = [
     balance,
   },
   {
-    privateKey: ethers.Wallet.fromMnemonic(DEPLOYER_MNEMONIC).privateKey,
+    privateKey:
+      DEPLOYER_PRIVATE_KEY ||
+      ethers.Wallet.fromMnemonic(DEPLOYER_MNEMONIC).privateKey,
     balance,
   },
 ];

@@ -1,8 +1,21 @@
 import {Overrides} from "@ethersproject/contracts";
 import dotenv from "dotenv";
 import {ethers} from "ethers";
+import fs from "fs";
+import {HttpNetworkAccountsUserConfig} from "hardhat/types";
+import {input} from "./wallet-helpers";
 
 dotenv.config();
+
+const getPrivateKeyfromEncryptedJson = (
+  keystorePath: string | undefined
+): string =>
+  keystorePath && fs.existsSync(keystorePath)
+    ? ethers.Wallet.fromEncryptedJsonSync(
+        fs.readFileSync(keystorePath, "utf8"),
+        input("password: ")
+      ).privateKey
+    : "";
 
 export const HARDHAT_CHAINID = 31337;
 export const GOERLI_CHAINID = 5;
@@ -51,9 +64,18 @@ export const ETHERSCAN_VERIFICATION_MAX_RETRIES = parseInt(
 export const DEPLOY_START = parseInt(process.env.DEPLOY_START || "0");
 export const DEPLOY_END = parseInt(process.env.DEPLOY_END || "21");
 
+export const KEYSTORE_PATH = "keystore";
+export const DEPLOYER_PRIVATE_KEY = getPrivateKeyfromEncryptedJson(
+  process.env.DEPLOYER_KEYSTORE_PATH
+);
 export const DEPLOYER_MNEMONIC =
   process.env.DEPLOYER_MNEMONIC ||
   "bottom drive obey lake curtain smoke basket hold race lonely fit walk";
+export const DEPLOYER: HttpNetworkAccountsUserConfig = DEPLOYER_PRIVATE_KEY
+  ? [DEPLOYER_PRIVATE_KEY]
+  : {
+      mnemonic: DEPLOYER_MNEMONIC,
+    };
 
 export const BLOCKSCOUT_DISABLE_INDEXER =
   process.env.BLOCKSCOUT_DISABLE_INDEXER == "false" ? false : true;
