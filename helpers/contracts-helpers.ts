@@ -1,4 +1,11 @@
-import {constants, Contract, Signer, utils, BigNumber} from "ethers";
+import {
+  constants,
+  Contract,
+  ContractFactory,
+  Signer,
+  utils,
+  BigNumber,
+} from "ethers";
 import {signTypedData_v4} from "eth-sig-util";
 import {fromRpcSig, ECDSASignature} from "ethereumjs-util";
 import {Fragment, isAddress} from "ethers/lib/utils";
@@ -110,6 +117,12 @@ export const insertContractAddressInDb = async (
   await getDb().set(key, newValue).write();
 };
 
+export const hasContractAddressInDb = async (id: eContractid | string) => {
+  return isNotFalsyOrZeroAddress(
+    ((await getDb().get(`${id}.${DRE.network.name}`).value()) || {}).address
+  );
+};
+
 export const getEthersSigners = async (): Promise<Signer[]> => {
   const ethersSigners = await Promise.all(await DRE.ethers.getSigners());
 
@@ -152,26 +165,40 @@ export const normalizeLibraryAddresses = (
   }
 };
 
-export const withSaveAndVerify = async <ContractType extends Contract>(
-  instance: ContractType,
+export const withSaveAndVerify = async <C extends ContractFactory>(
+  factory: C,
   id: string,
   args: ConstructorArgs,
   verify = true,
+  proxy = false,
   libraries?: ParaSpaceLibraryAddresses,
   signatures?: iFunctionSignature[]
-): Promise<ContractType> => {
+) => {
   const normalizedLibraries = normalizeLibraryAddresses(libraries);
+  const deployArgs = proxy ? args.slice(0, args.length - 2) : args;
+  const [impl, initData] = (
+    proxy ? args.slice(args.length - 2) : []
+  ) as string[];
+  const instance = await factory.deploy(...deployArgs, GLOBAL_OVERRIDES);
   await waitForTx(instance.deployTransaction);
   await registerContractInDb(
     id,
     instance,
-    args,
+    deployArgs,
     normalizedLibraries,
     signatures
   );
 
   if (verify) {
-    await verifyContract(id, instance, args, normalizedLibraries);
+    await verifyContract(id, instance, deployArgs, normalizedLibraries);
+  }
+
+  if (proxy) {
+    await waitForTx(
+      await (
+        instance as InitializableImmutableAdminUpgradeabilityProxy
+      ).initialize(impl, initData, GLOBAL_OVERRIDES)
+    );
   }
 
   return instance;

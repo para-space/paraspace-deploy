@@ -26,11 +26,14 @@ export enum XTokenType {
   PTokenSApe = 11,
 }
 
-export type ConstructorArgs =
+export type ConstructorArgs = (
   | string
+  | string[]
   | number
+  | number[]
   | boolean
-  | (string | string[] | number | boolean)[];
+  | boolean[]
+)[];
 
 export type LibraryAddresses = {[key: string]: string};
 
