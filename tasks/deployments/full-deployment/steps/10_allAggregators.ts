@@ -24,7 +24,7 @@ import {
   ERC721TokenContractId,
 } from "../../../../helpers/types";
 
-const deployNftOracle = async (verify = false) => {
+export const deployNftOracle = async (verify = false) => {
   const erc721Tokens = await getAllERC721Tokens();
   const paraSpaceConfig = getParaSpaceConfig();
   const oracleConfig = paraSpaceConfig.Oracle;

@@ -1,3 +1,4 @@
+import {ZERO_ADDRESS} from "../helpers/constants";
 import {eEthereumNetwork, IParaSpaceConfiguration} from "../helpers/types";
 import {MocksConfig} from "./mocks";
 import {MainnetOracleConfig, TestnetOracleConfig} from "./oracle";
@@ -74,6 +75,7 @@ export const HardhatParaSpaceConfig: IParaSpaceConfiguration = {
     sAPE: "0x0000000000000000000000000000000000000001",
   },
   BendDAO: {},
+  YogaLabs: {},
   Uniswap: {},
   Marketplace: {},
   Chainlink: {},
@@ -118,6 +120,7 @@ export const GoerliParaSpaceConfig: IParaSpaceConfiguration = {
     UniswapV3: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
   },
   BendDAO: {},
+  YogaLabs: {},
   Uniswap: {
     V2Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
     V2Router: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
@@ -201,6 +204,9 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
   },
   BendDAO: {
     Oracle: "0x7c2a19e54e48718f6c60908a9cff3396e4ea1eba",
+  },
+  YogaLabs: {
+    ApeCoinStaking: ZERO_ADDRESS,
   },
   Uniswap: {
     V2Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",

@@ -1,0 +1,246 @@
+import rawBRE from "hardhat";
+import {
+  ONE_ADDRESS,
+  SAPE_ADDRESS,
+  ZERO_ADDRESS,
+} from "../../../helpers/constants";
+import {
+  deployERC721OracleWrapper,
+  deployPoolComponents,
+} from "../../../helpers/contracts-deployments";
+import {
+  getNFTFloorOracle,
+  getParaSpaceOracle,
+  getPoolAddressesProvider,
+  getPoolProxy,
+  getProtocolDataProvider,
+  getPTokenSApe,
+} from "../../../helpers/contracts-getters";
+import {getParaSpaceAdmins} from "../../../helpers/contracts-helpers";
+import {GLOBAL_OVERRIDES} from "../../../helpers/hardhat-constants";
+import {
+  configureReservesByHelper,
+  initReservesByHelper,
+} from "../../../helpers/init-helpers";
+import {DRE, getParaSpaceConfig, waitForTx} from "../../../helpers/misc-utils";
+import {tEthereumAddress} from "../../../helpers/types";
+
+const releaseV12 = async (verify = false) => {
+  await DRE.run("set-DRE");
+  console.time("release-v1.2");
+  const addressesProvider = await getPoolAddressesProvider();
+  const paraSpaceConfig = getParaSpaceConfig();
+  const oracleConfig = paraSpaceConfig.Oracle;
+  const paraspaceOracle = await getParaSpaceOracle();
+  const protocolDataProvider = await getProtocolDataProvider();
+
+  try {
+    const {poolApeStaking, poolApeStakingSelectors} =
+      await deployPoolComponents(addressesProvider.address, verify);
+
+    await waitForTx(
+      await addressesProvider.updatePoolImpl(
+        [
+          {
+            implAddress: poolApeStaking.address,
+            action: 0,
+            functionSelectors: poolApeStakingSelectors,
+          },
+        ],
+        ZERO_ADDRESS,
+        "0x",
+        GLOBAL_OVERRIDES
+      )
+    );
+
+    const nftFloorOracle = await getNFTFloorOracle();
+    await waitForTx(
+      await nftFloorOracle.removeFeeder(
+        "0x026DfBE887986aEE83D2Ed1af667475C8CCB6279",
+        GLOBAL_OVERRIDES
+      )
+    );
+    await waitForTx(
+      await nftFloorOracle.removeFeeder(
+        "0x278d1740fA130Cd898Eb65378BC6C24ac0F316d9",
+        GLOBAL_OVERRIDES
+      )
+    );
+    await waitForTx(
+      await nftFloorOracle.removeFeeder(
+        "0x168acF8eA504aaA4645379a193d427A506f176ad",
+        GLOBAL_OVERRIDES
+      )
+    );
+    await waitForTx(
+      await nftFloorOracle.addFeeders(oracleConfig.Nodes, GLOBAL_OVERRIDES)
+    );
+
+    const assets = [
+      {
+        symbol: "BAYC",
+        address: "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D",
+        aggregator: "",
+      },
+      {
+        symbol: "MAYC",
+        address: "0x60E4d786628Fea6478F785A6d7e704777c86a7c6",
+        aggregator: "",
+      },
+      {
+        symbol: "DOODLE",
+        address: "0x8a90CAb2b38dba80c64b7734e58Ee1dB38B8992e",
+        aggregator: "",
+      },
+      {
+        symbol: "MOONBIRD",
+        address: "0x23581767a106ae21c074b2276d25e5c3e136a68b",
+        aggregator: "",
+      },
+      {
+        symbol: "MEEBITS",
+        address: "0x7bd29408f11d2bfc23c34f18275bbf23bb716bc7",
+        aggregator: "",
+      },
+      {
+        symbol: "AZUKI",
+        address: "0xed5af388653567af2f388e6224dc7c4b3241c544",
+        aggregator: "",
+      },
+      {
+        symbol: "OTHR",
+        address: "0x34d85c9cdeb23fa97cb08333b511ac86e1c4e258",
+        aggregator: "",
+      },
+      {
+        symbol: "CLONEX",
+        address: "0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b",
+        aggregator: "",
+      },
+      {
+        symbol: "WPUNKS",
+        address: "0xb7F7F6C52F2e2fdb1963Eab30438024864c313F6",
+        aggregator: "",
+      },
+    ];
+    await waitForTx(
+      await nftFloorOracle.addAssets(
+        assets.map((x) => x.address),
+        GLOBAL_OVERRIDES
+      )
+    );
+    for (const asset of assets) {
+      asset.aggregator = (
+        await deployERC721OracleWrapper(
+          addressesProvider.address,
+          nftFloorOracle.address,
+          asset.address,
+          asset.symbol,
+          verify
+        )
+      ).address;
+    }
+
+    assets.push(
+      {
+        symbol: "sAPE",
+        address: ONE_ADDRESS,
+        aggregator: "0xc7de7f4d4C9c991fF62a07D18b3E31e349833A18",
+      },
+      {
+        symbol: "DAI",
+        address: "0x773616E4d11A78F511299002da57A0a94577F1f4",
+        aggregator: "0x773616E4d11A78F511299002da57A0a94577F1f4",
+      },
+      {
+        symbol: "DAI",
+        address: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        aggregator: "0x773616E4d11A78F511299002da57A0a94577F1f4",
+      },
+      {
+        symbol: "WBTC",
+        address: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+        aggregator: "0xdeb288F737066589598e9214E782fa5A8eD689e8",
+      }
+    );
+
+    await waitForTx(
+      await paraspaceOracle.setAssetSources(
+        assets.map((x) => x.address),
+        assets.map((x) => x.aggregator),
+        GLOBAL_OVERRIDES
+      )
+    );
+
+    const reservesParams = paraSpaceConfig.ReservesConfig;
+    const allTokenAddresses = assets.reduce(
+      (accum: {[name: string]: tEthereumAddress}, {symbol, address}) => ({
+        ...accum,
+        [symbol]: address,
+      }),
+      {}
+    );
+    const {PTokenNamePrefix, VariableDebtTokenNamePrefix, SymbolPrefix} =
+      paraSpaceConfig;
+    const {paraSpaceAdminAddress} = await getParaSpaceAdmins();
+    const treasuryAddress = paraSpaceConfig.Treasury;
+
+    await initReservesByHelper(
+      reservesParams,
+      allTokenAddresses,
+      PTokenNamePrefix,
+      VariableDebtTokenNamePrefix,
+      SymbolPrefix,
+      paraSpaceAdminAddress,
+      treasuryAddress,
+      ZERO_ADDRESS,
+      verify
+    );
+
+    await configureReservesByHelper(
+      reservesParams,
+      allTokenAddresses,
+      protocolDataProvider,
+      paraSpaceAdminAddress
+    );
+
+    const pool = await getPoolProxy();
+    const sApe = await getPTokenSApe(
+      (
+        await pool.getReserveData(SAPE_ADDRESS)
+      ).xTokenAddress
+    );
+    await waitForTx(
+      await sApe.setNToken(
+        (
+          await pool.getReserveData(
+            "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D"
+          )
+        ).xTokenAddress,
+        (
+          await pool.getReserveData(
+            "0x60E4d786628Fea6478F785A6d7e704777c86a7c6"
+          )
+        ).xTokenAddress,
+        GLOBAL_OVERRIDES
+      )
+    );
+
+    console.timeEnd("release-v1.2");
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+};
+
+async function main() {
+  await rawBRE.run("set-DRE");
+  await releaseV12();
+}
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

@@ -7,7 +7,14 @@ import {
   tEthereumAddress,
 } from "./types";
 import {ProtocolDataProvider} from "../../types";
-import {chunk, isLocalTestnet, isPublicTestnet, waitForTx} from "./misc-utils";
+import {
+  chunk,
+  getParaSpaceConfig,
+  isLocalTestnet,
+  isMainnet,
+  isPublicTestnet,
+  waitForTx,
+} from "./misc-utils";
 import {
   getACLManager,
   getReservesSetupHelper,
@@ -63,6 +70,7 @@ export const initReservesByHelper = async (
   const addressProvider = await getPoolAddressesProvider(
     poolAddressesProviderProxy
   );
+  const paraSpaceConfig = getParaSpaceConfig();
   const pool = await getPoolProxy(poolProxy);
   // CHUNK CONFIGURATION
   const initChunks = 4;
@@ -334,31 +342,33 @@ export const initReservesByHelper = async (
         }
         xTokenToUse = nTokenUniSwapV3ImplementationAddress;
       } else if (reserveSymbols[i] === ERC721TokenContractId.BAYC) {
+        let apeCoinStaking;
         if (isLocalTestnet() || isPublicTestnet()) {
-          if (!nTokenBAYCImplementationAddress) {
-            const apeCoinStaking = await getApeCoinStaking();
-            nTokenBAYCImplementationAddress = (
-              await deployNTokenBAYCImpl(
-                apeCoinStaking.address,
-                pool.address,
-                verify
-              )
-            ).address;
-            xTokenToUse = nTokenBAYCImplementationAddress;
-          }
+          apeCoinStaking = (await getApeCoinStaking()).address;
+        } else if (isMainnet()) {
+          apeCoinStaking = paraSpaceConfig.YogaLabs.ApeCoinStaking!;
         }
-      } else if (reserveSymbols[i] === ERC721TokenContractId.MAYC) {
-        if (isLocalTestnet() || isPublicTestnet()) {
-          const apeCoinStaking = await getApeCoinStaking();
-          nTokenMAYCImplementationAddress = (
-            await deployNTokenMAYCImpl(
-              apeCoinStaking.address,
-              pool.address,
-              verify
-            )
+
+        if (!nTokenBAYCImplementationAddress) {
+          nTokenBAYCImplementationAddress = (
+            await deployNTokenBAYCImpl(apeCoinStaking, pool.address, verify)
           ).address;
-          xTokenToUse = nTokenMAYCImplementationAddress;
         }
+        xTokenToUse = nTokenBAYCImplementationAddress;
+      } else if (reserveSymbols[i] === ERC721TokenContractId.MAYC) {
+        let apeCoinStaking;
+        if (isLocalTestnet() || isPublicTestnet()) {
+          apeCoinStaking = (await getApeCoinStaking()).address;
+        } else if (isMainnet()) {
+          apeCoinStaking = paraSpaceConfig.YogaLabs.ApeCoinStaking;
+        }
+
+        if (!nTokenMAYCImplementationAddress) {
+          nTokenMAYCImplementationAddress = (
+            await deployNTokenMAYCImpl(apeCoinStaking, pool.address, verify)
+          ).address;
+        }
+        xTokenToUse = nTokenMAYCImplementationAddress;
       }
 
       if (!xTokenToUse) {

@@ -19,10 +19,17 @@ import {
   ERC721TokenContractId,
 } from "../../../../helpers/types";
 
-// eslint-disable-next-line
-export const step_20 = async (_verify = false) => {
-  const {paraSpaceAdminAddress, gatewayAdminAddress} =
-    await getParaSpaceAdmins();
+export const step_20 = async (
+  // eslint-disable-next-line
+  verify = false,
+  admins?: {
+    paraSpaceAdminAddress: string;
+    gatewayAdminAddress: string;
+    riskAdminAddress: string;
+  }
+) => {
+  const {paraSpaceAdminAddress, gatewayAdminAddress, riskAdminAddress} =
+    admins || (await getParaSpaceAdmins());
   const paraSpaceConfig = getParaSpaceConfig();
   const deployer = await getFirstSigner();
   const deployerAddress = await deployer.getAddress();
@@ -66,6 +73,25 @@ export const step_20 = async (_verify = false) => {
     await waitForTx(
       await aclManager.removePoolAdmin(deployerAddress, GLOBAL_OVERRIDES)
     );
+
+    if (!(await aclManager.isAssetListingAdmin(paraSpaceAdminAddress))) {
+      await waitForTx(
+        await aclManager.addAssetListingAdmin(paraSpaceAdminAddress)
+      );
+    }
+    if (await aclManager.isAssetListingAdmin(deployerAddress)) {
+      await waitForTx(
+        await aclManager.removeAssetListingAdmin(deployerAddress)
+      );
+    }
+
+    if (!(await aclManager.isRiskAdmin(riskAdminAddress))) {
+      await waitForTx(await aclManager.addRiskAdmin(riskAdminAddress));
+    }
+    if (await aclManager.isRiskAdmin(deployerAddress)) {
+      await waitForTx(await aclManager.removeRiskAdmin(deployerAddress));
+    }
+
     await waitForTx(
       await aclManager.grantRole(
         await aclManager.DEFAULT_ADMIN_ROLE(),

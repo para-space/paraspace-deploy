@@ -544,6 +544,10 @@ export interface IBendDAOConfig {
   Oracle?: tEthereumAddress;
 }
 
+export interface IYogaLabs {
+  ApeCoinStaking?: tEthereumAddress;
+}
+
 export interface IUniswapConfig {
   V2Factory?: tEthereumAddress;
   V2Router?: tEthereumAddress;
@@ -590,6 +594,7 @@ export interface ICommonConfiguration {
   GatewayAdminIndex: number;
   Tokens: iMultiPoolsAssets<tEthereumAddress>;
   BendDAO: IBendDAOConfig;
+  YogaLabs: IYogaLabs;
   Uniswap: IUniswapConfig;
   Marketplace: IMarketplaceConfig;
   Chainlink: IChainlinkConfig;
