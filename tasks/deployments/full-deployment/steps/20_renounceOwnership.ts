@@ -35,8 +35,6 @@ export const step_20 = async (_verify = false) => {
     const conduit = await getConduit();
     const zoneController = await getPausableZoneController();
     const aclManager = await getACLManager();
-    const wethGatewayProxy = await getWETHGatewayProxy();
-    const punkGatewayProxy = await getWPunkGatewayProxy();
     const nftFloorOracle = await getNFTFloorOracle();
 
     if (deployerAddress === paraSpaceAdminAddress) {
@@ -105,6 +103,7 @@ export const step_20 = async (_verify = false) => {
     );
 
     if (paraSpaceConfig.ReservesConfig[ERC20TokenContractId.WETH]) {
+      const wethGatewayProxy = await getWETHGatewayProxy();
       await waitForTx(
         await wethGatewayProxy.transferOwnership(
           gatewayAdminAddress,
@@ -113,6 +112,7 @@ export const step_20 = async (_verify = false) => {
       );
     }
     if (paraSpaceConfig.ReservesConfig[ERC721TokenContractId.WPUNKS]) {
+      const punkGatewayProxy = await getWPunkGatewayProxy();
       await waitForTx(
         await punkGatewayProxy.transferOwnership(
           gatewayAdminAddress,
