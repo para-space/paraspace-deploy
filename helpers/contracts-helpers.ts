@@ -60,7 +60,7 @@ import {Order, SignatureVersion} from "./blur-helpers/types";
 import {expect} from "chai";
 import {ABI} from "hardhat-deploy/dist/types";
 import {ethers} from "ethers";
-import {GLOBAL_OVERRIDES} from "./hardhat-constants";
+import {GLOBAL_OVERRIDES, INCREMENTAL_DEPLOYMENT} from "./hardhat-constants";
 
 export type ERC20TokenMap = {[symbol: string]: ERC20};
 export type ERC721TokenMap = {[symbol: string]: ERC721};
@@ -117,10 +117,9 @@ export const insertContractAddressInDb = async (
   await getDb().set(key, newValue).write();
 };
 
-export const hasContractAddressInDb = async (id: eContractid | string) => {
-  return isNotFalsyOrZeroAddress(
-    ((await getDb().get(`${id}.${DRE.network.name}`).value()) || {}).address
-  );
+export const getContractAddressInDb = async (id: eContractid | string) => {
+  return ((await getDb().get(`${id}.${DRE.network.name}`).value()) || {})
+    .address;
 };
 
 export const getEthersSigners = async (): Promise<Signer[]> => {
@@ -174,6 +173,11 @@ export const withSaveAndVerify = async <C extends ContractFactory>(
   libraries?: ParaSpaceLibraryAddresses,
   signatures?: iFunctionSignature[]
 ) => {
+  const addressInDb = await getContractAddressInDb(id);
+  if (INCREMENTAL_DEPLOYMENT && isNotFalsyOrZeroAddress(addressInDb)) {
+    return await factory.attach(addressInDb);
+  }
+
   const normalizedLibraries = normalizeLibraryAddresses(libraries);
   const deployArgs = proxy ? args.slice(0, args.length - 2) : args;
   const [impl, initData] = (
