@@ -798,7 +798,7 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
       console.log("contract address is already in db ", tokenSymbol);
       continue;
     } else if (tokensConfig[tokenSymbol]) {
-      console.log("contract address is already onchain ", tokenSymbol);
+      console.log("contract address is already in db ", tokenSymbol);
       await insertContractAddressInDb(
         tokenSymbol,
         getParaSpaceConfig().Tokens[tokenSymbol],
@@ -875,7 +875,7 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
       console.log("contract address is already in db ", tokenSymbol);
       continue;
     } else if (tokensConfig[tokenSymbol]) {
-      console.log("contract address is already onchain ", tokenSymbol);
+      console.log("contract address is already in db ", tokenSymbol);
       await insertContractAddressInDb(
         tokenSymbol,
         tokensConfig[tokenSymbol],

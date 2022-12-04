@@ -175,6 +175,7 @@ export const withSaveAndVerify = async <C extends ContractFactory>(
 ) => {
   const addressInDb = await getContractAddressInDb(id);
   if (INCREMENTAL_DEPLOYMENT && isNotFalsyOrZeroAddress(addressInDb)) {
+    console.log("contract address is already in db ", id);
     return await factory.attach(addressInDb);
   }
 

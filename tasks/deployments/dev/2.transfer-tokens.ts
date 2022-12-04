@@ -1,5 +1,6 @@
 import rawBRE from "hardhat";
 import {
+  DRE,
   getParaSpaceConfig,
   isFork,
   isMainnet,
@@ -27,7 +28,11 @@ enum AssetType {
 }
 
 const transferTokens = async () => {
-  if (!isFork() || !isMainnet()) {
+  if (
+    !isFork() ||
+    !isMainnet() ||
+    DRE.config.networks.hardhat.forking?.blockNumber !== 15909885
+  ) {
     return;
   }
 

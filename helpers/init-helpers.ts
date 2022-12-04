@@ -53,7 +53,7 @@ export const initReservesByHelper = async (
   genericVariableDebtTokenAddress?: tEthereumAddress,
   defaultReserveInterestRateStrategyAddress?: tEthereumAddress,
   defaultReserveAuctionStrategyAddress?: tEthereumAddress,
-  delegationAwarePTokenImpl?: tEthereumAddress,
+  genericDelegationAwarePTokenImplAddress?: tEthereumAddress,
   poolAddressesProviderProxy?: tEthereumAddress,
   poolProxy?: tEthereumAddress,
   poolConfiguratorProxyAddress?: tEthereumAddress
@@ -91,84 +91,53 @@ export const initReservesByHelper = async (
     atomicPricing?: boolean;
   }[] = [];
 
-  let strategyRates: [
-    string, // addresses provider
-    string,
-    string,
-    string,
-    string
-  ];
-  const rateStrategies: Record<string, typeof strategyRates> = {};
   const strategyAddresses: Record<string, tEthereumAddress> = {};
   const auctionStrategyAddresses: Record<string, tEthereumAddress> = {};
   const strategyAddressPerAsset: Record<string, string> = {};
   const auctionStrategyAddressPerAsset: Record<string, string> = {};
   const xTokenType: Record<string, string> = {};
-  let delegationAwarePTokenImplementationAddress = "";
-  let pTokenImplementationAddress = "";
-  let nTokenImplementationAddress = "";
+  let delegationAwarePTokenImplementationAddress =
+    genericDelegationAwarePTokenImplAddress;
+  let pTokenImplementationAddress = genericPTokenImplAddress;
+  let pTokenStETHImplementationAddress = "";
+  let pTokenATokenImplementationAddress = "";
+  let pTokenSApeImplementationAddress = "";
+  let nTokenImplementationAddress = genericNTokenImplAddress;
   let nTokenMoonBirdImplementationAddress = "";
   let nTokenUniSwapV3ImplementationAddress = "";
-  let variableDebtTokenImplementationAddress = "";
+  let nTokenBAYCImplementationAddress = "";
+  let nTokenMAYCImplementationAddress = "";
+  let variableDebtTokenImplementationAddress = genericVariableDebtTokenAddress;
+  let stETHVariableDebtTokenImplementationAddress = "";
+  let aTokenVariableDebtTokenImplementationAddress = "";
 
-  if (!genericVariableDebtTokenAddress) {
-    variableDebtTokenImplementationAddress = await (
-      await deployGenericVariableDebtToken(pool.address, verify)
-    ).address;
-    genericVariableDebtTokenAddress = variableDebtTokenImplementationAddress;
-  } else {
-    variableDebtTokenImplementationAddress = genericVariableDebtTokenAddress;
-  }
-
-  if (!genericPTokenImplAddress) {
-    const pTokenImplementation = await deployGenericPTokenImpl(
-      pool.address,
-      verify
+  if (genericPTokenImplAddress) {
+    await insertContractAddressInDb(
+      eContractid.PTokenImpl,
+      genericPTokenImplAddress,
+      false
     );
-    pTokenImplementationAddress = pTokenImplementation.address;
-  } else {
-    pTokenImplementationAddress = genericPTokenImplAddress;
   }
-
-  if (!genericNTokenImplAddress) {
-    const nTokenImplementation = await deployGenericNTokenImpl(
-      pool.address,
-      false,
-      verify
+  if (genericNTokenImplAddress) {
+    await insertContractAddressInDb(
+      eContractid.NTokenImpl,
+      genericNTokenImplAddress,
+      false
     );
-    nTokenImplementationAddress = nTokenImplementation.address;
-  } else {
-    nTokenImplementationAddress = genericNTokenImplAddress;
   }
-  const nTokenMoonBirdImplementation = await deployGenericMoonbirdNTokenImpl(
-    pool.address,
-    verify
-  );
-
-  const nTokenUniSwapV3 = await deployUniswapV3NTokenImpl(pool.address, verify);
-
-  nTokenMoonBirdImplementationAddress = nTokenMoonBirdImplementation.address;
-
-  nTokenUniSwapV3ImplementationAddress = nTokenUniSwapV3.address;
-
-  const delegatedAwareReserves = Object.entries(reservesParams).filter(
-    ([, {xTokenImpl}]) => xTokenImpl === eContractid.DelegationAwarePTokenImpl
-  ) as [string, IReserveParams][];
-
-  if (delegatedAwareReserves.length > 0) {
-    if (delegationAwarePTokenImpl) {
-      delegationAwarePTokenImplementationAddress = delegationAwarePTokenImpl;
-      await insertContractAddressInDb(
-        eContractid.DelegationAwarePTokenImpl,
-        delegationAwarePTokenImplementationAddress,
-        false
-      );
-    } else {
-      const delegationAwarePTokenImplementation =
-        await deployDelegationAwarePTokenImpl(pool.address, verify);
-      delegationAwarePTokenImplementationAddress =
-        delegationAwarePTokenImplementation.address;
-    }
+  if (genericDelegationAwarePTokenImplAddress) {
+    await insertContractAddressInDb(
+      eContractid.DelegationAwarePTokenImpl,
+      genericDelegationAwarePTokenImplAddress,
+      false
+    );
+  }
+  if (genericVariableDebtTokenAddress) {
+    await insertContractAddressInDb(
+      eContractid.VariableDebtTokenImpl,
+      genericVariableDebtTokenAddress,
+      false
+    );
   }
 
   const reserves = Object.entries(reservesParams).filter(
@@ -209,13 +178,6 @@ export const initReservesByHelper = async (
     } = auctionStrategy;
     if (!strategyAddresses[strategy.name]) {
       // Strategy does not exist, create a new one
-      rateStrategies[strategy.name] = [
-        addressProvider.address,
-        optimalUsageRatio,
-        baseVariableBorrowRate,
-        variableRateSlope1,
-        variableRateSlope2,
-      ];
       if (defaultReserveInterestRateStrategyAddress) {
         strategyAddresses[strategy.name] =
           defaultReserveInterestRateStrategyAddress;
@@ -228,7 +190,13 @@ export const initReservesByHelper = async (
         strategyAddresses[strategy.name] = (
           await deployReserveInterestRateStrategy(
             strategy.name,
-            rateStrategies[strategy.name],
+            [
+              addressProvider.address,
+              optimalUsageRatio,
+              baseVariableBorrowRate,
+              variableRateSlope1,
+              variableRateSlope2,
+            ],
             verify
           )
         ).address;
@@ -300,73 +268,130 @@ export const initReservesByHelper = async (
   }
 
   for (let i = 0; i < reserveSymbols.length; i++) {
-    let xTokenToUse: string;
+    let xTokenToUse = "";
+    let variableDebtTokenToUse = "";
+    console.log("IS ", reserveSymbols[i]);
+
     if (xTokenType[reserveSymbols[i]] === "generic") {
       if (reserveSymbols[i] === ERC20TokenContractId.stETH) {
-        xTokenToUse = (await deployPTokenStETH(pool.address, verify)).address;
-        variableDebtTokenImplementationAddress = (
+        if (!pTokenStETHImplementationAddress) {
+          pTokenStETHImplementationAddress = (
+            await deployPTokenStETH(pool.address, verify)
+          ).address;
+        }
+        xTokenToUse = pTokenStETHImplementationAddress;
+        if (!stETHVariableDebtTokenImplementationAddress) {
+          stETHVariableDebtTokenImplementationAddress = (
+            await deployStETHDebtToken(pool.address, verify)
+          ).address;
+        }
+        variableDebtTokenToUse = (
           await deployStETHDebtToken(pool.address, verify)
         ).address;
       } else if (reserveSymbols[i] === ERC20TokenContractId.aWETH) {
-        xTokenToUse = (await deployPTokenAToken(pool.address, verify)).address;
-        variableDebtTokenImplementationAddress = (
-          await deployATokenDebtToken(pool.address, verify)
-        ).address;
+        if (!pTokenATokenImplementationAddress) {
+          pTokenATokenImplementationAddress = (
+            await deployPTokenAToken(pool.address, verify)
+          ).address;
+        }
+        xTokenToUse = pTokenATokenImplementationAddress;
+        if (!aTokenVariableDebtTokenImplementationAddress) {
+          aTokenVariableDebtTokenImplementationAddress = (
+            await deployATokenDebtToken(pool.address, verify)
+          ).address;
+        }
+        variableDebtTokenToUse = aTokenVariableDebtTokenImplementationAddress;
       } else if (reserveSymbols[i] === ERC20TokenContractId.sAPE) {
-        xTokenToUse = (await deployPTokenSApe(pool.address, verify)).address;
-        variableDebtTokenImplementationAddress =
-          genericVariableDebtTokenAddress;
-      } else {
+        if (!pTokenSApeImplementationAddress) {
+          pTokenSApeImplementationAddress = (
+            await deployPTokenSApe(pool.address, verify)
+          ).address;
+        }
+        xTokenToUse = pTokenSApeImplementationAddress;
+      }
+
+      if (!xTokenToUse) {
+        if (!pTokenImplementationAddress) {
+          pTokenImplementationAddress = (
+            await deployGenericPTokenImpl(pool.address, verify)
+          ).address;
+        }
         xTokenToUse = pTokenImplementationAddress;
-        variableDebtTokenImplementationAddress =
-          genericVariableDebtTokenAddress;
       }
     } else if (xTokenType[reserveSymbols[i]] === "nft") {
       if (reserveSymbols[i] === ERC721TokenContractId.MOONBIRD) {
-        console.log("IS MOONBIRDS");
+        if (!nTokenMoonBirdImplementationAddress) {
+          nTokenMoonBirdImplementationAddress = (
+            await deployGenericMoonbirdNTokenImpl(pool.address, verify)
+          ).address;
+        }
         xTokenToUse = nTokenMoonBirdImplementationAddress;
       } else if (reserveSymbols[i] === ERC721TokenContractId.UniswapV3) {
-        console.log("IS UniSwapV3");
+        if (!nTokenUniSwapV3ImplementationAddress) {
+          nTokenUniSwapV3ImplementationAddress = (
+            await deployUniswapV3NTokenImpl(pool.address, verify)
+          ).address;
+        }
         xTokenToUse = nTokenUniSwapV3ImplementationAddress;
       } else if (reserveSymbols[i] === ERC721TokenContractId.BAYC) {
-        console.log("IS BAYC");
-        if (!isLocalTestnet() && !isPublicTestnet()) {
-          xTokenToUse = nTokenImplementationAddress;
-        } else {
-          const apeCoinStaking = await getApeCoinStaking();
-          const nTokenBAYC = await deployNTokenBAYCImpl(
-            apeCoinStaking.address,
-            pool.address,
-            verify
-          );
-          xTokenToUse = nTokenBAYC.address;
+        if (isLocalTestnet() || isPublicTestnet()) {
+          if (!nTokenBAYCImplementationAddress) {
+            const apeCoinStaking = await getApeCoinStaking();
+            nTokenBAYCImplementationAddress = (
+              await deployNTokenBAYCImpl(
+                apeCoinStaking.address,
+                pool.address,
+                verify
+              )
+            ).address;
+            xTokenToUse = nTokenBAYCImplementationAddress;
+          }
         }
       } else if (reserveSymbols[i] === ERC721TokenContractId.MAYC) {
-        console.log("IS MAYC");
-        if (!isLocalTestnet() && !isPublicTestnet()) {
-          xTokenToUse = nTokenImplementationAddress;
-        } else {
+        if (isLocalTestnet() || isPublicTestnet()) {
           const apeCoinStaking = await getApeCoinStaking();
-          const nTokenMAYC = await deployNTokenMAYCImpl(
-            apeCoinStaking.address,
-            pool.address,
-            verify
-          );
-          xTokenToUse = nTokenMAYC.address;
+          nTokenMAYCImplementationAddress = (
+            await deployNTokenMAYCImpl(
+              apeCoinStaking.address,
+              pool.address,
+              verify
+            )
+          ).address;
+          xTokenToUse = nTokenMAYCImplementationAddress;
         }
-      } else {
-        console.log("IS", reserveSymbols[i]);
+      }
+
+      if (!xTokenToUse) {
+        if (!nTokenImplementationAddress) {
+          nTokenImplementationAddress = (
+            await deployGenericNTokenImpl(pool.address, false, verify)
+          ).address;
+        }
         xTokenToUse = nTokenImplementationAddress;
       }
     } else {
+      if (!delegationAwarePTokenImplementationAddress) {
+        delegationAwarePTokenImplementationAddress = (
+          await deployDelegationAwarePTokenImpl(pool.address, verify)
+        ).address;
+      }
       xTokenToUse = delegationAwarePTokenImplementationAddress;
+    }
+
+    if (!variableDebtTokenToUse) {
+      if (!variableDebtTokenImplementationAddress) {
+        variableDebtTokenImplementationAddress = await await (
+          await deployGenericVariableDebtToken(pool.address, verify)
+        ).address;
+      }
+      variableDebtTokenToUse = variableDebtTokenImplementationAddress;
     }
 
     initInputParams.push({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      xTokenImpl: xTokenToUse!,
+      xTokenImpl: xTokenToUse,
       assetType: xTokenType[reserveSymbols[i]] == "nft" ? 1 : 0,
-      variableDebtTokenImpl: variableDebtTokenImplementationAddress,
+      variableDebtTokenImpl: variableDebtTokenToUse,
       underlyingAssetDecimals: reserveInitDecimals[i],
       interestRateStrategyAddress: strategyAddressPerAsset[reserveSymbols[i]],
       auctionStrategyAddress: auctionStrategyAddressPerAsset[reserveSymbols[i]],
