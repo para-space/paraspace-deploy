@@ -148,7 +148,7 @@ const releaseV12 = async (verify = false) => {
         symbol: "sAPE",
         address: ONE_ADDRESS,
         aggregator: "0xc7de7f4d4C9c991fF62a07D18b3E31e349833A18",
-      },
+      }
     );
 
     console.log("registering aggregators...");
