@@ -135,16 +135,6 @@ const releaseV12 = async (verify = false) => {
 
     assets.push(
       {
-        symbol: "sAPE",
-        address: ONE_ADDRESS,
-        aggregator: "0xc7de7f4d4C9c991fF62a07D18b3E31e349833A18",
-      },
-      {
-        symbol: "DAI",
-        address: "0x773616E4d11A78F511299002da57A0a94577F1f4",
-        aggregator: "0x773616E4d11A78F511299002da57A0a94577F1f4",
-      },
-      {
         symbol: "DAI",
         address: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
         aggregator: "0x773616E4d11A78F511299002da57A0a94577F1f4",
@@ -153,7 +143,12 @@ const releaseV12 = async (verify = false) => {
         symbol: "WBTC",
         address: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
         aggregator: "0xdeb288F737066589598e9214E782fa5A8eD689e8",
-      }
+      },
+      {
+        symbol: "sAPE",
+        address: ONE_ADDRESS,
+        aggregator: "0xc7de7f4d4C9c991fF62a07D18b3E31e349833A18",
+      },
     );
 
     console.log("registering aggregators...");
@@ -226,9 +221,9 @@ const releaseV12 = async (verify = false) => {
 
     console.log("renouncing ownership to multisig...");
     await step_20(verify, {
-      paraSpaceAdminAddress: "0x2f2d07d60ea7330DD2314f4413CCbB2dC25276EF",
-      gatewayAdminAddress: "0x2f2d07d60ea7330DD2314f4413CCbB2dC25276EF",
-      riskAdminAddress: "0x2f2d07d60ea7330DD2314f4413CCbB2dC25276EF",
+      paraSpaceAdminAddress: "0xe965198731CDdB2f06e91DD0CDff74b71e4b3714",
+      gatewayAdminAddress: "0xe965198731CDdB2f06e91DD0CDff74b71e4b3714",
+      riskAdminAddress: "0xe965198731CDdB2f06e91DD0CDff74b71e4b3714",
     });
 
     console.timeEnd("release-v1.2");
