@@ -6,10 +6,13 @@ import {
 } from "../../../helpers/constants";
 import {
   deployERC721OracleWrapper,
+  deployNFTFloorPriceOracle,
   deployPoolComponents,
+  deployPunkGateway,
+  deployPunkGatewayProxy,
 } from "../../../helpers/contracts-deployments";
 import {
-  getNFTFloorOracle,
+  getFirstSigner,
   getParaSpaceOracle,
   getPoolAddressesProvider,
   getPoolProxy,
@@ -33,11 +36,15 @@ const releaseV12 = async (verify = false) => {
   const oracleConfig = paraSpaceConfig.Oracle;
   const paraspaceOracle = await getParaSpaceOracle();
   const protocolDataProvider = await getProtocolDataProvider();
+  const deployer = await getFirstSigner();
+  const pool = await getPoolProxy();
 
   try {
+    console.log("deploying PoolApeStakingImpl...");
     const {poolApeStaking, poolApeStakingSelectors} =
       await deployPoolComponents(addressesProvider.address, verify);
 
+    console.log("registering PoolApeStaking function selectors...");
     await waitForTx(
       await addressesProvider.updatePoolImpl(
         [
@@ -53,29 +60,7 @@ const releaseV12 = async (verify = false) => {
       )
     );
 
-    const nftFloorOracle = await getNFTFloorOracle();
-    await waitForTx(
-      await nftFloorOracle.removeFeeder(
-        "0x026DfBE887986aEE83D2Ed1af667475C8CCB6279",
-        GLOBAL_OVERRIDES
-      )
-    );
-    await waitForTx(
-      await nftFloorOracle.removeFeeder(
-        "0x278d1740fA130Cd898Eb65378BC6C24ac0F316d9",
-        GLOBAL_OVERRIDES
-      )
-    );
-    await waitForTx(
-      await nftFloorOracle.removeFeeder(
-        "0x168acF8eA504aaA4645379a193d427A506f176ad",
-        GLOBAL_OVERRIDES
-      )
-    );
-    await waitForTx(
-      await nftFloorOracle.addFeeders(oracleConfig.Nodes, GLOBAL_OVERRIDES)
-    );
-
+    console.log("deploying NFTFloorOracle...");
     const assets = [
       {
         symbol: "BAYC",
@@ -123,12 +108,17 @@ const releaseV12 = async (verify = false) => {
         aggregator: "",
       },
     ];
+    const nftFloorOracle = await deployNFTFloorPriceOracle(verify);
     await waitForTx(
-      await nftFloorOracle.addAssets(
+      await nftFloorOracle.initialize(
+        await deployer.getAddress(),
+        oracleConfig.Nodes,
         assets.map((x) => x.address),
         GLOBAL_OVERRIDES
       )
     );
+
+    console.log("deploying NFT aggregators...");
     for (const asset of assets) {
       asset.aggregator = (
         await deployERC721OracleWrapper(
@@ -164,6 +154,7 @@ const releaseV12 = async (verify = false) => {
       }
     );
 
+    console.log("registering aggregators...");
     await waitForTx(
       await paraspaceOracle.setAssetSources(
         assets.map((x) => x.address),
@@ -185,6 +176,7 @@ const releaseV12 = async (verify = false) => {
     const {paraSpaceAdminAddress} = await getParaSpaceAdmins();
     const treasuryAddress = paraSpaceConfig.Treasury;
 
+    console.log("initializing reserves...");
     await initReservesByHelper(
       reservesParams,
       allTokenAddresses,
@@ -197,6 +189,7 @@ const releaseV12 = async (verify = false) => {
       verify
     );
 
+    console.log("configuring reserves...");
     await configureReservesByHelper(
       reservesParams,
       allTokenAddresses,
@@ -204,12 +197,12 @@ const releaseV12 = async (verify = false) => {
       paraSpaceAdminAddress
     );
 
-    const pool = await getPoolProxy();
     const sApe = await getPTokenSApe(
       (
         await pool.getReserveData(SAPE_ADDRESS)
       ).xTokenAddress
     );
+    console.log("configuring pSApe...");
     await waitForTx(
       await sApe.setNToken(
         (
@@ -224,6 +217,25 @@ const releaseV12 = async (verify = false) => {
         ).xTokenAddress,
         GLOBAL_OVERRIDES
       )
+    );
+
+    const punkGateway = await deployPunkGateway(
+      [
+        "0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB",
+        "0xb7F7F6C52F2e2fdb1963Eab30438024864c313F6",
+        pool.address,
+      ],
+      verify
+    );
+
+    const punkGatewayEncodedInitialize =
+      punkGateway.interface.encodeFunctionData("initialize");
+
+    await deployPunkGatewayProxy(
+      ZERO_ADDRESS, // disable upgradeability
+      punkGateway.address,
+      punkGatewayEncodedInitialize,
+      verify
     );
 
     console.timeEnd("release-v1.2");
