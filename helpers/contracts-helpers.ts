@@ -60,7 +60,11 @@ import {Order, SignatureVersion} from "./blur-helpers/types";
 import {expect} from "chai";
 import {ABI} from "hardhat-deploy/dist/types";
 import {ethers} from "ethers";
-import {GLOBAL_OVERRIDES, INCREMENTAL_DEPLOYMENT} from "./hardhat-constants";
+import {
+  GLOBAL_OVERRIDES,
+  DEPLOY_INCREMENTAL,
+  JSONRPC_VARIANT,
+} from "./hardhat-constants";
 
 export type ERC20TokenMap = {[symbol: string]: ERC20};
 export type ERC721TokenMap = {[symbol: string]: ERC721};
@@ -174,7 +178,7 @@ export const withSaveAndVerify = async <C extends ContractFactory>(
   signatures?: iFunctionSignature[]
 ) => {
   const addressInDb = await getContractAddressInDb(id);
-  if (INCREMENTAL_DEPLOYMENT && isNotFalsyOrZeroAddress(addressInDb)) {
+  if (DEPLOY_INCREMENTAL && isNotFalsyOrZeroAddress(addressInDb)) {
     console.log("contract address is already in db ", id);
     return await factory.attach(addressInDb);
   }
@@ -341,7 +345,7 @@ export const impersonateAddress = async (
 
   if (!usingTenderly()) {
     await (DRE as HardhatRuntimeEnvironment).network.provider.request({
-      method: "hardhat_impersonateAccount",
+      method: `${JSONRPC_VARIANT}_impersonateAccount`,
       params: [address],
     });
   }

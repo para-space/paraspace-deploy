@@ -63,6 +63,8 @@ export const ETHERSCAN_VERIFICATION_MAX_RETRIES = parseInt(
 
 export const DEPLOY_START = parseInt(process.env.DEPLOY_START || "0");
 export const DEPLOY_END = parseInt(process.env.DEPLOY_END || "21");
+export const DEPLOY_INCREMENTAL =
+  process.env.DEPLOY_INCREMENTAL == "true" ? true : false;
 
 export const KEYSTORE_PATH = "keystore";
 export const DEPLOYER_PRIVATE_KEY = getPrivateKeyfromEncryptedJson(
@@ -70,7 +72,7 @@ export const DEPLOYER_PRIVATE_KEY = getPrivateKeyfromEncryptedJson(
 );
 export const DEPLOYER_MNEMONIC =
   process.env.DEPLOYER_MNEMONIC ||
-  "bottom drive obey lake curtain smoke basket hold race lonely fit walk";
+  "test test test test test test test test test test test junk";
 export const DEPLOYER: HttpNetworkAccountsUserConfig = DEPLOYER_PRIVATE_KEY
   ? [DEPLOYER_PRIVATE_KEY]
   : {
@@ -88,6 +90,4 @@ export const GLOBAL_OVERRIDES: Overrides = {
 };
 
 export const RPC_URL = process.env.RPC_URL || "";
-
-export const INCREMENTAL_DEPLOYMENT =
-  process.env.INCREMENTAL_DEPLOYMENT == "true" ? true : false;
+export const JSONRPC_VARIANT = process.env.JSONRPC_VARIANT || "hardhat";
