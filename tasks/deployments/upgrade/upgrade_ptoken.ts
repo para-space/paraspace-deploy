@@ -7,12 +7,14 @@ import {
   deployPTokenStETH,
 } from "../../../helpers/contracts-deployments";
 import {
+  getAllERC721Tokens,
   getPoolAddressesProvider,
   getPoolConfiguratorProxy,
+  getPoolProxy,
   getProtocolDataProvider,
   getPToken,
 } from "../../../helpers/contracts-getters";
-import {XTokenType} from "../../../helpers/types";
+import {ERC721TokenContractId, XTokenType} from "../../../helpers/types";
 
 import dotenv from "dotenv";
 import {
@@ -25,11 +27,13 @@ dotenv.config();
 export const upgradePToken = async () => {
   const addressesProvider = await getPoolAddressesProvider();
   const poolAddress = await addressesProvider.getPool();
+  const pool = await getPoolProxy(poolAddress);
   const poolConfiguratorProxy = await getPoolConfiguratorProxy(
     await addressesProvider.getPoolConfigurator()
   );
   const protocolDataProvider = await getProtocolDataProvider();
   const allTokens = await protocolDataProvider.getAllXTokens();
+  const allERC721Tokens = await getAllERC721Tokens();
   let pTokenImplementationAddress = "";
   let pTokenDelegationAwareImplementationAddress = "";
   let pTokenStETHImplementationAddress = "";
@@ -69,8 +73,23 @@ export const upgradePToken = async () => {
     } else if (xTokenType == XTokenType.PTokenSApe) {
       if (!pTokenSApeImplementationAddress) {
         console.log("deploy PTokenSApe implementation");
+        const nBAYC = (
+          await pool.getReserveData(
+            allERC721Tokens[ERC721TokenContractId.BAYC].address
+          )
+        ).xTokenAddress;
+        const nMAYC = (
+          await pool.getReserveData(
+            allERC721Tokens[ERC721TokenContractId.MAYC].address
+          )
+        ).xTokenAddress;
         pTokenSApeImplementationAddress = (
-          await deployPTokenSApe(poolAddress, ETHERSCAN_VERIFICATION)
+          await deployPTokenSApe(
+            poolAddress,
+            nBAYC,
+            nMAYC,
+            ETHERSCAN_VERIFICATION
+          )
         ).address;
       }
       newImpl = pTokenSApeImplementationAddress;

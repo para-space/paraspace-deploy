@@ -1,9 +1,5 @@
 import rawBRE from "hardhat";
-import {
-  ONE_ADDRESS,
-  SAPE_ADDRESS,
-  ZERO_ADDRESS,
-} from "../../../helpers/constants";
+import {ONE_ADDRESS, ZERO_ADDRESS} from "../../../helpers/constants";
 import {
   deployERC721OracleWrapper,
   deployNFTFloorPriceOracle,
@@ -20,7 +16,6 @@ import {
   getPoolAddressesProvider,
   getPoolProxy,
   getProtocolDataProvider,
-  getPTokenSApe,
 } from "../../../helpers/contracts-getters";
 import {getParaSpaceAdmins} from "../../../helpers/contracts-helpers";
 import {GLOBAL_OVERRIDES} from "../../../helpers/hardhat-constants";
@@ -201,27 +196,6 @@ const releaseV12 = async (verify = false) => {
       allTokenAddresses,
       protocolDataProvider,
       paraSpaceAdminAddress
-    );
-    const sApe = await getPTokenSApe(
-      (
-        await pool.getReserveData(SAPE_ADDRESS)
-      ).xTokenAddress
-    );
-    console.log("configuring pSApe...");
-    await waitForTx(
-      await sApe.setNToken(
-        (
-          await pool.getReserveData(
-            "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D"
-          )
-        ).xTokenAddress,
-        (
-          await pool.getReserveData(
-            "0x60E4d786628Fea6478F785A6d7e704777c86a7c6"
-          )
-        ).xTokenAddress,
-        GLOBAL_OVERRIDES
-      )
     );
 
     console.log("deploying wpunkgateway...");

@@ -276,132 +276,11 @@ export const initReservesByHelper = async (
   }
 
   for (let i = 0; i < reserveSymbols.length; i++) {
-    let xTokenToUse = "";
-    let variableDebtTokenToUse = "";
-    console.log("IS ", reserveSymbols[i]);
-
-    if (xTokenType[reserveSymbols[i]] === "generic") {
-      if (reserveSymbols[i] === ERC20TokenContractId.stETH) {
-        if (!pTokenStETHImplementationAddress) {
-          pTokenStETHImplementationAddress = (
-            await deployPTokenStETH(pool.address, verify)
-          ).address;
-        }
-        xTokenToUse = pTokenStETHImplementationAddress;
-        if (!stETHVariableDebtTokenImplementationAddress) {
-          stETHVariableDebtTokenImplementationAddress = (
-            await deployStETHDebtToken(pool.address, verify)
-          ).address;
-        }
-        variableDebtTokenToUse = (
-          await deployStETHDebtToken(pool.address, verify)
-        ).address;
-      } else if (reserveSymbols[i] === ERC20TokenContractId.aWETH) {
-        if (!pTokenATokenImplementationAddress) {
-          pTokenATokenImplementationAddress = (
-            await deployPTokenAToken(pool.address, verify)
-          ).address;
-        }
-        xTokenToUse = pTokenATokenImplementationAddress;
-        if (!aTokenVariableDebtTokenImplementationAddress) {
-          aTokenVariableDebtTokenImplementationAddress = (
-            await deployATokenDebtToken(pool.address, verify)
-          ).address;
-        }
-        variableDebtTokenToUse = aTokenVariableDebtTokenImplementationAddress;
-      } else if (reserveSymbols[i] === ERC20TokenContractId.sAPE) {
-        if (!pTokenSApeImplementationAddress) {
-          pTokenSApeImplementationAddress = (
-            await deployPTokenSApe(pool.address, verify)
-          ).address;
-        }
-        xTokenToUse = pTokenSApeImplementationAddress;
-      }
-
-      if (!xTokenToUse) {
-        if (!pTokenImplementationAddress) {
-          pTokenImplementationAddress = (
-            await deployGenericPTokenImpl(pool.address, verify)
-          ).address;
-        }
-        xTokenToUse = pTokenImplementationAddress;
-      }
-    } else if (xTokenType[reserveSymbols[i]] === "nft") {
-      if (reserveSymbols[i] === ERC721TokenContractId.MOONBIRD) {
-        if (!nTokenMoonBirdImplementationAddress) {
-          nTokenMoonBirdImplementationAddress = (
-            await deployGenericMoonbirdNTokenImpl(pool.address, verify)
-          ).address;
-        }
-        xTokenToUse = nTokenMoonBirdImplementationAddress;
-      } else if (reserveSymbols[i] === ERC721TokenContractId.UniswapV3) {
-        if (!nTokenUniSwapV3ImplementationAddress) {
-          nTokenUniSwapV3ImplementationAddress = (
-            await deployUniswapV3NTokenImpl(pool.address, verify)
-          ).address;
-        }
-        xTokenToUse = nTokenUniSwapV3ImplementationAddress;
-      } else if (reserveSymbols[i] === ERC721TokenContractId.BAYC) {
-        let apeCoinStaking;
-        if (isLocalTestnet() || isPublicTestnet()) {
-          apeCoinStaking = (await getApeCoinStaking()).address;
-        } else if (isMainnet()) {
-          apeCoinStaking = paraSpaceConfig.YogaLabs.ApeCoinStaking!;
-        }
-
-        if (!nTokenBAYCImplementationAddress) {
-          nTokenBAYCImplementationAddress = (
-            await deployNTokenBAYCImpl(apeCoinStaking, pool.address, verify)
-          ).address;
-        }
-        xTokenToUse = nTokenBAYCImplementationAddress;
-      } else if (reserveSymbols[i] === ERC721TokenContractId.MAYC) {
-        let apeCoinStaking;
-        if (isLocalTestnet() || isPublicTestnet()) {
-          apeCoinStaking = (await getApeCoinStaking()).address;
-        } else if (isMainnet()) {
-          apeCoinStaking = paraSpaceConfig.YogaLabs.ApeCoinStaking;
-        }
-
-        if (!nTokenMAYCImplementationAddress) {
-          nTokenMAYCImplementationAddress = (
-            await deployNTokenMAYCImpl(apeCoinStaking, pool.address, verify)
-          ).address;
-        }
-        xTokenToUse = nTokenMAYCImplementationAddress;
-      }
-
-      if (!xTokenToUse) {
-        if (!nTokenImplementationAddress) {
-          nTokenImplementationAddress = (
-            await deployGenericNTokenImpl(pool.address, false, verify)
-          ).address;
-        }
-        xTokenToUse = nTokenImplementationAddress;
-      }
-    } else {
-      if (!delegationAwarePTokenImplementationAddress) {
-        delegationAwarePTokenImplementationAddress = (
-          await deployDelegationAwarePTokenImpl(pool.address, verify)
-        ).address;
-      }
-      xTokenToUse = delegationAwarePTokenImplementationAddress;
-    }
-
-    if (!variableDebtTokenToUse) {
-      if (!variableDebtTokenImplementationAddress) {
-        variableDebtTokenImplementationAddress = await await (
-          await deployGenericVariableDebtToken(pool.address, verify)
-        ).address;
-      }
-      variableDebtTokenToUse = variableDebtTokenImplementationAddress;
-    }
-
     initInputParams.push({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      xTokenImpl: xTokenToUse,
+      xTokenImpl: "",
+      variableDebtTokenImpl: "",
       assetType: xTokenType[reserveSymbols[i]] == "nft" ? 1 : 0,
-      variableDebtTokenImpl: variableDebtTokenToUse,
       underlyingAssetDecimals: reserveInitDecimals[i],
       interestRateStrategyAddress: strategyAddressPerAsset[reserveSymbols[i]],
       auctionStrategyAddress: auctionStrategyAddressPerAsset[reserveSymbols[i]],
@@ -437,11 +316,147 @@ export const initReservesByHelper = async (
     chunkIndex < chunkedInitInputParams.length;
     chunkIndex++
   ) {
+    const inputs = chunkedInitInputParams[chunkIndex];
+
+    for (let i = 0; i < inputs.length; i += 1) {
+      let xTokenToUse = "";
+      let variableDebtTokenToUse = "";
+      const reserveSymbol = inputs[i].underlyingAssetName;
+      console.log("IS ", reserveSymbol);
+
+      if (xTokenType[reserveSymbol] === "generic") {
+        if (reserveSymbol === ERC20TokenContractId.stETH) {
+          if (!pTokenStETHImplementationAddress) {
+            pTokenStETHImplementationAddress = (
+              await deployPTokenStETH(pool.address, verify)
+            ).address;
+          }
+          xTokenToUse = pTokenStETHImplementationAddress;
+          if (!stETHVariableDebtTokenImplementationAddress) {
+            stETHVariableDebtTokenImplementationAddress = (
+              await deployStETHDebtToken(pool.address, verify)
+            ).address;
+          }
+          variableDebtTokenToUse = (
+            await deployStETHDebtToken(pool.address, verify)
+          ).address;
+        } else if (reserveSymbol === ERC20TokenContractId.aWETH) {
+          if (!pTokenATokenImplementationAddress) {
+            pTokenATokenImplementationAddress = (
+              await deployPTokenAToken(pool.address, verify)
+            ).address;
+          }
+          xTokenToUse = pTokenATokenImplementationAddress;
+          if (!aTokenVariableDebtTokenImplementationAddress) {
+            aTokenVariableDebtTokenImplementationAddress = (
+              await deployATokenDebtToken(pool.address, verify)
+            ).address;
+          }
+          variableDebtTokenToUse = aTokenVariableDebtTokenImplementationAddress;
+        } else if (reserveSymbol === ERC20TokenContractId.sAPE) {
+          if (!pTokenSApeImplementationAddress) {
+            const nBAYC = (
+              await pool.getReserveData(
+                tokenAddresses[ERC721TokenContractId.BAYC]
+              )
+            ).xTokenAddress;
+            const nMAYC = (
+              await pool.getReserveData(
+                tokenAddresses[ERC721TokenContractId.MAYC]
+              )
+            ).xTokenAddress;
+            pTokenSApeImplementationAddress = (
+              await deployPTokenSApe(pool.address, nBAYC, nMAYC, verify)
+            ).address;
+          }
+          xTokenToUse = pTokenSApeImplementationAddress;
+        }
+
+        if (!xTokenToUse) {
+          if (!pTokenImplementationAddress) {
+            pTokenImplementationAddress = (
+              await deployGenericPTokenImpl(pool.address, verify)
+            ).address;
+          }
+          xTokenToUse = pTokenImplementationAddress;
+        }
+      } else if (xTokenType[reserveSymbol] === "nft") {
+        if (reserveSymbol === ERC721TokenContractId.MOONBIRD) {
+          if (!nTokenMoonBirdImplementationAddress) {
+            nTokenMoonBirdImplementationAddress = (
+              await deployGenericMoonbirdNTokenImpl(pool.address, verify)
+            ).address;
+          }
+          xTokenToUse = nTokenMoonBirdImplementationAddress;
+        } else if (reserveSymbol === ERC721TokenContractId.UniswapV3) {
+          if (!nTokenUniSwapV3ImplementationAddress) {
+            nTokenUniSwapV3ImplementationAddress = (
+              await deployUniswapV3NTokenImpl(pool.address, verify)
+            ).address;
+          }
+          xTokenToUse = nTokenUniSwapV3ImplementationAddress;
+        } else if (reserveSymbol === ERC721TokenContractId.BAYC) {
+          let apeCoinStaking;
+          if (isLocalTestnet() || isPublicTestnet()) {
+            apeCoinStaking = (await getApeCoinStaking()).address;
+          } else if (isMainnet()) {
+            apeCoinStaking = paraSpaceConfig.YogaLabs.ApeCoinStaking!;
+          }
+
+          if (!nTokenBAYCImplementationAddress) {
+            nTokenBAYCImplementationAddress = (
+              await deployNTokenBAYCImpl(apeCoinStaking, pool.address, verify)
+            ).address;
+          }
+          xTokenToUse = nTokenBAYCImplementationAddress;
+        } else if (reserveSymbol === ERC721TokenContractId.MAYC) {
+          let apeCoinStaking;
+          if (isLocalTestnet() || isPublicTestnet()) {
+            apeCoinStaking = (await getApeCoinStaking()).address;
+          } else if (isMainnet()) {
+            apeCoinStaking = paraSpaceConfig.YogaLabs.ApeCoinStaking;
+          }
+
+          if (!nTokenMAYCImplementationAddress) {
+            nTokenMAYCImplementationAddress = (
+              await deployNTokenMAYCImpl(apeCoinStaking, pool.address, verify)
+            ).address;
+          }
+          xTokenToUse = nTokenMAYCImplementationAddress;
+        }
+
+        if (!xTokenToUse) {
+          if (!nTokenImplementationAddress) {
+            nTokenImplementationAddress = (
+              await deployGenericNTokenImpl(pool.address, false, verify)
+            ).address;
+          }
+          xTokenToUse = nTokenImplementationAddress;
+        }
+      } else {
+        if (!delegationAwarePTokenImplementationAddress) {
+          delegationAwarePTokenImplementationAddress = (
+            await deployDelegationAwarePTokenImpl(pool.address, verify)
+          ).address;
+        }
+        xTokenToUse = delegationAwarePTokenImplementationAddress;
+      }
+
+      if (!variableDebtTokenToUse) {
+        if (!variableDebtTokenImplementationAddress) {
+          variableDebtTokenImplementationAddress = await await (
+            await deployGenericVariableDebtToken(pool.address, verify)
+          ).address;
+        }
+        variableDebtTokenToUse = variableDebtTokenImplementationAddress;
+      }
+
+      inputs[i].xTokenImpl = xTokenToUse;
+      inputs[i].variableDebtTokenImpl = variableDebtTokenToUse;
+    }
+
     const tx = await waitForTx(
-      await configurator.initReserves(
-        chunkedInitInputParams[chunkIndex],
-        GLOBAL_OVERRIDES
-      )
+      await configurator.initReserves(inputs, GLOBAL_OVERRIDES)
     );
 
     console.log(

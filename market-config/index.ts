@@ -86,7 +86,6 @@ export const HardhatParaSpaceConfig: IParaSpaceConfiguration = {
     USDT: strategyUSDT,
     WETH: strategyWETH,
     APE: strategyAPE,
-    sAPE: strategySAPE,
     WBTC: strategyWBTC,
     stETH: strategySTETH,
     aWETH: strategyAWETH,
@@ -102,6 +101,7 @@ export const HardhatParaSpaceConfig: IParaSpaceConfiguration = {
     OTHR: strategyOthr,
     CLONEX: strategyClonex,
     UniswapV3: strategyUniswapV3,
+    sAPE: strategySAPE,
   },
 };
 
@@ -146,7 +146,6 @@ export const GoerliParaSpaceConfig: IParaSpaceConfiguration = {
     USDT: strategyUSDT,
     WETH: strategyWETH,
     APE: strategyAPE,
-    sAPE: strategySAPE,
     WBTC: strategyWBTC,
     stETH: strategySTETH,
     aWETH: strategyAWETH,
@@ -162,6 +161,7 @@ export const GoerliParaSpaceConfig: IParaSpaceConfiguration = {
     OTHR: strategyOthr,
     CLONEX: strategyClonex,
     UniswapV3: strategyUniswapV3,
+    sAPE: strategySAPE,
   },
 };
 
@@ -183,7 +183,6 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
   ParaSpaceTeam: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
   Treasury: "0x17816E9A858b161c3E37016D139cf618056CaCD4",
   Tokens: {
-    sAPE: "0x0000000000000000000000000000000000000001",
     WETH: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     DAI: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -200,6 +199,7 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     AZUKI: "0xed5af388653567af2f388e6224dc7c4b3241c544",
     OTHR: "0x34d85c9cdeb23fa97cb08333b511ac86e1c4e258",
     CLONEX: "0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b",
+    sAPE: "0x0000000000000000000000000000000000000001",
     // UniswapV3: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
   },
   BendDAO: {

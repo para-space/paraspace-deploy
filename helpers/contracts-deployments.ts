@@ -1670,12 +1670,14 @@ export const deployPTokenStETH = async (
 
 export const deployPTokenSApe = async (
   poolAddress: tEthereumAddress,
+  nBAYC: tEthereumAddress,
+  nMAYC: tEthereumAddress,
   verify?: boolean
 ) =>
   withSaveAndVerify(
     new PTokenSApe__factory(await getFirstSigner()),
     eContractid.PTokenSApeImpl,
-    [poolAddress],
+    [poolAddress, nBAYC, nMAYC],
     verify
   ) as Promise<PTokenSApe>;
 
