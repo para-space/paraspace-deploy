@@ -12,8 +12,11 @@ import {
   deployPunkGatewayProxy,
 } from "../../../helpers/contracts-deployments";
 import {
+  getConduit,
+  getConduitController,
   getFirstSigner,
   getParaSpaceOracle,
+  getPausableZoneController,
   getPoolAddressesProvider,
   getPoolProxy,
   getProtocolDataProvider,
@@ -27,6 +30,7 @@ import {
 } from "../../../helpers/init-helpers";
 import {DRE, getParaSpaceConfig, waitForTx} from "../../../helpers/misc-utils";
 import {tEthereumAddress} from "../../../helpers/types";
+import {step_20} from "../full-deployment/steps/20_renounceOwnership";
 
 const releaseV12 = async (verify = false) => {
   await DRE.run("set-DRE");
@@ -38,6 +42,9 @@ const releaseV12 = async (verify = false) => {
   const protocolDataProvider = await getProtocolDataProvider();
   const deployer = await getFirstSigner();
   const pool = await getPoolProxy();
+  const conduitController = await getConduitController();
+  const zoneController = await getPausableZoneController();
+  const conduit = await getConduit();
 
   try {
     console.log("deploying PoolApeStakingImpl...");
@@ -188,7 +195,6 @@ const releaseV12 = async (verify = false) => {
       ZERO_ADDRESS,
       verify
     );
-
     console.log("configuring reserves...");
     await configureReservesByHelper(
       reservesParams,
@@ -196,7 +202,6 @@ const releaseV12 = async (verify = false) => {
       protocolDataProvider,
       paraSpaceAdminAddress
     );
-
     const sApe = await getPTokenSApe(
       (
         await pool.getReserveData(SAPE_ADDRESS)
@@ -219,6 +224,7 @@ const releaseV12 = async (verify = false) => {
       )
     );
 
+    console.log("deploying wpunkgateway...");
     const punkGateway = await deployPunkGateway(
       [
         "0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB",
@@ -237,6 +243,19 @@ const releaseV12 = async (verify = false) => {
       punkGatewayEncodedInitialize,
       verify
     );
+
+    console.log("accepting Conduit, ZoneController ownership...");
+    await waitForTx(
+      await conduitController.acceptOwnership(conduit.address, GLOBAL_OVERRIDES)
+    );
+    await waitForTx(await zoneController.acceptOwnership(GLOBAL_OVERRIDES));
+
+    console.log("renouncing ownership to multisig...");
+    await step_20(verify, {
+      paraSpaceAdminAddress: "0x2f2d07d60ea7330DD2314f4413CCbB2dC25276EF",
+      gatewayAdminAddress: "0x2f2d07d60ea7330DD2314f4413CCbB2dC25276EF",
+      riskAdminAddress: "0x2f2d07d60ea7330DD2314f4413CCbB2dC25276EF",
+    });
 
     console.timeEnd("release-v1.2");
   } catch (error) {
