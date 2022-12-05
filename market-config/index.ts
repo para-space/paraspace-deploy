@@ -1,4 +1,3 @@
-import {ZERO_ADDRESS} from "../helpers/constants";
 import {eEthereumNetwork, IParaSpaceConfiguration} from "../helpers/types";
 import {MocksConfig} from "./mocks";
 import {MainnetOracleConfig, TestnetOracleConfig} from "./oracle";
@@ -206,7 +205,7 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     Oracle: "0x7c2a19e54e48718f6c60908a9cff3396e4ea1eba",
   },
   YogaLabs: {
-    ApeCoinStaking: ZERO_ADDRESS,
+    ApeCoinStaking: "0x5954aB967Bc958940b7EB73ee84797Dc8a2AFbb9",
   },
   Uniswap: {
     V2Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
