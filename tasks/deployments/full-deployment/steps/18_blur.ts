@@ -65,7 +65,7 @@ export const step_18 = async (verify = false) => {
       )
     );
 
-    const blurAdapter = await deployBlurAdapter();
+    const blurAdapter = await deployBlurAdapter(verify);
 
     await waitForTx(
       await addressesProvider.setMarketplace(
