@@ -74,7 +74,7 @@ const transferTokens = async () => {
     },
     {
       name: ERC20TokenContractId.APE,
-      whale: "0xf977814e90da44bfa03b6295a0616a897441acec",
+      whale: "0x5a52e96bacdabb82fd05763e25335261b270efcb",
       address: tokens[ERC20TokenContractId.APE],
       type: AssetType.ERC20,
       amount: "10000", // 10,000 APE
