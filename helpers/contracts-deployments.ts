@@ -85,7 +85,6 @@ import {
   BoredApeYachtClub__factory,
   MutantApeYachtClub__factory,
   Doodles__factory,
-  ParaSpaceFallbackOracle__factory,
   Doodles,
   BoredApeYachtClub,
   MutantApeYachtClub,
@@ -1741,22 +1740,6 @@ export const deployPunkGatewayProxy = async (
 //     verify
 //   );
 // };
-
-export const deployParaSpaceFallbackOracle = async (
-  args: [string, string, string, string, string],
-  verify?: boolean
-) => {
-  const fallBackOracle = await new ParaSpaceFallbackOracle__factory(
-    await getFirstSigner()
-  ).deploy(...args, GLOBAL_OVERRIDES);
-
-  return withSaveAndVerify(
-    fallBackOracle,
-    eContractid.PriceOracle,
-    [...args],
-    verify
-  );
-};
 
 export const deployMockTokenFaucet = async (
   erc20configs,

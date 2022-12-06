@@ -537,10 +537,6 @@ export interface IChainlinkConfig {
   CLONEX?: tEthereumAddress;
 }
 
-export interface IBendDAOConfig {
-  Oracle?: tEthereumAddress;
-}
-
 export interface IUniswapConfig {
   V2Factory?: tEthereumAddress;
   V2Router?: tEthereumAddress;
@@ -586,7 +582,6 @@ export interface ICommonConfiguration {
   GatewayAdmin: tEthereumAddress | undefined;
   GatewayAdminIndex: number;
   Tokens: iMultiPoolsAssets<tEthereumAddress>;
-  BendDAO: IBendDAOConfig;
   Uniswap: IUniswapConfig;
   Marketplace: IMarketplaceConfig;
   Chainlink: IChainlinkConfig;

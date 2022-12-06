@@ -73,7 +73,6 @@ export const HardhatParaSpaceConfig: IParaSpaceConfiguration = {
   Tokens: {
     sAPE: "0x0000000000000000000000000000000000000001",
   },
-  BendDAO: {},
   Uniswap: {},
   Marketplace: {},
   Chainlink: {},
@@ -117,7 +116,6 @@ export const GoerliParaSpaceConfig: IParaSpaceConfiguration = {
     WETH: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
     UniswapV3: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
   },
-  BendDAO: {},
   Uniswap: {
     V2Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
     V2Router: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
@@ -198,9 +196,6 @@ export const MainnetParaSpaceConfig: IParaSpaceConfiguration = {
     OTHR: "0x34d85c9cdeb23fa97cb08333b511ac86e1c4e258",
     CLONEX: "0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b",
     // UniswapV3: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
-  },
-  BendDAO: {
-    Oracle: "0x7c2a19e54e48718f6c60908a9cff3396e4ea1eba",
   },
   Uniswap: {
     V2Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
