@@ -44,6 +44,9 @@ export const step_20 = async (
     const aclManager = await getACLManager();
     const nftFloorOracle = await getNFTFloorOracle();
 
+    console.log("new paraSpaceAdmin: ", paraSpaceAdminAddress);
+    console.log("new gatewayAdmin: ", gatewayAdminAddress);
+    console.log("new riskAdmin: ", riskAdminAddress);
     if (deployerAddress === paraSpaceAdminAddress) {
       return;
     }
