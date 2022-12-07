@@ -176,7 +176,6 @@ import {
   BoredApeYachtClub__factory,
   MutantApeYachtClub__factory,
   Doodles__factory,
-  ParaSpaceFallbackOracle__factory,
   Doodles,
   BoredApeYachtClub,
   MutantApeYachtClub,
