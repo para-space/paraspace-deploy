@@ -6,20 +6,26 @@ import fs from "fs";
 import {KEYSTORE_PATH} from "../../../helpers/hardhat-constants";
 
 const wallet = async () => {
-  await DRE.run("set-DRE");
-  console.time("wallet");
-  const wallet = await ethers.Wallet.fromMnemonic(input("secret: "));
-  const keystore = await wallet.encrypt(input("password: "));
+  try {
+    await DRE.run("set-DRE");
+    console.time("wallet");
+    const wallet = await ethers.Wallet.fromMnemonic(input("secret: "));
+    const keystore = await wallet.encrypt(input("password: "));
 
-  if (!fs.existsSync(KEYSTORE_PATH)) {
-    fs.mkdirSync(KEYSTORE_PATH);
+    if (!fs.existsSync(KEYSTORE_PATH)) {
+      fs.mkdirSync(KEYSTORE_PATH);
+    }
+
+    const fileName = JSON.parse(keystore).id;
+    const filePath = `${KEYSTORE_PATH}/${fileName}`;
+    fs.writeFileSync(filePath, keystore);
+    console.log(`wallet generated at: ${filePath}`);
+    console.timeEnd("wallet");
+    // eslint-disable-next-line
+  } catch (e: any) {
+    console.error(e.message);
+    process.exit(1);
   }
-
-  const fileName = JSON.parse(keystore).id;
-  const filePath = `${KEYSTORE_PATH}/${fileName}`;
-  fs.writeFileSync(filePath, keystore);
-  console.log(`wallet generated at: ${filePath}`);
-  console.timeEnd("wallet");
 };
 
 async function main() {

@@ -11,10 +11,14 @@ import {
   getWETHGatewayProxy,
   getWPunkGatewayProxy,
 } from "../../../../helpers/contracts-getters";
-import {getParaSpaceAdmins} from "../../../../helpers/contracts-helpers";
+import {
+  getContractAddressInDb,
+  getParaSpaceAdmins,
+} from "../../../../helpers/contracts-helpers";
 import {GLOBAL_OVERRIDES} from "../../../../helpers/hardhat-constants";
 import {getParaSpaceConfig, waitForTx} from "../../../../helpers/misc-utils";
 import {
+  eContractid,
   ERC20TokenContractId,
   ERC721TokenContractId,
 } from "../../../../helpers/types";
@@ -42,7 +46,6 @@ export const step_20 = async (
     const conduit = await getConduit();
     const zoneController = await getPausableZoneController();
     const aclManager = await getACLManager();
-    const nftFloorOracle = await getNFTFloorOracle();
 
     console.log("new paraSpaceAdmin: ", paraSpaceAdminAddress);
     console.log("new gatewayAdmin: ", gatewayAdminAddress);
@@ -150,34 +153,37 @@ export const step_20 = async (
       );
     }
 
-    await waitForTx(
-      await nftFloorOracle.grantRole(
-        await nftFloorOracle.UPDATER_ROLE(),
-        paraSpaceAdminAddress,
-        GLOBAL_OVERRIDES
-      )
-    );
-    await waitForTx(
-      await nftFloorOracle.revokeRole(
-        await nftFloorOracle.UPDATER_ROLE(),
-        deployerAddress,
-        GLOBAL_OVERRIDES
-      )
-    );
-    await waitForTx(
-      await nftFloorOracle.grantRole(
-        await nftFloorOracle.DEFAULT_ADMIN_ROLE(),
-        paraSpaceAdminAddress,
-        GLOBAL_OVERRIDES
-      )
-    );
-    await waitForTx(
-      await nftFloorOracle.revokeRole(
-        await nftFloorOracle.DEFAULT_ADMIN_ROLE(),
-        deployerAddress,
-        GLOBAL_OVERRIDES
-      )
-    );
+    if (await getContractAddressInDb(eContractid.NFTFloorOracle)) {
+      const nftFloorOracle = await getNFTFloorOracle();
+      await waitForTx(
+        await nftFloorOracle.grantRole(
+          await nftFloorOracle.UPDATER_ROLE(),
+          paraSpaceAdminAddress,
+          GLOBAL_OVERRIDES
+        )
+      );
+      await waitForTx(
+        await nftFloorOracle.revokeRole(
+          await nftFloorOracle.UPDATER_ROLE(),
+          deployerAddress,
+          GLOBAL_OVERRIDES
+        )
+      );
+      await waitForTx(
+        await nftFloorOracle.grantRole(
+          await nftFloorOracle.DEFAULT_ADMIN_ROLE(),
+          paraSpaceAdminAddress,
+          GLOBAL_OVERRIDES
+        )
+      );
+      await waitForTx(
+        await nftFloorOracle.revokeRole(
+          await nftFloorOracle.DEFAULT_ADMIN_ROLE(),
+          deployerAddress,
+          GLOBAL_OVERRIDES
+        )
+      );
+    }
   } catch (error) {
     console.error(error);
     process.exit(1);

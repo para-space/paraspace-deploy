@@ -9,13 +9,20 @@ dotenv.config();
 
 const getPrivateKeyfromEncryptedJson = (
   keystorePath: string | undefined
-): string =>
-  keystorePath && fs.existsSync(keystorePath)
-    ? ethers.Wallet.fromEncryptedJsonSync(
-        fs.readFileSync(keystorePath, "utf8"),
-        input("password: ")
-      ).privateKey
-    : "";
+): string => {
+  try {
+    return keystorePath && fs.existsSync(keystorePath)
+      ? ethers.Wallet.fromEncryptedJsonSync(
+          fs.readFileSync(keystorePath, "utf8"),
+          input("password: ")
+        ).privateKey
+      : "";
+    // eslint-disable-next-line
+  } catch (e: any) {
+    console.error(e.message);
+    process.exit(1);
+  }
+};
 
 export const HARDHAT_CHAINID = 31337;
 export const GOERLI_CHAINID = 5;

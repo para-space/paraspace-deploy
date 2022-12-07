@@ -16,14 +16,11 @@ import {
 import {XTokenType} from "../../../helpers/types";
 
 import dotenv from "dotenv";
-import {
-  ETHERSCAN_VERIFICATION,
-  GLOBAL_OVERRIDES,
-} from "../../../helpers/hardhat-constants";
+import {GLOBAL_OVERRIDES} from "../../../helpers/hardhat-constants";
 
 dotenv.config();
 
-export const upgradeNToken = async () => {
+export const upgradeNToken = async (verify = false) => {
   const addressesProvider = await getPoolAddressesProvider();
   const poolAddress = await addressesProvider.getPool();
   const poolConfiguratorProxy = await getPoolConfiguratorProxy(
@@ -67,7 +64,7 @@ export const upgradeNToken = async () => {
           await deployNTokenBAYCImpl(
             apeCoinStaking.address,
             poolAddress,
-            ETHERSCAN_VERIFICATION
+            verify
           )
         ).address;
       }
@@ -79,7 +76,7 @@ export const upgradeNToken = async () => {
           await deployNTokenMAYCImpl(
             apeCoinStaking.address,
             poolAddress,
-            ETHERSCAN_VERIFICATION
+            verify
           )
         ).address;
       }
@@ -88,7 +85,7 @@ export const upgradeNToken = async () => {
       if (!nTokenUniSwapV3ImplementationAddress) {
         console.log("deploy NTokenUniswapV3 implementation");
         nTokenUniSwapV3ImplementationAddress = (
-          await deployUniswapV3NTokenImpl(poolAddress, ETHERSCAN_VERIFICATION)
+          await deployUniswapV3NTokenImpl(poolAddress, verify)
         ).address;
       }
       newImpl = nTokenUniSwapV3ImplementationAddress;
@@ -96,10 +93,7 @@ export const upgradeNToken = async () => {
       if (!nTokenMoonBirdImplementationAddress) {
         console.log("deploy NTokenMoonBirds implementation");
         nTokenMoonBirdImplementationAddress = (
-          await deployGenericMoonbirdNTokenImpl(
-            poolAddress,
-            ETHERSCAN_VERIFICATION
-          )
+          await deployGenericMoonbirdNTokenImpl(poolAddress, verify)
         ).address;
       }
       newImpl = nTokenMoonBirdImplementationAddress;
@@ -107,11 +101,7 @@ export const upgradeNToken = async () => {
       if (!nTokenImplementationAddress) {
         console.log("deploy NToken implementation");
         nTokenImplementationAddress = (
-          await deployGenericNTokenImpl(
-            poolAddress,
-            false,
-            ETHERSCAN_VERIFICATION
-          )
+          await deployGenericNTokenImpl(poolAddress, false, verify)
         ).address;
       }
       newImpl = nTokenImplementationAddress;
@@ -132,18 +122,16 @@ export const upgradeNToken = async () => {
       `upgrading ${token.symbol}'s version from v${oldRevision} to v${newRevision}`
     );
 
+    const updateInput = {
+      asset: asset,
+      incentivesController: incentivesController,
+      name: name,
+      symbol: symbol,
+      implementation: newImpl,
+      params: "0x10",
+    };
     await waitForTx(
-      await poolConfiguratorProxy.updateNToken(
-        {
-          asset: asset,
-          incentivesController: incentivesController,
-          name: name,
-          symbol: symbol,
-          implementation: newImpl,
-          params: "0x10",
-        },
-        GLOBAL_OVERRIDES
-      )
+      await poolConfiguratorProxy.updateNToken(updateInput, GLOBAL_OVERRIDES)
     );
   }
 

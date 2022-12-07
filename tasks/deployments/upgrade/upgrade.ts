@@ -9,18 +9,17 @@ import dotenv from "dotenv";
 import {ZERO_ADDRESS} from "../../../helpers/constants";
 import {upgradePToken} from "./upgrade_ptoken";
 import {upgradeNToken} from "./upgrade_ntoken";
-import {ETHERSCAN_VERIFICATION} from "../../../helpers/hardhat-constants";
 
 dotenv.config();
 
-export const upgradeAll = async () => {
-  await upgradePool();
-  await upgradePToken();
-  await upgradeNToken();
+export const upgradeAll = async (verify = false) => {
+  await upgradePool(verify);
+  await upgradePToken(verify);
+  await upgradeNToken(verify);
   console.log("upgrade all finished!");
 };
 
-export const upgradePool = async () => {
+export const upgradePool = async (verify = false) => {
   const addressesProvider = await getPoolAddressesProvider();
   console.time("deploy PoolComponent");
   const {
@@ -32,10 +31,7 @@ export const upgradePool = async () => {
     poolParametersSelectors,
     poolMarketplaceSelectors,
     poolApeStakingSelectors,
-  } = await deployPoolComponents(
-    addressesProvider.address,
-    ETHERSCAN_VERIFICATION
-  );
+  } = await deployPoolComponents(addressesProvider.address, verify);
   console.timeEnd("deploy PoolComponent");
 
   console.time("upgrade PoolCore");
@@ -131,7 +127,7 @@ export const removePoolFuncs = async () => {
   }
 };
 
-export const addPoolFuncs = async () => {
+export const addPoolFuncs = async (verify = false) => {
   const poolAdmin = await getFirstSigner();
   const addressesProvider = (await getPoolAddressesProvider()).connect(
     poolAdmin
@@ -147,10 +143,7 @@ export const addPoolFuncs = async () => {
     poolParametersSelectors,
     poolMarketplaceSelectors,
     poolApeStakingSelectors,
-  } = await deployPoolComponents(
-    addressesProvider.address,
-    ETHERSCAN_VERIFICATION
-  );
+  } = await deployPoolComponents(addressesProvider.address, verify);
   console.timeEnd("deploy PoolComponent");
 
   const FUNCS_TO_ADD = process.env.FUNCS_TO_ADD?.replace(/\[|\]|'/g, "").split(
