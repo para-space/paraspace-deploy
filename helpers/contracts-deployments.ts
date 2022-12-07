@@ -67,7 +67,6 @@ import {
   NTokenMoonBirds,
   NTokenUniswapV3,
   ParaProxy__factory,
-  ParaSpaceFallbackOracle,
   ParaSpaceOracle,
   PausableZoneController,
   PolicyManager,
@@ -1308,22 +1307,6 @@ export const deployPunkGatewayProxy = async (
     verify,
     true
   ) as Promise<InitializableImmutableAdminUpgradeabilityProxy>;
-};
-
-export const deployParaSpaceFallbackOracle = async (
-  args: [string, string, string, string, string],
-  verify?: boolean
-) => {
-  const fallBackOracle = new ParaSpaceFallbackOracle__factory(
-    await getFirstSigner()
-  );
-
-  return withSaveAndVerify(
-    fallBackOracle,
-    eContractid.PriceOracle,
-    [...args],
-    verify
-  ) as Promise<ParaSpaceFallbackOracle>;
 };
 
 export const deploySeaportAdapter = async (verify?: boolean) => {
