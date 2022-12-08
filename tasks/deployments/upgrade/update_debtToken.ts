@@ -56,7 +56,7 @@ export const upgradeDebtToken = async (verify = false) => {
     }
 
     console.log(
-      `upgrading ${reserve.symbol}'s version from v${oldRevision} to v${newRevision}`
+      `upgrading ${symbol}'s version from v${oldRevision} to v${newRevision}`
     );
     const updateInput = {
       asset: asset,
@@ -74,5 +74,5 @@ export const upgradeDebtToken = async (verify = false) => {
     );
   }
 
-  console.log("upgraded all ptoken implementation.\n");
+  console.log("upgraded all debt token implementation.\n");
 };
