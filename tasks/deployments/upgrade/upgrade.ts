@@ -9,12 +9,14 @@ import dotenv from "dotenv";
 import {ZERO_ADDRESS} from "../../../helpers/constants";
 import {upgradePToken} from "./upgrade_ptoken";
 import {upgradeNToken} from "./upgrade_ntoken";
+import {upgradeDebtToken} from "./update_debtToken";
 
 dotenv.config();
 
 export const upgradeAll = async (verify = false) => {
   await upgradePool(verify);
   await upgradePToken(verify);
+  await upgradeDebtToken(verify);
   await upgradeNToken(verify);
   console.log("upgrade all finished!");
 };
