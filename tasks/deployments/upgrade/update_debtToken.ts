@@ -26,7 +26,7 @@ export const upgradeDebtToken = async (verify = false) => {
   let newImpl = "";
 
   if (!variableDebtTokenImplementationAddress) {
-    console.log("deploy PTokenAToken implementation");
+    console.log("deploy VariableDebtToken implementation");
     variableDebtTokenImplementationAddress = (
       await deployGenericVariableDebtToken(poolAddress, verify)
     ).address;
