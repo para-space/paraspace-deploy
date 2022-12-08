@@ -1,4 +1,4 @@
-import {waitForTx} from "../../../helpers/misc-utils";
+import {getParaSpaceConfig, waitForTx} from "../../../helpers/misc-utils";
 import {
   deployDelegationAwarePTokenImpl,
   deployGenericPTokenImpl,
@@ -23,6 +23,7 @@ dotenv.config();
 
 export const upgradePToken = async (verify = false) => {
   const addressesProvider = await getPoolAddressesProvider();
+  const paraSpaceConfig = getParaSpaceConfig();
   const poolAddress = await addressesProvider.getPool();
   const pool = await getPoolProxy(poolAddress);
   const poolConfiguratorProxy = await getPoolConfiguratorProxy(
@@ -56,7 +57,7 @@ export const upgradePToken = async (verify = false) => {
     ) {
       continue;
     }
-    const treasury = await pToken.RESERVE_TREASURY_ADDRESS();
+    const treasury = paraSpaceConfig.Treasury;
 
     if (xTokenType == XTokenType.PTokenAToken) {
       if (!pTokenATokenImplementationAddress) {
