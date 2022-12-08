@@ -15,10 +15,6 @@ import {
   ATokenDebtToken__factory,
   AuctionLogic,
   AuctionLogic__factory,
-  BlurAdapter,
-  BlurAdapter__factory,
-  BlurExchange,
-  BlurExchange__factory,
   BorrowLogic,
   BorrowLogic__factory,
   ConduitController,
@@ -29,8 +25,6 @@ import {
   DelegationAwarePToken,
   ERC721Delegate,
   ERC721OracleWrapper,
-  ExecutionDelegate,
-  ExecutionDelegate__factory,
   ExecutionManager,
   FlashClaimLogic,
   FlashClaimLogic__factory,
@@ -39,8 +33,6 @@ import {
   LooksRareAdapter,
   LooksRareExchange,
   MarketplaceLogic,
-  MerkleVerifier,
-  MerkleVerifier__factory,
   MintableERC20,
   MintableERC721,
   MintableERC721Logic,
@@ -69,8 +61,6 @@ import {
   ParaProxy__factory,
   ParaSpaceOracle,
   PausableZoneController,
-  PolicyManager,
-  PolicyManager__factory,
   PoolAddressesProvider,
   PoolAddressesProviderRegistry,
   PoolApeStaking,
@@ -93,8 +83,6 @@ import {
   RoyaltyFeeRegistry,
   Seaport,
   SeaportAdapter,
-  StandardPolicyERC721,
-  StandardPolicyERC721__factory,
   StETHDebtToken,
   StETHDebtToken__factory,
   StrategyStandardSaleForFixedPrice,
@@ -1794,87 +1782,6 @@ export const deployMintableERC721Logic = async (verify?: boolean) => {
     [],
     verify
   ) as Promise<MintableERC721Logic>;
-};
-
-export const deployMerkleVerifier = async (verify?: boolean) =>
-  withSaveAndVerify(
-    new MerkleVerifier__factory(await getFirstSigner()),
-    eContractid.MerkleVerifier,
-    [],
-    verify
-  ) as Promise<MerkleVerifier>;
-
-export const deployExecutionDelegate = async (verify?: boolean) =>
-  withSaveAndVerify(
-    new ExecutionDelegate__factory(await getFirstSigner()),
-    eContractid.ExecutionDelegate,
-    [],
-    verify
-  ) as Promise<ExecutionDelegate>;
-
-export const deployPolicyManager = async (verify?: boolean) =>
-  withSaveAndVerify(
-    new PolicyManager__factory(await getFirstSigner()),
-    eContractid.PolicyManager,
-    [],
-    verify
-  ) as Promise<PolicyManager>;
-
-export const deployStandardPolicyERC721 = async (verify?: boolean) =>
-  withSaveAndVerify(
-    new StandardPolicyERC721__factory(await getFirstSigner()),
-    eContractid.StandardPolicyERC721,
-    [],
-    verify
-  ) as Promise<StandardPolicyERC721>;
-
-export const deployBlurExchangeImpl = async (verify?: boolean) => {
-  const merkleVerifier = await deployMerkleVerifier(verify);
-  const blurExchangeLibraries = {
-    ["contracts/dependencies/blur-exchange/MerkleVerifier.sol:MerkleVerifier"]:
-      merkleVerifier.address,
-  };
-  const blurExchange = new BlurExchange__factory(
-    blurExchangeLibraries,
-    await getFirstSigner()
-  );
-
-  return withSaveAndVerify(
-    blurExchange,
-    eContractid.BlurExchangeImpl,
-    [],
-    verify,
-    false,
-    blurExchangeLibraries
-  ) as Promise<BlurExchange>;
-};
-
-export const deployBlurExchangeProxy = async (
-  admin: string,
-  blurExchange: string,
-  initData: string,
-  verify?: boolean
-) => {
-  const blurExchangeProxy =
-    new InitializableImmutableAdminUpgradeabilityProxy__factory(
-      await getFirstSigner()
-    );
-  return withSaveAndVerify(
-    blurExchangeProxy,
-    eContractid.BlurExchangeProxy,
-    [admin, blurExchange, initData],
-    verify,
-    true
-  ) as Promise<InitializableImmutableAdminUpgradeabilityProxy>;
-};
-
-export const deployBlurAdapter = async (verify?: boolean) => {
-  return withSaveAndVerify(
-    new BlurAdapter__factory(await getFirstSigner()),
-    eContractid.BlurAdapter,
-    [],
-    verify
-  ) as Promise<BlurAdapter>;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
