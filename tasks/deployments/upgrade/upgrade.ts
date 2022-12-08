@@ -10,11 +10,13 @@ import {ZERO_ADDRESS} from "../../../helpers/constants";
 import {upgradePToken} from "./upgrade_ptoken";
 import {upgradeNToken} from "./upgrade_ntoken";
 import {upgradeDebtToken} from "./update_debtToken";
+import {upgradeConfigurator} from "./upgrade_configurator";
 
 dotenv.config();
 
 export const upgradeAll = async (verify = false) => {
   await upgradePool(verify);
+  await upgradeConfigurator(verify);
   await upgradePToken(verify);
   await upgradeDebtToken(verify);
   await upgradeNToken(verify);
