@@ -11,6 +11,7 @@ import {upgradePToken} from "./upgrade_ptoken";
 import {upgradeNToken} from "./upgrade_ntoken";
 import {upgradeDebtToken} from "./update_debtToken";
 import {upgradeConfigurator} from "./upgrade_configurator";
+import {GLOBAL_OVERRIDES} from "../../../helpers/hardhat-constants";
 
 dotenv.config();
 
@@ -49,7 +50,8 @@ export const upgradePool = async (verify = false) => {
         },
       ],
       ZERO_ADDRESS,
-      "0x"
+      "0x",
+      GLOBAL_OVERRIDES
     )
   );
   console.timeEnd("upgrade PoolCore");
@@ -65,7 +67,8 @@ export const upgradePool = async (verify = false) => {
         },
       ],
       ZERO_ADDRESS,
-      "0x"
+      "0x",
+      GLOBAL_OVERRIDES
     )
   );
   console.timeEnd("upgrade PoolParameters");
@@ -81,7 +84,8 @@ export const upgradePool = async (verify = false) => {
         },
       ],
       ZERO_ADDRESS,
-      "0x"
+      "0x",
+      GLOBAL_OVERRIDES
     )
   );
   console.timeEnd("upgrade PoolMarketplace");
@@ -97,7 +101,8 @@ export const upgradePool = async (verify = false) => {
         },
       ],
       ZERO_ADDRESS,
-      "0x"
+      "0x",
+      GLOBAL_OVERRIDES
     )
   );
   console.timeEnd("upgrade PoolApeStaking");
@@ -125,7 +130,8 @@ export const removePoolFuncs = async () => {
           },
         ],
         ZERO_ADDRESS,
-        "0x"
+        "0x",
+        GLOBAL_OVERRIDES
       )
     );
   }
@@ -170,7 +176,8 @@ export const addPoolFuncs = async (verify = false) => {
             },
           ],
           ZERO_ADDRESS,
-          "0x"
+          "0x",
+          GLOBAL_OVERRIDES
         )
       );
     }
@@ -189,7 +196,8 @@ export const addPoolFuncs = async (verify = false) => {
             },
           ],
           ZERO_ADDRESS,
-          "0x"
+          "0x",
+          GLOBAL_OVERRIDES
         )
       );
     }
@@ -208,7 +216,8 @@ export const addPoolFuncs = async (verify = false) => {
             },
           ],
           ZERO_ADDRESS,
-          "0x"
+          "0x",
+          GLOBAL_OVERRIDES
         )
       );
     }
@@ -228,7 +237,8 @@ export const addPoolFuncs = async (verify = false) => {
             },
           ],
           ZERO_ADDRESS,
-          "0x"
+          "0x",
+          GLOBAL_OVERRIDES
         )
       );
     }
