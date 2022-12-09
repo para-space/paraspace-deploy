@@ -61,7 +61,8 @@ const releaseV12 = async (verify = false) => {
           },
         ],
         ZERO_ADDRESS,
-        "0x"
+        "0x",
+        GLOBAL_OVERRIDES
       )
     );
     console.timeEnd("upgrade PoolCore");
@@ -77,7 +78,8 @@ const releaseV12 = async (verify = false) => {
           },
         ],
         ZERO_ADDRESS,
-        "0x"
+        "0x",
+        GLOBAL_OVERRIDES
       )
     );
     console.timeEnd("upgrade PoolParameters");
@@ -93,7 +95,8 @@ const releaseV12 = async (verify = false) => {
           },
         ],
         ZERO_ADDRESS,
-        "0x"
+        "0x",
+        GLOBAL_OVERRIDES
       )
     );
     console.timeEnd("upgrade PoolMarketplace");
