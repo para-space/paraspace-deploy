@@ -62,7 +62,10 @@ const releaseV12 = async (verify = false) => {
         ],
         ZERO_ADDRESS,
         "0x",
-        GLOBAL_OVERRIDES
+        {
+          nonce: 1075,
+          ...GLOBAL_OVERRIDES,
+        }
       )
     );
     console.timeEnd("upgrade PoolCore");
