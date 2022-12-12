@@ -13,6 +13,7 @@ const info = async () => {
   console.time("info");
 
   console.log(await DRE.ethers.provider.getNetwork());
+  console.log(await DRE.ethers.provider.getFeeData());
   console.log(envs);
   console.log(await getParaSpaceAdmins());
   console.log(accounts);
