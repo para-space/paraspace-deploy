@@ -68,6 +68,7 @@ import {
   MarketplaceLogic__factory,
   FlashClaimLogic__factory,
   PoolLogic__factory,
+  ApeYield__factory,
 } from "../../types";
 import {
   getEthersSigners,
@@ -1022,6 +1023,15 @@ export const getBlurExchangeProxy = async (address?: tEthereumAddress) =>
         await getDb()
           .get(`${eContractid.BlurExchangeProxy}.${DRE.network.name}`)
           .value()
+      ).address,
+    await getFirstSigner()
+  );
+
+export const getApeYield = async (address?: tEthereumAddress) =>
+  await ApeYield__factory.connect(
+    address ||
+      (
+        await getDb().get(`${eContractid.ApeYield}.${DRE.network.name}`).value()
       ).address,
     await getFirstSigner()
   );

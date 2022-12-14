@@ -11,6 +11,8 @@ import {
   ApeCoinStaking,
   ApeStakingLogic,
   ApeStakingLogic__factory,
+  ApeYield,
+  ApeYield__factory,
   ATokenDebtToken,
   ATokenDebtToken__factory,
   AuctionLogic,
@@ -125,11 +127,10 @@ import {
   getFirstSigner,
   getWETH,
   getMintableERC721Logic,
+  getApeYield,
+  getAllTokens,
 } from "./contracts-getters";
-import {
-  convertToCurrencyDecimals,
-  getFunctionSignatures,
-} from "./contracts-helpers";
+import {getFunctionSignatures} from "./contracts-helpers";
 import {
   ProtocolDataProvider__factory,
   PToken__factory,
@@ -491,6 +492,9 @@ export const deployPoolComponents = async (
     await getFirstSigner()
   );
 
+  const allTokens = await getAllTokens();
+  const apeYield = await getApeYield();
+
   const {
     poolCoreSelectors,
     poolParametersSelectors,
@@ -529,7 +533,7 @@ export const deployPoolComponents = async (
     poolApeStaking: (await withSaveAndVerify(
       poolApeStaking,
       eContractid.PoolApeStakingImpl,
-      [provider],
+      [provider, apeYield.address, allTokens.APE.address],
       verify,
       false,
       apeStakingLibraries,
@@ -837,7 +841,6 @@ export const deployAllERC20Tokens = async (verify?: boolean) => {
 };
 
 export const deployAllERC721Tokens = async (verify?: boolean) => {
-  const erc20Tokens = await getAllERC20Tokens();
   const tokens: {
     [symbol: string]:
       | MockContract
@@ -923,54 +926,6 @@ export const deployAllERC721Tokens = async (verify?: boolean) => {
         tokens[tokenSymbol] = await deployMAYC(
           [tokenSymbol, tokenSymbol, ZERO_ADDRESS, ZERO_ADDRESS],
           verify
-        );
-        const bakc = await deployMintableERC721(["BAKC", "BAKC", ""], verify);
-
-        const apeCoinStaking = await deployApeCoinStaking(
-          [
-            erc20Tokens.APE.address,
-            tokens.BAYC.address,
-            tokens.MAYC.address,
-            bakc.address,
-          ],
-          verify
-        );
-        const amount = await convertToCurrencyDecimals(
-          erc20Tokens.APE.address,
-          "94694400"
-        );
-
-        await apeCoinStaking.addTimeRange(
-          0,
-          amount,
-          "1666771200",
-          "1761465600",
-          amount,
-          GLOBAL_OVERRIDES
-        );
-        await apeCoinStaking.addTimeRange(
-          1,
-          amount,
-          "1666771200",
-          "1761465600",
-          amount,
-          GLOBAL_OVERRIDES
-        );
-        await apeCoinStaking.addTimeRange(
-          2,
-          amount,
-          "1666771200",
-          "1761465600",
-          amount,
-          GLOBAL_OVERRIDES
-        );
-        await apeCoinStaking.addTimeRange(
-          3,
-          amount,
-          "1666771200",
-          "1761465600",
-          amount,
-          GLOBAL_OVERRIDES
         );
         continue;
       }
@@ -2129,3 +2084,14 @@ export const deployMockTokenFaucet = async (
     [erc20configs, erc721configs, punkConfig],
     verify
   );
+
+export const deployApeYield = async (
+  args: [tEthereumAddress, tEthereumAddress],
+  verify?: boolean
+) =>
+  withSaveAndVerify(
+    new ApeYield__factory(await getFirstSigner()),
+    eContractid.ApeYield,
+    [...args],
+    verify
+  ) as Promise<ApeYield>;

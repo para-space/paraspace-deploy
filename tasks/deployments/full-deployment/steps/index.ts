@@ -5,6 +5,7 @@ export const getAllSteps = async () => {
   const {step_03} = await import("./03_faucet");
   const {step_04} = await import("./04_addressProvider");
   const {step_05} = await import("./05_aclManager");
+  const {step_06a} = await import("./06_apeStaking");
   const {step_06} = await import("./06_pool");
   const {step_07} = await import("./07_poolConfigurator");
   const {step_08} = await import("./08_reservesSetupHelper");
@@ -28,6 +29,7 @@ export const getAllSteps = async () => {
     step_03,
     step_04,
     step_05,
+    step_06a,
     step_06,
     step_07,
     step_08,
